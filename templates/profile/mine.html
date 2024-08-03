@@ -28,8 +28,8 @@
             {% if request.user.profile.profile_image %}
                 <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
             {% else %}
-                <img src="{% static 'icon/profile_icon.png' %}" alt="Profile Picture" class="profile-pic rounded-circle">
-            {% endif %}
+            <i class="fas fa-user-circle fa-5x mr-3"></i>
+                      {% endif %}
         </div>
 
                     <div class="col">
