@@ -249,8 +249,6 @@ def register(request):
                 username=username,
                 email=email,
                 password=password,
-                first_name=first_name,
-                last_name=last_name,
                 is_customer = True,
                 invitation_code=invite_code
             )
