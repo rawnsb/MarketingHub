@@ -230,95 +230,7 @@ def order_management(request):
 
 import json
 from adminControl.models import SubmittedOrder
-# @login_required
-# def grab_order(request):
-#     next_order = SubmittedOrder.objects.filter(is_submitted=False,check_box=True,submitted_by=request.user).order_by('index').first()
-#     if request.method == 'POST':
-#         order_id = request.POST.get('order_id')
-#         print(order_id)
-#         if order_id:
-#             order = get_object_or_404(SubmittedOrder, id=order_id,submitted_by=request.user)
-#             order.is_submitted = True
-#             order.save()
-#             request.user.ordercount.no_of_submitted_order+=1
-#             cm=(decimal.Decimal(order.product_commission)/100)
-#             price=order.product_price
-#             cmr=cm*price
-#             request.user.balance.account_balance+=cmr
-#             request.user.balance.update_daily_commission(cmr)
-#             request.user.ordercount.save()
-#             # request.user.balance.account_balance+=cm
-#
-#             messages.success(request, f"Order {order.order_id} submitted.")
-#
-#         # Redirect to the same view to show the next order
-#         return redirect('order_management')
-#
-#     return render(request, "grabOrder/simple_order.html",{"order":next_order})
 import json
-# @login_required
-# def grab_order(request):
-#     next_order = SubmittedOrder.objects.filter(is_submitted=False, check_box=True, submitted_by=request.user).order_by(
-#         'index').first()
-#
-#     data = json.loads(request.body.decode('utf-8'))
-#     order_ids = data.get('order_ids').split(',')
-#     print(order_ids)
-#     total_order_amount = decimal.Decimal(data.get('total_amount'))
-#
-#     if request.user.balance.account_balance < total_order_amount:
-#         gap=total_order_amount-request.user.balance.account_balance
-#         return JsonResponse({"success": False, "message": f"Insufficient balance. Please deposit {gap} to Claim this order."})
-#
-#         for order_id in order_ids:
-#             order = get_object_or_404(SubmittedOrder, id=order_id, submitted_by=request.user)
-#             order.is_submitted = True
-#             order.save()
-#             request.user.ordercount.no_of_submitted_order += 1
-#             cm = (decimal.Decimal(order.product_commission) / 100)
-#             price = order.product_price
-#             cmr = cm * price
-#             request.user.balance.account_balance += cmr
-#             request.user.balance.update_daily_commission(cmr)
-#             request.user.ordercount.save()
-#
-#             messages.success(request, f"Order {order.order_id} submitted.")
-#
-#         return redirect('order_management')
-#
-#     combined_lucky_orders = []
-#     simple_order = None
-#
-#     if next_order:
-#         if next_order.label == 'lucky':
-#             # Combine three lucky orders
-#             combined_lucky_orders = list(
-#                 SubmittedOrder.objects.filter(label='lucky', is_submitted=False, check_box=True).order_by('index')[:3])
-#         elif next_order.label == 'simple':
-#             simple_order = next_order
-#
-#     # Calculate commission and total for combined lucky orders
-#     if combined_lucky_orders:
-#         total_amount = sum(order.product_price for order in combined_lucky_orders)
-#         commission_rate = sum(decimal.Decimal(order.product_commission) for order in combined_lucky_orders)
-#         commission_rate = commission_rate / 100
-#         commission = total_amount * commission_rate
-#         expected_total = total_amount + commission
-#     else:
-#         total_amount = simple_order.product_price if simple_order else 0
-#         commission_rate = decimal.Decimal(simple_order.product_commission) / 100 if simple_order else 0
-#         commission = total_amount * commission_rate
-#         expected_total = total_amount + commission
-#
-#     return render(request, "grabOrder/simple_order.html", {
-#         "combined_lucky_orders": combined_lucky_orders,
-#         "simple_order": simple_order,
-#         "total_amount": total_amount,
-#         "commission": commission,
-#         "expected_total": expected_total,
-#     })
-#
-
 
 @login_required
 def grab_order(request):
@@ -336,8 +248,7 @@ def grab_order(request):
                 gap_obj.save()
                 return JsonResponse(
                     {"success": False, "message": f"Insufficient balance. Please deposit {gap} to claim this order."})
-            request.user.ordercount.no_of_submitted_order += 1
-            request.user.ordercount.save()
+
             for order_id in order_ids:
                 order = get_object_or_404(SubmittedOrder, id=order_id, submitted_by=request.user)
                 order.is_submitted = True
@@ -346,9 +257,11 @@ def grab_order(request):
                 cm = (decimal.Decimal(order.product_commission) / 100)
                 price = order.product_price
                 cmr = cm * price
-                print("Commision",cmr)
+
                 request.user.balance.account_balance += cmr
                 request.user.balance.update_daily_commission(cmr)
+            request.user.ordercount.no_of_submitted_order += 1
+            request.user.ordercount.save()
 
 
             return JsonResponse({"success": True, "message": "Order(s) submitted successfully."})
@@ -395,8 +308,6 @@ def grab_order(request):
         "commission": commission,
         "expected_total": expected_total,
     })
-
-
 
 
 
