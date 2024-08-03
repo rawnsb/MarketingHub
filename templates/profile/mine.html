@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-3 animated zoomIn">
-                        <div class="card bg-info text-white">
+                        <div class="card bg-danger text-white">
                             <div class="card-body">
                                 <p class="mb-0">Cash Gap</p>
                                 <h3 class="mb-0">{{ request.user.gapamount.gap_amount }} USDT</h3>
@@ -81,22 +81,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-3 animated zoomIn">
-                        <div class="card bg-danger text-white">
-                            <div class="card-body">
-                                <p class="mb-0">Total Withdrawal</p>
-                                <h3 class="mb-0">{{ request.user.balance.total_withdrawal }} USDT</h3>
-                            </div>
-                        </div>
-                    </div>
-<!--                    <div class="col-md-4 mb-3 animated zoomIn">-->
-<!--                        <div class="card bg-danger text-white">-->
-<!--                            <div class="card-body">-->
-<!--                                <p class="mb-0">Total Orders</p>-->
-<!--                                <h3 class="mb-0">{{ request.user.ordercount.no_of_submitted_order }}</h3>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
+
                 </div>
                 <div class="card bg-warning text-center text-white mb-4 animated fadeInUp">
                     <div class="card-body">
@@ -118,7 +103,7 @@
                         <i class="fas fa-lock mr-2"></i> Change password
                     </a>
                     <a href="{% url 'change_payment_password' %}" class="list-group-item list-group-item-action animated slideInUp bg-payment">
-                        <i class="fas fa-shield-alt mr-2"></i> Change payment password
+                        <i class="fas fa-shield-alt mr-2"></i> Change Withdraw password
                     </a>
                     <a href="#" class="list-group-item list-group-item-action animated slideInUp bg-about">
                         <i class="fas fa-info-circle mr-2"></i> About Us
