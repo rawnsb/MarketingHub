@@ -202,8 +202,6 @@ def register(request):
     #     messages.info(request, 'You have already logged in. Please logout first to register a new account.')
     #     return redirect("/home/settings/")
     if request.method == 'POST':
-        first_name = request.POST.get('firstName')
-        last_name = request.POST.get('lastName')
         username = request.POST.get('username')
         email = request.POST.get('email')
         invite_code = request.POST.get('inviteCode')
