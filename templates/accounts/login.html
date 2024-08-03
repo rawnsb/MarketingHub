@@ -128,7 +128,10 @@
   <body>
     <div class="customer-service">
       <a href="" target="_blank">
-        <img src="{% static 'icon/Telegram_logo.svg' %}" alt="Telegram Customer Service" />
+        <img
+          src="{% static 'icon/Telegram_logo.svg' %}"
+          alt="Telegram Customer Service"
+        />
       </a>
     </div>
     <div class="container">
@@ -136,7 +139,7 @@
         <div class="col-md-6">
           <div class="card">
             <div class="card-header text-center">
-              <img src="" alt="Company Logo" class="logo" />
+              <!-- <img src="" alt="Company Logo" class="logo" /> -->
               <h2>Login</h2>
             </div>
             <div class="card-body">
@@ -181,13 +184,12 @@
               </form>
             </div>
             <div class="card-footer text-center">
-              <a href="#">Forgot password?</a> |
+              <a href="">Forgot password?</a> |
               <a href="{% url 'register' %}">Sign up</a>
-
             </div>
             <div class="bottom-nav text-center">
-      <a href="{% url 'Employee_login' %}">Employee Portal</a>
-    </div>
+              <!-- <a href="{% url 'Employee_login' %}">Employee Portal</a> -->
+            </div>
           </div>
         </div>
       </div>
