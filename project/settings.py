@@ -37,7 +37,7 @@ SECRET_KEY = 'django-insecure-n@anrp9&m&)y$rlnecbeivu93=nu($230l0vqm4+4iwdaqt@82
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ['https://cashquest-production.up.railway.app']
 
 # Application definition
 
