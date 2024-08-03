@@ -1,0 +1,501 @@
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html lang="en">&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta charset="UTF-8">&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta name="viewport" content="width=device-width, initial-scale=1.0">&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Simple Order Summary</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">&ndash;&gt;-->
+<!--&lt;!&ndash;    <style>&ndash;&gt;-->
+<!--&lt;!&ndash;        body {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center fixed;&ndash;&gt;-->
+<!--&lt;!&ndash;            background-size: cover;&ndash;&gt;-->
+<!--&lt;!&ndash;            height: 100vh;&ndash;&gt;-->
+<!--&lt;!&ndash;            display: flex;&ndash;&gt;-->
+<!--&lt;!&ndash;            justify-content: center;&ndash;&gt;-->
+<!--&lt;!&ndash;            align-items: center;&ndash;&gt;-->
+<!--&lt;!&ndash;            font-family: 'Arial', sans-serif;&ndash;&gt;-->
+<!--&lt;!&ndash;            margin: 0;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .order-card {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(255, 255, 255, 0.8);&ndash;&gt;-->
+<!--&lt;!&ndash;            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;            width: 100%;&ndash;&gt;-->
+<!--&lt;!&ndash;            max-width: 250px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        h1 {&ndash;&gt;-->
+<!--&lt;!&ndash;            background-color: #4CAF50;&ndash;&gt;-->
+<!--&lt;!&ndash;            color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;            text-align: center;&ndash;&gt;-->
+<!--&lt;!&ndash;            font-size: 1.2em;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .product-item {&ndash;&gt;-->
+<!--&lt;!&ndash;            background-color: #f0f8ff;&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-bottom: 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            display: flex;&ndash;&gt;-->
+<!--&lt;!&ndash;            align-items: center;&ndash;&gt;-->
+<!--&lt;!&ndash;            font-size: 0.9em;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .product-image {&ndash;&gt;-->
+<!--&lt;!&ndash;            width: 50px;&ndash;&gt;-->
+<!--&lt;!&ndash;            height: 50px;&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-right: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 50%;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .order-summary {&ndash;&gt;-->
+<!--&lt;!&ndash;            background-color: #ff9a9e;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-top: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;            font-size: 0.9em;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .submit-order {&ndash;&gt;-->
+<!--&lt;!&ndash;            width: 100%;&ndash;&gt;-->
+<!--&lt;!&ndash;            background-color: #008CBA;&ndash;&gt;-->
+<!--&lt;!&ndash;            color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;            padding: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 8px;&ndash;&gt;-->
+<!--&lt;!&ndash;            cursor: pointer;&ndash;&gt;-->
+<!--&lt;!&ndash;            font-size: 1em;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    </style>&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="order-card">&ndash;&gt;-->
+<!--&lt;!&ndash;        <h1>Order ID:{{order.order_id}}</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div id="productsContainer">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="product-item">&ndash;&gt;-->
+<!--&lt;!&ndash;                <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div><strong>{{order.product_name}}</strong> - ${{order.product_price}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="order-summary" id="summary">&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Order Amount:</strong> $.00</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Commission ({{order.product_commission}}%):</strong> $2.00</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Expected Total:</strong> $52.00</p>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        <br>&ndash;&gt;-->
+<!--&lt;!&ndash;        <form method="post">&ndash;&gt;-->
+<!--&lt;!&ndash;        {% csrf_token %}&ndash;&gt;-->
+<!--&lt;!&ndash;            <input type="hidden" name="order_id" value="{{ order.id }}">&ndash;&gt;-->
+<!--&lt;!&ndash;        <button class="submit-order" type="submit">Submit Order</button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </form>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <script>&ndash;&gt;-->
+<!--&lt;!&ndash;        // Simple calculations for demonstration&ndash;&gt;-->
+<!--&lt;!&ndash;        const orderAmount = {{order.product_price}}; // Example amount&ndash;&gt;-->
+<!--&lt;!&ndash;        const commissionRate = {{order.product_commission}}/100;&ndash;&gt;-->
+<!--&lt;!&ndash;        const commission = orderAmount * commissionRate;&ndash;&gt;-->
+<!--&lt;!&ndash;        const expectedTotal = orderAmount + commission;&ndash;&gt;-->
+
+<!--&lt;!&ndash;        document.getElementById('summary').innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Order Amount:</strong> $${orderAmount.toFixed(2)}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Commission ({{order.product_commission}}%):</strong> $${commission.toFixed(2)}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p><strong>Expected Total:</strong> $${expectedTotal.toFixed(2)}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;        `;&ndash;&gt;-->
+<!--&lt;!&ndash;    </script>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Order Summary</title>-->
+<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background: url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center fixed;-->
+<!--            background-size: cover;-->
+<!--            height: 100vh;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            font-family: 'Arial', sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 10px;-->
+<!--        }-->
+<!--        .order-card {-->
+<!--            background: rgba(255, 255, 255, 0.8);-->
+<!--            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);-->
+<!--            padding: 10px;-->
+<!--            border-radius: 10px;-->
+<!--            width: 100%;-->
+<!--            max-width: 300px;-->
+<!--        }-->
+<!--        h1 {-->
+<!--            background-color: #4CAF50;-->
+<!--            color: white;-->
+<!--            padding: 8px;-->
+<!--            border-radius: 10px;-->
+<!--            text-align: center;-->
+<!--            font-size: 1.2em;-->
+<!--        }-->
+<!--        .product-item {-->
+<!--            background-color: #f0f8ff;-->
+<!--            margin-bottom: 5px;-->
+<!--            padding: 5px;-->
+<!--            border-radius: 8px;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            font-size: 0.9em;-->
+<!--        }-->
+<!--        .product-image {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            margin-right: 10px;-->
+<!--            border-radius: 50%;-->
+<!--        }-->
+<!--        .order-summary {-->
+<!--            background-color: #ff9a9e;-->
+<!--            padding: 8px;-->
+<!--            border-radius: 8px;-->
+<!--            margin-top: 10px;-->
+<!--            font-size: 0.9em;-->
+<!--        }-->
+<!--        .submit-order {-->
+<!--            width: 100%;-->
+<!--            background-color: #008CBA;-->
+<!--            color: white;-->
+<!--            padding: 8px;-->
+<!--            border-radius: 8px;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 1em;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="order-card">-->
+<!--        {% if combined_lucky_orders %}-->
+<!--            <h1>Combined Lucky Orders</h1>-->
+<!--            <div id="productsContainer">-->
+<!--                {% for order in combined_lucky_orders %}-->
+<!--                    <div class="product-item">-->
+<!--                        <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">-->
+<!--                        <div><strong>{{ order.product_name }}</strong> - ${{ order.product_price }}</div>-->
+<!--                    </div>-->
+<!--                {% endfor %}-->
+<!--            </div>-->
+<!--        {% elif simple_order %}-->
+<!--            <h1>Order ID: {{ simple_order.order_id }}</h1>-->
+<!--            <div id="productsContainer">-->
+<!--                <div class="product-item">-->
+<!--                    <img src="{{ simple_order.product_img.url }}" class="product-image" alt="{{ simple_order.product_name }}">-->
+<!--                    <div><strong>{{ simple_order.product_name }}</strong> - ${{ simple_order.product_price }}</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        {% endif %}-->
+<!--        <div class="order-summary" id="summary">-->
+<!--            <p><strong>Order Amount:</strong> ${{ total_amount }}</p>-->
+<!--            <p><strong>Commission:</strong> ${{ commission }}</p>-->
+<!--            <p><strong>Expected Total:</strong> ${{ expected_total }}</p>-->
+<!--        </div>-->
+<!--        <br>-->
+<!--        <form method="post">-->
+<!--            {% csrf_token %}-->
+<!--            {% if combined_lucky_orders %}-->
+<!--                {% for order in combined_lucky_orders %}-->
+<!--                    <input type="hidden" name="order_id" value="{{ order.id }}">-->
+<!--                {% endfor %}-->
+<!--            {% elif simple_order %}-->
+<!--                <input type="hidden" name="order_id" value="{{ simple_order.id }}">-->
+<!--            {% endif %}-->
+<!--            <button class="submit-order" type="submit">Submit Order</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Order Summary</title>-->
+<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background: url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center fixed;-->
+<!--            background-size: cover;-->
+<!--            height: 100vh;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            font-family: 'Arial', sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 10px;-->
+<!--        }-->
+<!--        .order-card {-->
+<!--            background: rgba(255, 255, 255, 0.8);-->
+<!--            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);-->
+<!--            padding: 10px;-->
+<!--            border-radius: 10px;-->
+<!--            width: 100%;-->
+<!--            max-width: 300px;-->
+<!--        }-->
+<!--        h1 {-->
+<!--            background-color: #4CAF50;-->
+<!--            color: white;-->
+<!--            padding: 8px;-->
+<!--            border-radius: 10px;-->
+<!--            text-align: center;-->
+<!--            font-size: 1.2em;-->
+<!--        }-->
+<!--        .product-item {-->
+<!--            background-color: #f0f8ff;-->
+<!--            margin-bottom: 5px;-->
+<!--            padding: 5px;-->
+<!--            border-radius: 8px;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            font-size: 0.9em;-->
+<!--        }-->
+<!--        .product-image {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            margin-right: 10px;-->
+<!--            border-radius: 50%;-->
+<!--        }-->
+<!--        .order-summary {-->
+<!--            background-color: #ff9a9e;-->
+<!--            padding: 8px;-->
+<!--            border-radius: 8px;-->
+<!--            margin-top: 10px;-->
+<!--            font-size: 0.9em;-->
+<!--        }-->
+<!--        .submit-order {-->
+<!--            width: 100%;-->
+<!--            background-color: #008CBA;-->
+<!--            color: white;-->
+<!--            padding: 8px;-->
+<!--            border-radius: 8px;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 1em;-->
+<!--        }-->
+<!--    </style>-->
+<!--    <script>-->
+<!--        function prepareOrderList() {-->
+<!--            const orderIds = [];-->
+<!--            {% if combined_lucky_orders %}-->
+<!--                {% for order in combined_lucky_orders %}-->
+<!--                    orderIds.push("{{ order.id }}");-->
+<!--                {% endfor %}-->
+<!--            {% elif simple_order %}-->
+<!--                orderIds.push("{{ simple_order.id }}");-->
+<!--            {% endif %}-->
+<!--            document.getElementById('order_ids').value = orderIds.join(',');-->
+<!--        }-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="order-card">-->
+<!--        {% if combined_lucky_orders %}-->
+<!--            <h1>Combined Lucky Orders</h1>-->
+<!--            <div id="productsContainer">-->
+<!--                {% for order in combined_lucky_orders %}-->
+<!--                    <div class="product-item">-->
+<!--                        <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">-->
+<!--                        <div><strong>{{ order.product_name }}</strong> - ${{ order.product_price }}</div>-->
+<!--                    </div>-->
+<!--                {% endfor %}-->
+<!--            </div>-->
+<!--        {% elif simple_order %}-->
+<!--            <h1>Order ID: {{ simple_order.order_id }}</h1>-->
+<!--            <div id="productsContainer">-->
+<!--                <div class="product-item">-->
+<!--                    <img src="{{ simple_order.product_img.url }}" class="product-image" alt="{{ simple_order.product_name }}">-->
+<!--                    <div><strong>{{ simple_order.product_name }}</strong> - ${{ simple_order.product_price }}</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        {% endif %}-->
+<!--        <div class="order-summary" id="summary">-->
+<!--            <p><strong>Order Amount:</strong> ${{ total_amount }}</p>-->
+<!--            <p><strong>Commission:</strong> ${{ commission }}</p>-->
+<!--            <p><strong>Expected Total:</strong> ${{ expected_total }}</p>-->
+<!--        </div>-->
+<!--        <br>-->
+<!--        <form method="post" onsubmit="prepareOrderList()">-->
+<!--            {% csrf_token %}-->
+<!--            <input type="hidden" name="order_ids" id="order_ids">-->
+<!--            <button class="submit-order" type="submit">Submit Order</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 10px;
+        }
+        .order-card {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .product-item {
+            background-color: #f0f8ff;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        .product-image {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        .order-summary {
+            background-color: #ff9a9e;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .submit-order {
+            width: 100%;
+            background-color: #008CBA;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .alert {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+    <script>
+        async function submitOrder(event) {
+    event.preventDefault();
+    const orderIds = [];
+    {% if combined_lucky_orders %}
+        {% for order in combined_lucky_orders %}
+            orderIds.push("{{ order.id }}");
+        {% endfor %}
+    {% elif simple_order %}
+        orderIds.push("{{ simple_order.id }}");
+    {% endif %}
+
+    const response = await fetch("{% url 'grab_order' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            order_ids: orderIds.join(','),
+            total_amount: {{ total_amount }},
+        })
+    });
+
+    const result = await response.json();
+    const alertBox = document.getElementById('alertBox');
+    alertBox.style.display = 'block';
+
+    if (result.success) {
+        alertBox.className = 'alert alert-success';
+        alertBox.innerHTML = result.message;
+        setTimeout(() => {
+                    window.location.href = "{% url 'order_management' %}";
+                }, 1500);
+
+    } else {
+        alertBox.className = 'alert alert-danger';
+        alertBox.innerHTML = result.message;
+    }
+}
+
+       window.onload = function() {
+            const noOrders = "{{ no_orders }}";
+            if (noOrders === "True") {
+                alert("Contact customer service to get orders");
+                window.location.href = "{% url 'order_management' %}";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="order-card">
+        {% if combined_lucky_orders %}
+            <h1>Combined Lucky Orders</h1>
+            <div id="productsContainer">
+                {% for order in combined_lucky_orders %}
+                    <div class="product-item">
+                        <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">
+                        <div><strong>{{ order.product_name }}</strong> - ${{ order.product_price }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif simple_order %}
+            <h1>Order ID: {{ simple_order.order_id }}</h1>
+            <div id="productsContainer">
+                <div class="product-item">
+                    <img src="{{ simple_order.product_img.url }}" class="product-image" alt="{{ simple_order.product_name }}">
+                    <div><strong>{{ simple_order.product_name }}</strong> - ${{ simple_order.product_price }}</div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="order-summary" id="summary">
+            <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
+            <p><strong>Commission:</strong> ${{ commission }}</p>
+            <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
+        </div>
+        <br>
+        <div id="alertBox" class="alert"></div>
+        <form onsubmit="submitOrder(event)">
+            <button class="submit-order" type="submit">Submit Order</button>
+        </form>
+    </div>
+</body>
+</html>
+

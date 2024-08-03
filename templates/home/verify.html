@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification in Progress</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #74EBD5 0%, #9FACE6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            width: 200px;
+            border: 10px solid #007bff;
+            border-radius: 50%;
+            margin: 20px auto;
+            font-size: 24px;
+            color: #007bff;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .text-center {
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Verification in Progress</h2>
+        <div id="timer" class="timer"></div>
+        <p class="text-center mt-3">Your verification is in process. Please wait...</p>
+    </div>
+
+    <script>
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            const interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    display.textContent = "  Verification complete!";
+                    window.location.href = "/home/index/";
+
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            startTimer(60, document.getElementById('timer')); // 5 minutes
+        };
+    </script>
+</body>
+</html>

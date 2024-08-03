@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Record</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .record {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+        }
+         .updated-at {
+            font-size: 0.8em;
+            color: grey;
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Deposit Record</h2>
+        <div id="recordList">
+            {% if Deposite_records %}
+                {% for deposit in Deposite_records %}
+                    <div class="record">
+                        <p><strong>Method:</strong> {{ deposit.deposit_method }}</p>
+                        <p><strong>Amount:</strong> ${{ deposit.deposited_amount }}</p>
+                        <p><strong>Wallet Address:</strong> {{ deposit.wallet_address }}</p>
+                       <p><strong>Status:</strong> <span class="{{ deposit.is_amount_received|yesno:'text-success,text-danger' }}">{{ deposit.is_amount_received|yesno:"Successful,Pending" }}</span></p>
+                        <p class="updated-at">{{ deposit.updated_at }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No deposit records found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+
+</html>

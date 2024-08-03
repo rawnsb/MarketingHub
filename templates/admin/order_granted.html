@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Granted</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Order Granted</h2>
+        <div class="text-right mb-3">
+<!--            <button class="btn btn-primary" data-toggle="modal" data-target="#createOrderModal">Create Order</button>-->
+            <a class="btn btn-success" href="{% url 'Admin_dashboard' %}">Back</a>
+        </div>
+        <form method="post" >
+            {% csrf_token %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+
+                    <th>Product Type</th>
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Product Commission</th>
+                    <th>Order ID</th>
+                    <th>Order Index</th>
+                    <th>CheckBox</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.label }}</td>
+                        <td>{{ order.product_name }}</td>
+                        <td>{{ order.product_price }}</td>
+                        <td>{{ order.product_commission }}%</td>
+                        <td>{{ order.order_id }}</td>
+                        <td><input type="number" class="form-control" id="index_{{ order.id }}" name="index_{{ order.id }}" value="{{ order.index }}" placeholder="Enter index"></td>
+                        <td>
+                    <input type="checkbox" name="order_ids" value="{{ order.id }}" {% if order.check_box %}checked{% endif %}>
+                        </td>
+
+                    </tr>
+
+                    <!-- Modal for Updating Order -->
+
+                {% endfor %}
+            </tbody>
+        </table>
+            <button type="submit" class="btn btn-primary" >Save selected Orders</button>
+            </form>
+
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

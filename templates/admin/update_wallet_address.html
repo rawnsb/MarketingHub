@@ -1,0 +1,155 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Wallet Address Management</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background-color: #f4f7fa;-->
+<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
+<!--        }-->
+<!--        .wallet-container {-->
+<!--            max-width: 600px;-->
+<!--            margin: 50px auto;-->
+<!--            padding: 30px;-->
+<!--            background: white;-->
+<!--            box-shadow: 0 4px 8px rgba(0,0,0,0.1);-->
+<!--            border-radius: 10px;-->
+<!--        }-->
+<!--        .form-control, .btn {-->
+<!--            border-radius: 8px;-->
+<!--            box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
+<!--        }-->
+<!--        .btn-primary {-->
+<!--            background-color: #007bff;-->
+<!--        }-->
+<!--        .btn-success {-->
+<!--            background-color: #28a745;-->
+<!--        }-->
+<!--        .btn-info {-->
+<!--            background-color: #17a2b8;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="wallet-container">-->
+<!--        <h2 class="text-center mb-4">Wallet Address Management</h2>-->
+
+<!--        &lt;!&ndash; Deposit Wallet Address &ndash;&gt;-->
+<!--        <div class="mb-4">-->
+<!--            <label for="currentDepositAddress" class="form-label">Current Deposit Wallet Address:</label>-->
+<!--            <input type="text" class="form-control" id="currentDepositAddress" placeholder="Current Address" disabled>-->
+<!--        </div>-->
+<!--        <div class="mb-3">-->
+<!--            <label for="newDepositAddress" class="form-label">New Deposit Wallet Address:</label>-->
+<!--            <input type="text" class="form-control" id="newDepositAddress" placeholder="Enter new address">-->
+<!--        </div>-->
+<!--        <button type="button" class="btn btn-primary mb-4" onclick="replaceDepositAddress()">Save and Replace</button>-->
+
+<!--        &lt;!&ndash; Withdrawal Wallet Address &ndash;&gt;-->
+<!--        <div class="mb-4">-->
+<!--            <label for="withdrawalAddress" class="form-label">Withdrawal Wallet Address:</label>-->
+<!--            <input type="text" class="form-control" id="withdrawalAddress" value="{{ withdraw_wallet.address }}">-->
+<!--        </div>-->
+<!--        <button type="button" class="btn btn-info" onclick="copyToClipboard()">Copy Address</button>-->
+<!--        <button type="button" class="btn btn-success" style="margin-left: 10px;">OK</button>-->
+<!--    </div>-->
+
+<!--    <script>-->
+<!--        function replaceDepositAddress() {-->
+<!--            var currentAddress = document.getElementById('currentDepositAddress');-->
+<!--            var newAddress = document.getElementById('newDepositAddress').value;-->
+<!--            if (newAddress) {-->
+<!--                currentAddress.value = newAddress;-->
+<!--                alert('Deposit address updated successfully!');-->
+<!--            } else {-->
+<!--                alert('Please enter a valid new address.');-->
+<!--            }-->
+<!--        }-->
+
+<!--        function copyToClipboard() {-->
+<!--            var withdrawalAddress = document.getElementById('withdrawalAddress');-->
+<!--            withdrawalAddress.select();-->
+<!--            document.execCommand('copy');-->
+<!--            alert('Address copied to clipboard!');-->
+<!--        }-->
+<!--    </script>-->
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Address Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .wallet-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .form-control, .btn {
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="wallet-container">
+        <h2 class="text-center mb-4">Wallet Address Management</h2>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Deposit Wallet Address -->
+            <div class="mb-4">
+                <label for="currentDepositAddress" class="form-label">Current Deposit Wallet Address:</label>
+                <input type="text" class="form-control" id="currentDepositAddress" value="{{ wallet_address.address }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label for="newDepositAddress" class="form-label">New Deposit Wallet Address:</label>
+                <input type="text" class="form-control" id="newDepositAddress" name="newAddress" placeholder="Enter new address">
+            </div>
+            <button type="submit" class="btn btn-primary mb-4">Save and Replace</button>
+        </form>
+
+        <!-- Withdrawal Wallet Address -->
+        <div class="mb-4">
+            <label for="withdrawalAddress" class="form-label">Withdrawal Wallet Address:</label>
+            <input type="text" class="form-control" id="withdrawalAddress" value="{{ withdrawal_address }}" disabled>
+        </div>
+        <button type="button" class="btn btn-info" onclick="copyToClipboard()">Copy Address</button>
+        <a href="{% url 'Admin_dashboard' %}" class="btn btn-success" style="margin-left: 10px;">OK</a> <!-- Replace 'dashboard' with your dashboard URL name -->
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            var withdrawalAddress = document.getElementById('withdrawalAddress');
+            withdrawalAddress.select();
+            document.execCommand('copy');
+            alert('Address copied to clipboard!');
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Orders</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Simple Orders</h2>
+        <div class="text-right mb-3">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#createOrderModal">Create Order</button>
+            <a class="btn btn-success" href="{% url 'Admin_dashboard' %}">Back</a>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+
+                    <th>Product Type</th>
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Product Commission</th>
+                    <th>Order ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.label }}</td>
+                        <td>{{ order.product_name }}</td>
+                        <td>{{ order.product_price }}</td>
+                        <td>{{ order.product_commission }}%</td>
+                        <td>{{ order.order_id }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#updateOrderModal{{ order.id }}">Update</button>
+
+
+                                <form method="POST" action="{% url 'delete_order' order.id %}" style="display:inline;">
+                     {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+
+                        </td>
+                    </tr>
+
+                    <!-- Modal for Updating Order -->
+                    <div class="modal fade" id="updateOrderModal{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="updateOrderModalLabel{{ order.id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateOrderModalLabel{{ order.id }}">Update Order</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="{% url 'update_order' order.id %}" enctype="multipart/form-data">
+                                        {% csrf_token %}
+
+                                        <div class="form-group">
+                                            <label for="product_name">Product Name:</label>
+                                            <input type="text" class="form-control" id="product_name" name="product_name" value="{{ order.product_name }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="product_price">Product Price:</label>
+                                            <input type="number" class="form-control" id="product_price" name="product_price" step="0.01" value="{{ order.product_price }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="product_commission">Product Commission:</label>
+                                            <input type="text" class="form-control" id="product_commission" name="product_commission" value="{{ order.product_commission }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="product_img">Product Image:</label>
+                                            <input type="file" class="form-control-file" id="product_img" name="product_img">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Order</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for Creating Order -->
+    <div class="modal fade" id="createOrderModal" tabindex="-1" role="dialog" aria-labelledby="createOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createOrderModalLabel">Create Simple Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   <form method="POST" action="{% url 'list_and_create_orders' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                       <div class="form-group">
+                           <select class="form-control" name="label" id="label" required>
+    <option value="">Select a label</option>
+    <option value="simple" selected>Simple</option>
+    <option value="lucky">Lucky</option>
+    <!-- Add more options as needed -->
+</select>
+
+
+                       </div>
+                        <div class="form-group">
+                            <label for="product_name">Product Name:</label>
+                            <input type="text" class="form-control" id="product_name" name="product_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_price">Product Price:</label>
+                            <input type="number" class="form-control" id="product_price" name="product_price" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product_commission">Product Commission:</label>
+                            <input type="text" class="form-control" id="product_commission" name="product_commission" required>
+                        </div>
+                       <div class="form-group">
+                            <label for="product_img">Product Image:</label>
+                            <input type="file" class="form-control-file" id="product_img" name="product_img" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

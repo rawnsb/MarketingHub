@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.5); }
+    to { transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    from, 20%, 40%, 60%, 80%, to {
+        -webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+    0% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+    }
+    20% {
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+    40% {
+        transform: scale3d(0.9, 0.9, 0.9);
+    }
+    60% {
+        opacity: 1;
+        transform: scale3d(1.03, 1.03, 1.03);
+    }
+    80% {
+        transform: scale3d(0.97, 0.97, 0.97);
+    }
+    to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+.fadeIn {
+    animation-name: fadeIn;
+}
+
+.slideInLeft {
+    animation-name: slideInLeft;
+}
+
+.zoomIn {
+    animation-name: zoomIn;
+}
+
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+.slideInUp {
+    animation-name: slideInUp;
+}
+
+.bounceIn {
+    animation-name: bounceIn;
+}
+
+.list-group-item i {
+    color: #007bff;
+}
+
+.bg-recharge {
+    background-color: #f8f9fa;
+}
+
+.bg-recharge:hover {
+    background-color: #e9ecef;
+}
+
+.bg-withdraw {
+    background-color: #f8f9fa;
+}
+
+.bg-withdraw:hover {
+    background-color: #e9ecef;
+}
+
+.bg-method {
+    background-color: #f8f9fa;
+}
+
+.bg-method:hover {
+    background-color: #e9ecef;
+}
+
+.bg-password {
+    background-color: #f8f9fa;
+}
+
+.bg-password:hover {
+    background-color: #e9ecef;
+}
+
+.bg-payment {
+    background-color: #f8f9fa;
+}
+
+.bg-payment:hover {
+    background-color: #e9ecef;
+}
+
+.bg-about {
+    background-color: #f8f9fa;
+}
+
+.bg-about:hover {
+    background-color: #e9ecef;
+}
+
+.bg-language {
+    background-color: #f8f9fa;
+}
+
+.bg-language:hover {
+    background-color: #e9ecef;
+}

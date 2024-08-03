@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Service Card</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa; /* Light grey background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .card {
+        width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .card img {
+        width: 100%;
+        height: auto;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+      }
+
+      .card-body {
+        padding: 15px;
+        text-align: center;
+        background-color: white;
+      }
+
+      .card-title {
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <img
+        src="https://img.freepik.com/free-photo/woman-working-call-centre_329181-13453.jpg?t=st=1722290567~exp=1722294167~hmac=c55e491cd1a58649f5d7cb4f6f8b5aa50f7b38d5fcd703a3816c740822b0b4a9&w=360"
+        alt="Customer Service"
+      />
+      <div class="card-body">
+        <h5 class="card-title">customer service</h5>
+
+        <a href="{{ request.user.telegram_account.telegram_link }}" class="btn btn-primary">Send Message</a>
+      </div>
+    </div>
+  </body>
+</html>

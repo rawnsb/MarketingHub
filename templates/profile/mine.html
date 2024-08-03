@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'style/style.css' %}">
+</head>
+<body>
+    <div class="container my-5">
+        <div class="card shadow-lg animated fadeIn">
+            <div class="card-body">
+                {% include "Base/alert.html" %}
+                <div class="row align-items-center mb-4 animated slideInLeft">
+                    <div class="col-auto">
+                        {% if request.user.profile.profile_image %}
+                         <img src="{{  request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
+                         {% else %}
+                         <img src="{%  static 'icon/profile_icon.png' %}" alt="Profile Picture" class="profile-pic rounded-circle">
+                          {% endif %}
+
+
+                    </div>
+                    <div class="col">
+                        <h2 class="mb-0">{{ request.user.username }}</h2>
+                        <p class="mb-0 text-muted">ID: {{ request.user.email }}</p>
+<!--                        <p class="mb-0 text-muted">Credit: 100%</p>-->
+                    </div>
+                </div>
+                <div class="row text-center mb-4">
+                    <div class="col-md-4 mb-3 animated zoomIn">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <p class="mb-0">Account balance</p>
+                                <h3 class="mb-0">${{ request.user.balance.account_balance }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 animated zoomIn">
+                        <div class="card bg-success text-white">
+                            <div class="card-body">
+                                <p class="mb-0">Today's commission</p>
+                                <h3 class="mb-0">${{ request.user.balance.today_commission }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 animated zoomIn">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <p class="mb-0">Cash Gap</p>
+                                <h3 class="mb-0">${{ request.user.gapamount.gap_amount }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-md-4 mb-3 animated zoomIn">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <p class="mb-0">Amount Under Review </p>
+                                {% with latest_withdraw=request.user.withdraw_set.all|dictsort:"-created_at"|first %}
+        {% if latest_withdraw %}
+            {% if latest_withdraw.processed %}
+                <h3 class="mb-0">$0</h3>
+            {% else %}
+                <h3 class="mb-0">${{ latest_withdraw.amount }}</h3>
+            {% endif %}
+        {% else %}
+            <h3 class="mb-0">$0</h3>
+        {% endif %}
+    {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 animated zoomIn">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body">
+                                <p class="mb-0">Total Withdrawal</p>
+                                <h3 class="mb-0">${{ request.user.balance.total_withdrawal }}</h3>
+                            </div>
+                        </div>
+                    </div>
+<!--                    <div class="col-md-4 mb-3 animated zoomIn">-->
+<!--                        <div class="card bg-danger text-white">-->
+<!--                            <div class="card-body">-->
+<!--                                <p class="mb-0">Total Orders</p>-->
+<!--                                <h3 class="mb-0">{{ request.user.ordercount.no_of_submitted_order }}</h3>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+                <div class="card bg-warning text-center text-white mb-4 animated fadeInUp">
+                    <div class="card-body">
+                        <p class="mb-0">Invite friends</p>
+                        <p class="mb-0">Invite friends to get rewards</p>
+                    </div>
+                </div>
+                <div class="list-group mb-4">
+                    <a href="{% url 'deposite' %}" class="list-group-item list-group-item-action animated slideInUp bg-recharge">
+                        <i class="fas fa-wallet mr-2"></i> Recharge balance
+                    </a>
+                    <a href="{% url 'withdraw' %}" class="list-group-item list-group-item-action animated slideInUp bg-withdraw">
+                        <i class="fas fa-money-bill-wave mr-2"></i> Withdraw money
+                    </a>
+<!--                    <a href="#" class="list-group-item list-group-item-action animated slideInUp bg-method">-->
+<!--                        <i class="fas fa-credit-card mr-2"></i> Withdrawal method-->
+<!--                    </a>-->
+                    <a href="{% url 'change_account_password' %}" class="list-group-item list-group-item-action animated slideInUp bg-password">
+                        <i class="fas fa-lock mr-2"></i> Change password
+                    </a>
+                    <a href="{% url 'change_payment_password' %}" class="list-group-item list-group-item-action animated slideInUp bg-payment">
+                        <i class="fas fa-shield-alt mr-2"></i> Change payment password
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action animated slideInUp bg-about">
+                        <i class="fas fa-info-circle mr-2"></i> About Us
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action animated slideInUp bg-language">
+                        <i class="fas fa-globe mr-2"></i> Language settings
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="{% url 'logout' %}" class="btn btn-danger animated bounceIn">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
