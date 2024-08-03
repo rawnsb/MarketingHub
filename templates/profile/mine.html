@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'style/style.css' %}">
 </head>
+<style>
+
+  .profile-pic {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Ensures the image maintains its aspect ratio */
+}
+
+</style>
 <body>
     <div class="container my-5">
         <div class="card shadow-lg animated fadeIn">
@@ -16,14 +25,13 @@
                 {% include "Base/alert.html" %}
                 <div class="row align-items-center mb-4 animated slideInLeft">
                     <div class="col-auto">
-                        {% if request.user.profile.profile_image %}
-                         <img src="{{  request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
-                         {% else %}
-                         <img src="{%  static 'icon/profile_icon.png' %}" alt="Profile Picture" class="profile-pic rounded-circle">
-                          {% endif %}
+            {% if request.user.profile.profile_image %}
+                <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
+            {% else %}
+                <img src="{% static 'icon/profile_icon.png' %}" alt="Profile Picture" class="profile-pic rounded-circle">
+            {% endif %}
+        </div>
 
-
-                    </div>
                     <div class="col">
                         <h2 class="mb-0">{{ request.user.username }}</h2>
                         <p class="mb-0 text-muted">ID: {{ request.user.email }}</p>
@@ -35,15 +43,15 @@
                         <div class="card bg-primary text-white">
                             <div class="card-body">
                                 <p class="mb-0">Account balance</p>
-                                <h3 class="mb-0">${{ request.user.balance.account_balance }}</h3>
+                                <h3 class="mb-0">{{ request.user.balance.account_balance }} USDT</h3>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 mb-3 animated zoomIn">
                         <div class="card bg-success text-white">
                             <div class="card-body">
-                                <p class="mb-0">Today's commission</p>
-                                <h3 class="mb-0">${{ request.user.balance.today_commission }}</h3>
+                                <p class="mb-0">Total commission</p>
+                                <h3 class="mb-0">{{ request.user.balance.total_commission }} USDT</h3>
                             </div>
                         </div>
                     </div>
@@ -51,7 +59,7 @@
                         <div class="card bg-info text-white">
                             <div class="card-body">
                                 <p class="mb-0">Cash Gap</p>
-                                <h3 class="mb-0">${{ request.user.gapamount.gap_amount }}</h3>
+                                <h3 class="mb-0">{{ request.user.gapamount.gap_amount }} USDT</h3>
                             </div>
                         </div>
                     </div>
@@ -62,12 +70,12 @@
                                 {% with latest_withdraw=request.user.withdraw_set.all|dictsort:"-created_at"|first %}
         {% if latest_withdraw %}
             {% if latest_withdraw.processed %}
-                <h3 class="mb-0">$0</h3>
+                <h3 class="mb-0">0.00 USDT</h3>
             {% else %}
-                <h3 class="mb-0">${{ latest_withdraw.amount }}</h3>
+                <h3 class="mb-0">{{ latest_withdraw.amount }} USDT</h3>
             {% endif %}
         {% else %}
-            <h3 class="mb-0">$0</h3>
+            <h3 class="mb-0">0.00 USDT</h3>
         {% endif %}
     {% endwith %}
                             </div>
@@ -77,7 +85,7 @@
                         <div class="card bg-danger text-white">
                             <div class="card-body">
                                 <p class="mb-0">Total Withdrawal</p>
-                                <h3 class="mb-0">${{ request.user.balance.total_withdrawal }}</h3>
+                                <h3 class="mb-0">{{ request.user.balance.total_withdrawal }} USDT</h3>
                             </div>
                         </div>
                     </div>
