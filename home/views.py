@@ -288,10 +288,12 @@ def grab_order(request):
 
     if combined_lucky_orders:
         total_amount = sum(order.product_price for order in combined_lucky_orders)
-        commission_rate = sum(decimal.Decimal(order.product_commission) for order in combined_lucky_orders) / len(
-            combined_lucky_orders) / 100
+        commission_rate = sum(decimal.Decimal(order.product_commission) for order in combined_lucky_orders) / len(combined_lucky_orders) / 100
+        
         commission = total_amount * commission_rate
+        commission = round(commission, 2)
         expected_total = total_amount + commission
+        expected_total = round(expected_total, 2)
     else:
         total_amount = simple_order.product_price if simple_order else 0
         commission_rate = decimal.Decimal(simple_order.product_commission) / 100 if simple_order else 0
