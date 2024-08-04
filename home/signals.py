@@ -6,6 +6,7 @@ from django.utils import timezone
 
 @receiver(post_save, sender=Deposit)
 def update_account_balance(sender, instance, created, **kwargs):
+    print("deposited")
     if instance.is_amount_received==True and not created:
         # Get or create the AccountBalance associated with the user
         account_balance, _ = AccountBalance.objects.get_or_create(user=instance.user)

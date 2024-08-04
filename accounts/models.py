@@ -140,7 +140,7 @@ class PaymentPassword(BaseModel):
 
 class User_Wallet_Address(BaseModel):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    address = models.CharField(max_length=255, unique=False)
+    address = models.CharField(max_length=255, unique=False,null=True)
     label = models.CharField(max_length=100, blank=True,null=True)
     def __str__(self):
         return f"{self.user.username}'s wallet address :- {self.address}"

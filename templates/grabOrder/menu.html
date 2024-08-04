@@ -304,10 +304,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VIP Commissions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    
     <style>
       body {
         background-color: #f2f7ff;
@@ -555,6 +557,35 @@
         </div>
       </div>
     </div>
+    <nav class="navbar navbar-expand navbar-light bg-white fixed-bottom border-top footer-menu">
+      <ul class="navbar-nav nav-justified w-100">
+        <li class="nav-item ">
+          <a href="{% url 'home' %}" class="nav-link">
+            <i class="fa fa-home"></i>
+            <p>Home</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'service' %}" class="nav-link">
+            <i class="fa fa-comments"></i>
+            <p>Service</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'menu' %}"  class="nav-link">
+            <i class="fa fa-link"></i>
+            <p>MENU</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'mine' %}" class="nav-link">
+            <i class="fa fa-user"></i>
+            <p>Mine</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
 
     <script>
       function checkConditions(platform, minDeposit, maxDeposit, color) {
