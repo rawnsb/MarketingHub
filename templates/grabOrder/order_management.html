@@ -20,7 +20,7 @@
             margin-bottom: 30px;
             text-align: center;
             position: relative;
-            z-index: 1;
+            /* z-index: 1; */
         }
         .order-management h2 {
             font-weight: bold;
@@ -116,7 +116,7 @@
         <div class="loading-text">Connecting to <span id="platform-name">Amazon</span>...</div>
     </div>
     {% include "Base/alert.html" %}
-    <div class="container mt-5">
+    <div class="container mt-5" >
         <div id="orderManagement" class="order-management" style="background-color: {{ color }};">
             <h2>Order Management</h2>
             <div class="row" style="margin-bottom: 50px">
