@@ -316,3 +316,6 @@ def grab_order(request):
 @login_required
 def service(request):
     return render(request,"home/service.html")
+
+def custom_404_view(request, exception):
+    return render(request, 'home/404.html', status=404)

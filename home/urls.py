@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.conf.urls import handler404
 from django.urls import path
 from .views import home,service,grab_order,order_management,menu,mine,withdrawal_records,settings_page,wallet_management,check_withdrawal_status,withdraw,wallet_verification,deposite,deposite_records
 urlpatterns = [
@@ -17,3 +18,5 @@ urlpatterns = [
    path('services/',service,name='service'),
    path('grab-order/',grab_order,name='grab_order'),
 ]
+
+handler404 = 'home.views.custom_404_view'
