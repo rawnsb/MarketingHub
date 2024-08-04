@@ -19,4 +19,4 @@ urlpatterns = [
    path('grab-order/',grab_order,name='grab_order'),
 ]
 
-handler404 = 'custom_404_view'
+handler404 = custom_404_view
