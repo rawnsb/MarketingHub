@@ -26,7 +26,4 @@ def update_account_balance(sender, instance, created, **kwargs):
         account_balance, _ = AccountBalance.objects.get_or_create(user=instance.user)
         account_balance.update_balance_on_withdrawal(instance.amount)
 
-        # Optionally, update commissions if applicable
-        # if instance.deposit_method == 'SomeSpecificMethodThatAffectsCommissions':
-        #     commission_amount = calculate_commission(instance.deposited_amount)  # Define this function as needed
-        #     account_balance.update_daily_commission(commission_amount)
+       
