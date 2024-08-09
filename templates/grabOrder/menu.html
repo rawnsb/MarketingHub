@@ -121,7 +121,7 @@
 </head>
 <body>
 <div id="loading" style="display: none;">
-    <div>Loading...</div>
+    <div>Loading....</div>
     <div class="loading-text">
         Connecting to <span id="platform-name"></span>
     </div>
@@ -129,85 +129,32 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-sm-6">
-            <form action="{% url 'order_management' %}" method="get"
-                  onsubmit="return checkConditions(this, 'Amazon', 20, 350, '#007bff')">
-                <input type="hidden" name="color" value="#007bff">
-                <a
-                    {% if request.user.balance.account_balance >= 20 and request.user.balance.account_balance < 350 %}
-                    href="javascript:void(0)"
-                    {% else %}
-                    {% if request.user.balance.account_balance < 20 %}
-                    href="#" onclick="alert('Please deposit an amount to make your balance 20 or above.')"
-                    {% elif request.user.balance.account_balance > 350 %}
-                    href="#" onclick="alert('You are Level 1 user. You should try Alibaba and AliExpress now.')"
-                    {% else %}
-                    href="#"
-                    {% endif %}
-                    {% endif %}
-                    class="card vip1"
-                    onclick="this.closest('form').submit()"
-                >
-                    <h2>VIP 1</h2>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" width="80">
-                    <h3>Amazon</h3>
-                    <p>Account Balance: 20 USDT to 350 USDT</p>
-                    <p>Commissions: 4%</p>
-                </a>
-            </form>
+            <a onclick="return checkConditions('Amazon', 20, 350, '#007bff')" class="card vip1">
+                <h2>VIP 1</h2>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" width="80">
+                <h3>Amazon</h3>
+                <p>Account Balance: 20 USDT to 350 USDT</p>
+                <p>Commissions: 4%</p>
+            </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <form action="{% url 'order_management' %}" method="get"
-                  onsubmit="return checkConditions(this, 'Alibaba', 350, 600, '#ffc107')">
-                <input type="hidden" name="color" value="#ffc107">
-
-                <a
-                    {% if request.user.balance.account_balance >= 350 and request.user.balance.account_balance < 600 %}
-                    href="javascript:void(0)"
-                    {% else %}
-                    {% if request.user.balance.account_balance < 350 %}
-                    href="#" onclick="alert('Please deposit an amount to make your balance 350 or above.')"
-                    {% elif request.user.balance.account_balance > 600 %}
-                    href="#" onclick="alert('You are Level 2 user. You should try AliExpress now.')"
-                    {% else %}
-                    href="#"
-                    {% endif %}
-                    {% endif %}
-                    class="card vip2"
-                    onclick="this.closest('form').submit()"
-                >
-                    <h2>VIP 2</h2>
-                    <img src="{% static 'icon/alibabalogo.png' %}" alt="Alibaba" width="80">
-                    <h3>Alibaba</h3>
-                    <p>Account Balance: 350 USDT to 600 USDT</p>
-                    <p>Commissions: 8%</p>
-                </a>
-            </form>
+            <a onclick="return checkConditions('Alibaba', 350, 600, '#ffc107')" class="card vip2">
+                <h2>VIP 2</h2>
+                <img src="{% static 'icon/alibabalogo.png' %}" alt="Alibaba" width="80">
+                <h3>Alibaba</h3>
+                <p>Account Balance: 350 USDT to 600 USDT</p>
+                <p>Commissions: 8%</p>
+            </a>
         </div>
         <div class="col-md-4 col-sm-6 mx-auto">
-            <form action="{% url 'order_management' %}" method="get"
-                  onsubmit="return checkConditions(this, 'AliExpress', 600, Infinity, '#dc3545')">
-                <input type="hidden" name="color" value="#dc3545">
-                <a
-                    {% if request.user.balance.account_balance > 600 %}
-                    href="javascript:void(0)"
-                    {% else %}
-                    {% if request.user.balance.account_balance < 600 %}
-                    href="#" onclick="alert('Please deposit an amount to make your balance 600 or above.')"
-                    {% else %}
-                    href="#"
-                    {% endif %}
-                    {% endif %}
-                    class="card vip3"
-                    onclick="this.closest('form').submit()"
-                >
-                    <h2>VIP 3</h2>
-                    <img src="https://logotic.me/system/assets/uploads/vector-files/aliexpress-logo-1643122910-logotic-1668778354-logotic-brand.svg"
-                         alt="AliExpress" width="80">
-                    <h3>AliExpress</h3>
-                    <p>Account Balance: more than 600 USDT</p>
-                    <p>Commissions: 12%</p>
-                </a>
-            </form>
+            <a onclick="return checkConditions('AliExpress', 600, Infinity, '#dc3545')" class="card vip3">
+                <h2>VIP 3</h2>
+                <img src="https://logotic.me/system/assets/uploads/vector-files/aliexpress-logo-1643122910-logotic-1668778354-logotic-brand.svg"
+                     alt="AliExpress" width="80">
+                <h3>AliExpress</h3>
+                <p>Account Balance: more than 600 USDT</p>
+                <p>Commissions: 12%</p>
+            </a>
         </div>
     </div>
 </div>
@@ -241,25 +188,31 @@
 </nav>
 
 <script>
-    function checkConditions(form, platform, minDeposit, maxDeposit, color) {
+    function checkConditions(platform, minDeposit, maxDeposit, color) {
         const deposit = {{ request.user.balance.account_balance }};
+
         if (deposit >= minDeposit && deposit < maxDeposit) {
             document.getElementById("platform-name").innerText = platform;
-            document.getElementById("loading").style.display = "block";
+            document.getElementById("loading").style.display = "flex"; // Show the loading animation
             setTimeout(function () {
-                form.submit(); // Submit the form after the delay
-            }, 3000); // Simulate a 3-second loading time
-            return false; // Prevent the form from submitting immediately
+                window.location.href = '{% url "order_management" %}'; // Redirect after the delay
+            }, 3000);
+            
         } else if (deposit < minDeposit) {
             alert(`Please deposit an amount to make your balance ${minDeposit} or above.`);
         } else {
-            alert(`You are at a higher level. You should try other platforms.`);
+            if (deposit>=350 && deposit<600 ){
+              alert(`You are at Intermediate level. You should try other platforms.`);
+            }
+            else if ( deposit>600)
+            alert(`You are at a higher level. You should Ali Express platforms.`);
         }
-        return false; // Prevent the form from submitting
+        return false; // Prevent further actions if conditions aren't met
     }
 </script>
 </body>
 </html>
+
 
 
 

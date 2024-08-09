@@ -223,7 +223,16 @@ def menu(request):
 
 @login_required
 def order_management(request):
-    color = request.GET.get('color','#007bff')
+    bal=request.user.balance.account_balance
+    color = '#007bff'
+    
+    if bal>20 and bal<350:
+       color = request.GET.get('color','#007bff')
+    if bal >=350 and bal <600:
+        
+        color=request.GET.get('color',"#ffc107")
+    if bal>=600:
+        color=request.GET.get('color',"#dc3545")
     print(color)
     return render(request,"grabOrder/order_management.html",{'color': color})
 
