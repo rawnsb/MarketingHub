@@ -1,4 +1,4 @@
-{% load static %}
+<!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,10 +86,12 @@
         @media (max-width: 576px) {
             .container {
                 margin-top: 20px;
-                padding-bottom: 60px;
+                padding-bottom: 100px;
+                display: flex;
+                height: 700px;
             }
             .card {
-                margin-bottom: 30px;
+                margin-bottom: 10px;
                 padding: 20px;
             }
             .footer-menu {
@@ -213,316 +215,556 @@
 </body>
 </html>
 
+ -->
 
 
-
-<!-- {% load static %}
+ <!-- {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP Commissions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
     <style>
-      body {
-        background-color: #f2f7ff;
-        font-family: Arial, sans-serif;
-      }
-      .container {
-        margin-top: 50px;
-      }
-      .row {
-        display: flex;
-        justify-content: center;
-      }
-      .card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        margin: 20px;
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.3s ease;
-        width: 100%;
-        max-width: 450px;
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-      .card:hover {
-        transform: scale(1.05);
-      }
-      .card h2 {
-        margin-bottom: 20px;
-        font-size: 1.5rem;
-        color: #fff;
-        padding: 15px 0;
-        border-radius: 15px 15px 0 0;
-        animation: text-bounce 2s infinite;
-      }
-      .card img {
-        margin: 10px 0;
-      }
-      .card p {
-        margin-bottom: 10px;
-        text-align: left;
-        animation: text-fade 3s infinite;
-      }
-      .vip1 h2 {
-        background-color: #007bff;
-      }
-      .vip2 h2 {
-        background-color: #ffc107;
-      }
-      .vip3 h2 {
-        background-color: #dc3545;
-      }
-      .vip1 p,
-      .vip1 .price {
-        color: #007bff;
-      }
-      .vip2 p,
-      .vip2 .price {
-        color: #ffc107;
-      }
-      .vip3 p,
-      .vip3 .price {
-        color: #dc3545;
-      }
-      .bubble {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(139, 69, 19, 0.3);
-        animation: float 20s infinite, color-change 5s infinite;
-        pointer-events: none;
-        opacity: 0.8;
-      }
-      .vip1 .bubble {
-        background: rgba(108, 171, 241, 0.5);
-      }
-      .vip2 .bubble {
-        background: rgba(237, 209, 126, 0.5);
-      }
-      .vip3 .bubble {
-        background: rgba(221, 140, 149, 0.5);
-      }
-      @keyframes float {
-        0% {
-          transform: translate(0, 0);
+        body {
+            background-color: #eef2f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        25% {
-          transform: translate(50px, -50px);
+        .container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 10px;
         }
-        50% {
-          transform: translate(-50px, -100px);
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 250px;
+            min-height: 200px;
         }
-        75% {
-          transform: translate(-100px, -50px);
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
-        100% {
-          transform: translate(0, 0);
+        .card h2 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #fff;
+            padding: 5px 0;
+            border-radius: 8px 8px 0 0;
+            background-color: #007bff;
+            transition: background-color 0.3s ease;
         }
-      }
-      @keyframes text-bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-          transform: translateY(0);
+        .card img {
+            margin: 5px 0;
+            max-height: 40px;
+            object-fit: contain;
         }
-        40% {
-          transform: translateY(-20px);
+        .card p {
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #555;
         }
-        60% {
-          transform: translateY(-10px);
+        .card a {
+            text-decoration: none;
+            color: inherit;
         }
-      }
-      @keyframes text-fade {
-        0% {
-          opacity: 0;
+        .card:hover h2 {
+            background-color: #0056b3;
         }
-        50% {
-          opacity: 1;
+        .vip1 h2 {
+            background-color: #007bff;
         }
-        100% {
-          opacity: 0;
+        .vip2 h2 {
+            background-color: #ffc107;
         }
-      }
-      /* Loading Animation */
-      #loading {
-        display: none;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.9);
-        top: 0;
-        left: 0;
-        z-index: 9999;
-        text-align: center;
-        line-height: 100vh;
-        font-size: 2rem;
-        color: #007bff;
-      }
-      .loading-text {
-        font-size: 1.5rem;
-        margin-top: 10px;
-      }
+        .vip3 h2 {
+            background-color: #dc3545;
+        }
+        .vip1 p,
+        .vip1 .price {
+            color: #007bff;
+        }
+        .vip2 p,
+        .vip2 .price {
+            color: #ffc107;
+        }
+        .vip3 p,
+        .vip3 .price {
+            color: #dc3545;
+        }
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                padding: 0;
+            }
+            .card {
+                max-width: 100%;
+                min-height: 120px;
+                margin-bottom: 10px;
+            }
+            .card img {
+                max-height: 30px;
+            }
+            .card h2 {
+                font-size: 1rem;
+            }
+            .card p {
+                font-size: 0.75rem;
+            }
+        }
+        /* Loading Animation */
+        #loading {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 2rem;
+            color: #007bff;
+        }
+        .loading-text {
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+        /* Footer Menu */
+        .footer-menu {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+        .footer-menu .nav-item {
+            text-align: center;
+        }
+        .footer-menu .nav-link {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .footer-menu .nav-link i {
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+        .footer-menu .nav-link p {
+            margin: 0;
+            font-size: 0.75rem;
+        }
+        .footer-menu .nav-link:hover {
+            color: #007bff;
+        }
     </style>
-  </head>
-  <body>
-    <div id="loading">
-      <div>Loading...</div>
-      <div class="loading-text">
-        Connecting to <span id="platform-name">Amazon</span>
-      </div>
+</head>
+<body>
+<div id="loading" style="display: none;">
+    <div>Loading....</div>
+    <div class="loading-text">
+        Connecting to <span id="platform-name"></span>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4">
-          <form action="{% url 'order_management' %}" method="get" onsubmit="return checkConditions('Amazon', 20, 350, '#007bff')">
-            <input type="hidden" name="color" value="#007bff">
-            <a
-              {% if request.user.balance.account_balance >= 20 and request.user.balance.account_balance < 350 %}
-                href="javascript:void(0)"
-              {% else %}
-                {% if request.user.balance.account_balance < 20 %}
-                  href="#" onclick="alert('Please deposit an amount to make your balance 20 or above.')"
-                {% elif request.user.balance.account_balance > 350 %}
-                  href="#" onclick="alert('You are Level 1 user. You should try Alibaba and AliExpress now.')"
-                {% else %}
-                  href="#"
-                {% endif %}
-              {% endif %}
-              class="card vip1"
-              onclick="this.closest('form').submit()"
-            >
-              <h2>VIP 1</h2>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" width="80">
-              <h3>Amazon</h3>
-              <p>Account Balance: 20 USDT to 350 USDT</p>
-              <p>Commissions: 4%</p>
-              <div class="bubble" style="width: 20px; height: 20px; top: 10%; left: 20%"></div>
-              <div class="bubble" style="width: 30px; height: 30px; top: 30%; left: 80%"></div>
-              <div class="bubble" style="width: 40px; height: 40px; top: 50%; left: 50%"></div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <a onclick="return checkConditions('Amazon', 20, 350, '#007bff')" class="card vip1">
+                <h2>VIP 1</h2>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" width="80">
+                <h3>Amazon</h3>
+                <p>Account Balance: 20 USDT to 350 USDT</p>
+                <p>Commissions: 4%</p>
             </a>
-          </form>
         </div>
-        <div class="col-md-4">
-          <form action="{% url 'order_management' %}" method="get" onsubmit="return checkConditions('Alibaba', 350, 600, '#ffc107')">
-            <input type="hidden" name="color" value="#ffc107">
-
-            <a
-              {% if request.user.balance.account_balance >= 350 and request.user.balance.account_balance < 600 %}
-                href="javascript:void(0)"
-              {% else %}
-                {% if request.user.balance.account_balance < 350 %}
-                  href="#" onclick="alert('Please deposit an amount to make your balance 350 or above.')"
-                {% elif request.user.balance.account_balance > 600 %}
-                  href="#" onclick="alert('You are Level 2 user. You should try AliExpress now.')"
-                {% else %}
-                  href="#"
-                {% endif %}
-              {% endif %}
-              class="card vip2"
-              onclick="this.closest('form').submit()"
-            >
-              <h2>VIP 2</h2>
-              <img src="{% static 'icon/alibabalogo.png' %}" alt="Alibaba" width="80">
-              <h3>Alibaba</h3>
-              <p>Account Balance: 350 USDT to 600 USDT</p>
-              <p>Commissions: 8%</p>
-              <div class="bubble" style="width: 20px; height: 20px; top: 10%; left: 20%"></div>
-              <div class="bubble" style="width: 30px; height: 30px; top: 30%; left: 80%"></div>
-              <div class="bubble" style="width: 40px; height: 40px; top: 50%; left: 50%"></div>
+        <div class="col-12">
+            <a onclick="return checkConditions('Alibaba', 350, 600, '#ffc107')" class="card vip2">
+                <h2>VIP 2</h2>
+                <img src="{% static 'icon/alibabalogo.png' %}" alt="Alibaba" width="80">
+                <h3>Alibaba</h3>
+                <p>Account Balance: 350 USDT to 600 USDT</p>
+                <p>Commissions: 8%</p>
             </a>
-          </form>
         </div>
-        <div class="col-md-4">
-          <form action="{% url 'order_management' %}" method="get" onsubmit="return checkConditions('AliExpress', 600, Infinity, '#dc3545')">
-            <input type="hidden" name="color" value="#dc3545">
-            <a
-              {% if request.user.balance.account_balance > 600 %}
-                href="javascript:void(0)"
-              {% else %}
-                {% if request.user.balance.account_balance < 600 %}
-                  href="#" onclick="alert('Please deposit an amount to make your balance 600 or above.')"
-                {% else %}
-                  href="#"
-                {% endif %}
-              {% endif %}
-              class="card vip3"
-              onclick="this.closest('form').submit()"
-            >
-              <h2>VIP 3</h2>
-              <img src="https://logotic.me/system/assets/uploads/vector-files/aliexpress-logo-1643122910-logotic-1668778354-logotic-brand.svg" alt="AliExpress" width="80">
-              <h3>AliExpress</h3>
-              <p>Account Balance: more than 600 USDT</p>
-              <p>Commissions: 12%</p>
-              <div class="bubble" style="width: 20px; height: 20px; top: 10%; left: 20%"></div>
-              <div class="bubble" style="width: 30px; height: 30px; top: 30%; left: 80%"></div>
-              <div class="bubble" style="width: 40px; height: 40px; top: 50%; left: 50%"></div>
+        <div class="col-12">
+            <a onclick="return checkConditions('AliExpress', 600, Infinity, '#dc3545')" class="card vip3">
+                <h2>VIP 3</h2>
+                <img src="https://logotic.me/system/assets/uploads/vector-files/aliexpress-logo-1643122910-logotic-1668778354-logotic-brand.svg"
+                     alt="AliExpress" width="80">
+                <h3>AliExpress</h3>
+                <p>Account Balance: more than 600 USDT</p>
+                <p>Commissions: 12%</p>
             </a>
-          </form>
         </div>
-      </div>
     </div>
-    <nav class="navbar navbar-expand navbar-light bg-white fixed-bottom border-top footer-menu">
-      <ul class="navbar-nav nav-justified w-100">
-        <li class="nav-item ">
-          <a href="{% url 'home' %}" class="nav-link">
-            <i class="fa fa-home"></i>
-            <p>Home</p>
-          </a>
+</div>
+<nav class="navbar navbar-expand navbar-light bg-white fixed-bottom border-top footer-menu">
+    <ul class="navbar-nav nav-justified w-100">
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link">
+                <i class="fa fa-home"></i>
+                <p>Home</p>
+            </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'service' %}" class="nav-link">
-            <i class="fa fa-comments"></i>
-            <p>Service</p>
-          </a>
+            <a href="{% url 'service' %}" class="nav-link">
+                <i class="fa fa-comments"></i>
+                <p>Service</p>
+            </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'menu' %}"  class="nav-link">
-            <i class="fa fa-link"></i>
-            <p>MENU</p>
-          </a>
+            <a href="{% url 'menu' %}" class="nav-link">
+                <i class="fa fa-link"></i>
+                <p>MENU</p>
+            </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'mine' %}" class="nav-link">
-            <i class="fa fa-user"></i>
-            <p>Mine</p>
-          </a>
+            <a href="{% url 'mine' %}" class="nav-link">
+                <i class="fa fa-user"></i>
+                <p>Mine</p>
+            </a>
         </li>
-      </ul>
-    </nav>
+    </ul>
+</nav>
 
-
-    <script>
-      function checkConditions(platform, minDeposit, maxDeposit, color) {
+<script>
+    function checkConditions(platform, minDeposit, maxDeposit, color) {
         const deposit = {{ request.user.balance.account_balance }};
+
         if (deposit >= minDeposit && deposit < maxDeposit) {
-          document.getElementById("platform-name").innerText = platform;
-          document.getElementById("loading").style.display = "block";
-          setTimeout(function () {
-            window.location.href = `order_management`;
-          }, 3000); // Simulate a 3-second loading time
-          return false; // Prevent the form from submitting the traditional way
+            document.getElementById("platform-name").innerText = platform;
+            document.getElementById("loading").style.display = "flex"; // Show the loading animation
+            setTimeout(function () {
+                window.location.href = '{% url "order_management" %}'; // Redirect after the delay
+            }, 3000);
+            
         } else if (deposit < minDeposit) {
-          alert(`Please deposit an amount to make your balance ${minDeposit} or above.`);
+            alert(`Please deposit an amount to make your balance ${minDeposit} or above.`);
         } else {
-          alert(`You are at a higher level. You should try other platforms.`);
+            if (deposit >= 350 && deposit < 600 ){
+              alert(`You are now at Intermediate level. You should try other platforms.`);
+            }
+            else if (deposit > 600)
+            alert(`You are now at a higher level. You should try Ali Express platform.`);
         }
-        return false; // Prevent the form from submitting
-      }
-    </script>
-  </body>
+        return false; // Prevent further actions if conditions aren't met
+    }
+</script>
+</body>
 </html> -->
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Commissions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <style>
+        body {
+            background-color: #eef2f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 320px;
+            min-height: 280px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: #fff;
+            padding: 10px 0;
+            border-radius: 12px 12px 0 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .card img {
+            margin: 10px 0;
+            max-height: 50px;
+            object-fit: contain;
+        }
+
+        .card p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover h2 {
+            background-color: #0056b3;
+        }
+
+        .vip1 h2 {
+            background-color: #007bff;
+        }
+
+        .vip2 h2 {
+            background-color: #ffc107;
+        }
+
+        .vip3 h2 {
+            background-color: #dc3545;
+        }
+
+        .vip1 p,
+        .vip1 .price {
+            color: #007bff;
+        }
+
+        .vip2 p,
+        .vip2 .price {
+            color: #ffc107;
+        }
+
+        .vip3 p,
+        .vip3 .price {
+            color: #dc3545;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .row {
+                display: flex;
+                justify-content: center;
+            }
+
+            .col-md-4 {
+                flex: 0 0 30%;
+                max-width: 30%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                padding: 0;
+                margin-bottom:70px ;
+            }
+
+            .card {
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .card img {
+                max-height: 40px;
+            }
+
+            .card h2 {
+                font-size: 1.2rem;
+            }
+
+            .card p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Loading Animation */
+        #loading {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        /* Footer Menu */
+        .footer-menu {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-menu .nav-item {
+            text-align: center;
+        }
+
+        .footer-menu .nav-link {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .footer-menu .nav-link i {
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+
+        .footer-menu .nav-link p {
+            margin: 0;
+            font-size: 0.75rem;
+        }
+
+        .footer-menu .nav-link:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<div id="loading" style="display: none;">
+    <div>Loading....</div>
+    <div class="loading-text">
+        Connecting to <span id="platform-name"></span>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 col-sm-12">
+            <a onclick="return checkConditions('Amazon', 20, 350, '#007bff')" class="card vip1">
+                <h2>VIP 1</h2>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" width="80">
+                <h3>Amazon</h3>
+                <p>Account Balance: 20 USDT to 350 USDT</p>
+                <p>Commissions: 4%</p>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <a onclick="return checkConditions('Alibaba', 350, 600, '#ffc107')" class="card vip2">
+                <h2>VIP 2</h2>
+                <img src="{% static 'icon/alibabalogo.png' %}" alt="Alibaba" width="80">
+                <h3>Alibaba</h3>
+                <p>Account Balance: 350 USDT to 600 USDT</p>
+                <p>Commissions: 8%</p>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <a onclick="return checkConditions('AliExpress', 600, Infinity, '#dc3545')" class="card vip3">
+                <h2>VIP 3</h2>
+                <img src="https://logotic.me/system/assets/uploads/vector-files/aliexpress-logo-1643122910-logotic-1668778354-logotic-brand.svg"
+                     alt="AliExpress" width="80">
+                <h3>AliExpress</h3>
+                <p>Account Balance: more than 600 USDT</p>
+                <p>Commissions: 12%</p>
+            </a>
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand navbar-light bg-white fixed-bottom border-top footer-menu">
+    <ul class="navbar-nav nav-justified w-100">
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link">
+                <i class="fa fa-home"></i>
+                <p>Home</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'service' %}" class="nav-link">
+                <i class="fa fa-comments"></i>
+                <p>Service</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'menu' %}" class="nav-link">
+                <i class="fa fa-link"></i>
+                <p>MENU</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'mine' %}" class="nav-link">
+                <i class="fa fa-user"></i>
+                <p>Mine</p>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    function checkConditions(platform, minDeposit, maxDeposit, color) {
+        const deposit = {{ request.user.balance.account_balance }};
+
+        if (deposit >= minDeposit && deposit < maxDeposit) {
+            document.getElementById("platform-name").innerText = platform;
+            document.getElementById("loading").style.display = "flex"; // Show the loading animation
+            setTimeout(function () {
+                window.location.href = '{% url "order_management" %}'; // Redirect after the delay
+            }, 3000);
+            
+        } else if (deposit < minDeposit) {
+            alert(`Please deposit an amount to make your balance ${minDeposit} or above.`);
+        } else {
+            if (deposit >= 350 && deposit < 600 ){
+              alert(`You are now at Intermediate level. You should try other platforms.`);
+            }
+            else if (deposit > 600)
+            alert(`You are now at a higher level. You should try Ali Express platform.`);
+        }
+        return false; // Prevent further actions if conditions aren't met
+    }
+</script>
+</body>
+</html>
+

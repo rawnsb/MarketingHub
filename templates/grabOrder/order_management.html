@@ -8,9 +8,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            overflow: hidden;
             background-color: #f2f7ff;
-            position: relative;
+            overflow-x: hidden;
         }
         .order-management {
             background: #f8f9fa;
@@ -20,7 +19,6 @@
             margin-bottom: 30px;
             text-align: center;
             position: relative;
-            /* z-index: 1; */
         }
         .order-management h2 {
             font-weight: bold;
@@ -43,6 +41,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             transition: background 0.3s;
+            margin: 10px 0;
         }
         .btn-grab-order:hover {
             background: #563d7c;
@@ -108,6 +107,51 @@
             font-size: 1.5rem;
             margin-top: 10px;
         }
+        .attention-section {
+            background-color: #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .attention-section h2 {
+            color: #343a40;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .attention-section ul {
+            padding-left: 20px;
+            list-style-type: square;
+            color: #343a40;
+        }
+        .attention-section ul li {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        .attention-section p {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #343a40;
+        }
+        @media (max-width: 576px) {
+            .container{
+                margin-top: 0px;
+                padding-top: 0px;
+                height: 30px;
+            }
+            .order-management h2, .attention-section h2 {
+                font-size: 1.5rem;
+            }
+            .order-stat span, .attention-section ul li {
+                font-size: 1rem;
+            }
+            .btn-grab-order {
+                padding: 10px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -116,10 +160,10 @@
         <div class="loading-text">Connecting to <span id="platform-name">Amazon</span>...</div>
     </div>
     {% include "Base/alert.html" %}
-    <div class="container mt-5" >
-        <div id="orderManagement" class="order-management" style="background-color: {{ color }};">
+    <div class="container mt-5">
+        <div id="orderManagement" class="order-management" style="background-color: {{ color }} ;">
             <h2>Order Management</h2>
-            <div class="row" style="margin-bottom: 50px">
+            <div class="row mb-5">
                 <div class="col-md-3 col-6 order-stat">
                     <span>Account Balance:</span>
                     <span class="value">{{ request.user.balance.account_balance }} USDT</span>
@@ -128,7 +172,6 @@
                     <span>Total Commission:</span>
                     <span class="value">{{ request.user.balance.total_commission }} USDT</span>
                 </div>
-
                 <div class="col-md-3 col-6 order-stat">
                     <span>Today Commission:</span>
                     <span class="value">{{ request.user.balance.today_commission }} USDT</span>
@@ -138,73 +181,18 @@
                     <span class="value">{{ request.user.ordercount.no_of_submitted_order }}</span>
                 </div>
             </div>
-<!--            <button class="btn btn-grab-order mt-3">Grab Order</button>-->
-            <a href="{% url 'menu' %}" class="btn btn-grab-order mt-3">Back To Menu</a>
-            <a href="{% url 'grab_order' %}" class="btn btn-grab-order mt-3">Grab Order</a>
+            <a href="{% url 'menu' %}" class="btn btn-grab-order">Back To Menu</a>
+            <a href="{% url 'grab_order' %}" class="btn btn-grab-order">Grab Order</a>
         </div>
-        <div>
+        <div class="attention-section">
             <h2>Attention:</h2>
-    <ul>
-        <li><strong>Task Assignment:</strong> Your task has been assigned randomly by the system.</li>
-        <li><strong>Urgency:</strong> Please complete the task promptly to avoid any potential issues.</li>
-        <li><strong>Deadline:</strong> You have 72 hours to complete the task. If you require additional time, please contact customer service immediately.</li>
-    </ul>
-    <p>Thank you for your cooperation.</p>
-
+            <ul>
+                <li><strong>Task Assignment:</strong> Your task has been assigned randomly by the system.</li>
+                <li><strong>Urgency:</strong> Please complete the task promptly to avoid any potential issues.</li>
+                <li><strong>Deadline:</strong> You have 72 hours to complete the task. If you require additional time, please contact customer service immediately.</li>
+            </ul>
+            <p>Thank you for your cooperation.</p>
         </div>
     </div>
-
-    <script>
-<!--        function getPlatform() {-->
-<!--            const urlParams = new URLSearchParams(window.location.search);-->
-<!--            return urlParams.get('platform');-->
-<!--        }-->
-
-<!--        function updatePage() {-->
-<!--            const platform = getPlatform();-->
-<!--            const orderManagement = document.getElementById('orderManagement');-->
-<!--            const loadingAnimation = document.getElementById('loading-animation');-->
-<!--            const platformName = document.getElementById('platform-name');-->
-
-<!--            let color, bubblesColor, platformText;-->
-<!--            if (platform === 'amazon') {-->
-<!--                color = '#007bff';-->
-<!--                bubblesColor = 'rgba(108, 171, 241, 0.5)';-->
-<!--                platformText = 'Amazon';-->
-<!--            } else if (platform === 'alibaba') {-->
-<!--                color = '#ffc107';-->
-<!--                bubblesColor = 'rgba(237, 209, 126, 0.5)';-->
-<!--                platformText = 'Alibaba';-->
-<!--            } else if (platform === 'aliexpress') {-->
-<!--                color = '#dc3545';-->
-<!--                bubblesColor = 'rgba(221, 140, 149, 0.5)';-->
-<!--                platformText = 'AliExpress';-->
-<!--            }-->
-
-<!--            orderManagement.style.backgroundColor = color;-->
-<!--            platformName.innerText = platformText;-->
-
-<!--            setTimeout(() => {-->
-<!--                loadingAnimation.style.display = 'none';-->
-<!--                for (let i = 0; i < 10; i++) {-->
-<!--                    let bubble = document.createElement('div');-->
-<!--                    bubble.className = 'bubble';-->
-<!--                    bubble.style.backgroundColor = bubblesColor;-->
-<!--                    bubble.style.width = `${Math.random() * 40 + 10}px`;-->
-<!--                    bubble.style.height = bubble.style.width;-->
-<!--                    bubble.style.top = `${Math.random() * 100}%`;-->
-<!--                    bubble.style.left = `${Math.random() * 100}%`;-->
-<!--                    document.body.appendChild(bubble);-->
-<!--                }-->
-<!--            }, 2000);-->
-<!--        }-->
-
-<!--        window.onload = () => {-->
-<!--            document.getElementById('loading-animation').style.display = 'block';-->
-<!--            updatePage()-->
-<!--            -->
-<!--        };-->
-    </script>
 </body>
 </html>
-
