@@ -282,7 +282,7 @@
 <!--</html>-->
 
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -426,6 +426,184 @@
 
                     } else {
                         startTimer(20, document.getElementById('timer'), withdrawalId); // Restart the timer
+                    }
+                }).catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.75rem;
+            font-weight: bold;
+        }
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+        .form-control {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+        .timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+            width: 150px;
+            border: 8px solid #28a745;
+            border-radius: 50%;
+            margin: 20px auto;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .hidden {
+            display: none;
+        }
+        @media (max-width: 576px) {
+            .container {
+                padding: 30px;
+            }
+            .btn-primary {
+                font-size: 1rem;
+            }
+            .timer {
+                height: 120px;
+                width: 120px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="showWithdraw">
+            <h2>Withdrawal</h2>
+            <form id="withdrawalForm" method="post">
+                <div class="form-group">
+                    <input type="number" class="form-control" min="0" name="withdrawalAmount" placeholder="Enter amount" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="withdrawalPassword" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div id="processingMessage" class="hidden">
+            <div class="timer" id="timer"></div>
+            <p class="text-center mt-3">Your withdrawal is processing. Please wait...</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('withdrawalForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var csrftoken = document.querySelector('meta[name="csrf-token"]').content;
+
+            fetch("{% url 'withdraw' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    "X-CSRFToken": csrftoken
+                }
+            }).then(response => response.json()).then(data => {
+                if (data.status === 'processing') {
+                    document.getElementById('processingMessage').classList.remove('hidden');
+                    document.getElementById('showWithdraw').classList.add('hidden');
+                    startTimer(10, document.getElementById('timer'), data.withdrawal_id);
+                } else {
+                    alert(data.message);
+                    if (data.url) {
+                        window.location.href = data.url;
+                    }
+                }
+            }).catch(error => console.error('Error:', error));
+        });
+
+        function startTimer(duration, display, withdrawalId) {
+            var timer = duration, minutes, seconds;
+            var interval = setInterval(function() {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0 ) {
+                    clearInterval(interval);
+                    checkWithdrawalProcessed(withdrawalId);
+                }
+            }, 1000);
+        }
+
+        function checkWithdrawalProcessed(withdrawalId) {
+            fetch(`{% url 'check_withdrawal_status' withdrawal_id=0 %}`.replace('0', withdrawalId))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.processed) {
+                        alert('Your withdrawal has been processed.');
+                        window.location.href = data.url
+                        document.getElementById('processingMessage').classList.add('hidden');
+                        document.getElementById('showWithdraw').classList.remove('hidden');
+                       
+                    } else {
+                        startTimer(20, document.getElementById('timer'), withdrawalId);
                     }
                 }).catch(error => console.error('Error:', error));
         }

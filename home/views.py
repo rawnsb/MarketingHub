@@ -20,20 +20,21 @@ from .models import KYC,Withdraw,GapAmount
 @login_required
 def wallet_management(request):
     if request.method == 'POST':
-        # Create a new KYC instance from the posted data and files
-        new_kyc = KYC.objects.create(
-            user=request.user,
-            id_card_front=request.FILES['idCardFront'],
-            id_card_back=request.FILES['idCardBack'],
-            face_video=request.FILES['faceVideo'],
-            wallet_type=request.POST['walletType'],
-            wallet_address=request.POST['walletAddress']
-        )
-        new_kyc.save()
+        # Check if a KYC object already exists for the user
+        kyc_instance, created = KYC.objects.get_or_create(user=request.user)
+
+        # Update the existing KYC instance with the posted data and files
+        kyc_instance.id_card_front = request.FILES['idCardFront']
+        kyc_instance.id_card_back = request.FILES['idCardBack']
+        kyc_instance.face_video = request.FILES['faceVideo']
+        kyc_instance.wallet_type = request.POST['walletType']
+        kyc_instance.wallet_address = request.POST['walletAddress']
+        kyc_instance.save()
 
         # Optionally, redirect to a new URL after saving
-        messages.success(request, "Your KYC documents have been uploaded successfully.Wait for verification")
+        messages.success(request, "Your KYC documents have been uploaded successfully. Wait for verification.")
         return redirect('verification')
+
     return render(request, "home/wallet-management.html")
 
 @login_required
@@ -201,7 +202,7 @@ def withdraw(request):
 @login_required
 def check_withdrawal_status(request, withdrawal_id):
         withdrawal = Withdraw.objects.get(uid=withdrawal_id, user=request.user)
-        return JsonResponse({'processed': withdrawal.processed})
+        return JsonResponse({'processed': withdrawal.processed,'url': reverse('withdraw_records'),})
 
 @login_required
 def withdrawal_records(request):

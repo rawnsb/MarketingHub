@@ -1,4 +1,4 @@
-
+<!-- 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -170,4 +170,227 @@
         }
     </script>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 20px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            color: #153c63;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.75rem;
+            font-weight: bold;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: bold;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s ease;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .wallet-address {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .wallet-address input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        .wallet-address input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+        }
+
+        .wallet-address button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .wallet-address button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 30px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn-primary {
+                font-size: 1rem;
+            }
+
+            .wallet-address button {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Deposit</h2>
+        <form id="depositForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="depositMethod">Select Deposit Method</label>
+                <select class="form-control" id="depositMethod" required>
+                    <option value="" >Select</option>
+                    <option value="usdt" selected>USDT</option>
+                    <option value="solana">Solana</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="depositAmount">Amount</label>
+                <input type="number" class="form-control" min="0" id="depositAmount" placeholder="Enter amount" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="generateWalletAddress()">Generate Wallet Address</button>
+        </form>
+        <div class="wallet-address hidden" id="walletAddressSection">
+            <input type="text" id="walletAddress" readonly>
+            <button onclick="copyToClipboard()">Copy</button>
+        </div>
+    </div>
+
+    <script>
+        function generateWalletAddress() {
+            const depositMethod = document.getElementById('depositMethod').value;
+            const depositAmount = document.getElementById('depositAmount').value;
+
+            if (!depositMethod || !depositAmount) {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            // Example: Use fetch to send data and get wallet address
+            fetch("{% url 'deposite' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    method: depositMethod,
+                    amount: depositAmount
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('walletAddress').value = data.walletAddress;
+                document.getElementById('walletAddressSection').classList.remove('hidden');
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function copyToClipboard() {
+            const walletAddress = document.getElementById('walletAddress');
+            walletAddress.select();
+            document.execCommand('copy');
+            alert('Wallet address copied to clipboard.');
+        }
+    </script>
+</body>
+
 </html>

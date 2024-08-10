@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -164,11 +164,11 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
-</html>
+</html> -->
 
 
 
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -306,13 +306,16 @@
 
     <div class="row action-buttons">
         <div class="col-6 col-md-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit</button>
+            <!-- <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit</button> -->
+            <a class="btn btn-success" href="{% url 'deposite' %}" >Deposit</a>
         </div>
         <div class="col-6 col-md-3">
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#withdrawalModal">Withdrawal</button>
-        </div>
+            <!-- <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#withdrawalModal">Withdrawal</button> -->
+            <a class="btn btn-danger" href="{% url 'withdraw' %}">Withdrawal</a>
+          </div>
         <div class="col-6 col-md-3">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal">Wallet Management</button>
+            <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal">Wallet Management</button> -->
+            <a class="btn btn-primary" href="{% url 'wallet' %}" >Wallet Management</a>
         </div>
         <div class="col-6 col-md-3">
             <button class="btn btn-warning">Invite Friends</button>
@@ -340,7 +343,7 @@
 </div>
 
 <!-- Deposit Modal -->
-<div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -371,10 +374,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Withdrawal Modal -->
-<div class="modal fade" id="withdrawalModal" tabindex="-1" aria-labelledby="withdrawalModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="withdrawalModal" tabindex="-1" aria-labelledby="withdrawalModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -397,10 +400,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Wallet Management Modal -->
-<div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -417,7 +420,7 @@
                         <label for="network" class="form-label">Select Network</label>
                         <select class="form-select" id="network" required>
                             <option value="trc20">TRC20</option>
-                            <!-- Add more networks as needed -->
+                            
                         </select>
                     </div>
                     <div class="mb-3">
@@ -429,49 +432,49 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
-<div class="verified-badge d-none">
+<!-- <div class="verified-badge d-none">
     <div class="alert alert-success text-center" role="alert">
         Verified
     </div>
-</div>
+</div> -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.getElementById('depositForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Show wallet address after form submission
-        document.getElementById('walletAddressContainer').style.display = 'block';
-    });
+    // document.getElementById('depositForm').addEventListener('submit', function(event) {
+    //     event.preventDefault();
+    //     // Show wallet address after form submission
+    //     document.getElementById('walletAddressContainer').style.display = 'block';
+    // });
 
-    document.getElementById('withdrawForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Simulate verification
-        setTimeout(() => {
-            document.querySelector('.verified-badge').classList.remove('d-none');
-            setTimeout(() => {
-                document.querySelector('.verified-badge').classList.add('d-none');
-            }, 3000);
-        }, 2000);
-    });
+    // document.getElementById('withdrawForm').addEventListener('submit', function(event) {
+    //     event.preventDefault();
+    //     // Simulate verification
+    //     setTimeout(() => {
+    //         document.querySelector('.verified-badge').classList.remove('d-none');
+    //         setTimeout(() => {
+    //             document.querySelector('.verified-badge').classList.add('d-none');
+    //         }, 3000);
+    //     }, 2000);
+    // });
 
-    document.getElementById('walletForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Simulate wallet management submission
-        setTimeout(() => {
-            alert('Wallet details submitted!');
-        }, 5000);
-    });
+    // document.getElementById('walletForm').addEventListener('submit', function(event) {
+    //     event.preventDefault();
+    //     // Simulate wallet management submission
+    //     setTimeout(() => {
+    //         alert('Wallet details submitted!');
+    //     }, 5000);
+    // });
 
-    function copyToClipboard() {
-            const walletAddress = document.getElementById('walletAddress');
-            walletAddress.select();
-            document.execCommand('copy');
-            alert('Wallet address copied to clipboard.');
-        }
+    // function copyToClipboard() {
+    //         const walletAddress = document.getElementById('walletAddress');
+    //         walletAddress.select();
+    //         document.execCommand('copy');
+    //         alert('Wallet address copied to clipboard.');
+    //     }
 </script>
 
 </body>
 </html>
- -->
+
