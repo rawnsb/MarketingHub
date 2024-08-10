@@ -450,17 +450,15 @@
         </div>
         <div class="balance-card" style="background-color: #66cdaa;">
             <h4>Amount Under Review</h4>
-            {% with latest_withdraw=request.user.withdraw_set.all|dictsort:"-created_at"|first %}
-        {% if latest_withdraw %}
-            {% if latest_withdraw.processed %}
-                <h3 class="mb-0">0.00 USDT</h3>
-            {% else %}
-                <p class="balance-amount">{{ latest_withdraw.amount }} <span class="balance-currency">USDT</span></p>
-            {% endif %}
-        {% else %}
-        <p class="balance-amount">0.00 <span class="balance-currency">USDT</span></p>
-        {% endif %}
-    {% endwith %}
+            <p class="balance-amount">
+                {% if withdrawal %}
+                    {{ withdrawal.amount }} <span class="balance-currency">USDT</span>
+                {% else %}
+                    0.00 <span class="balance-currency">USDT</span>
+                {% endif %}
+            </p>
+            
+        
             <!-- <p class="balance-amount">0.00 <span class="balance-currency">USDT</span></p> -->
         </div>
     </div>

@@ -11,7 +11,8 @@ def home(request):
     return render(request,'home/index.html')
 @login_required
 def mine(request):
-    return render(request,"profile/mine.html")
+    withdrawal = Withdraw.objects.filter(processed=False).first()
+    return render(request,"profile/mine.html",{'withdrawal': withdrawal})
 # Create your views here.
 
 
