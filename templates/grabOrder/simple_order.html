@@ -1,4 +1,4 @@
-
+<!-- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,6 +96,7 @@
             padding: 20px;
             border: 1px solid #888;
             width: 50%;
+            height: 40%;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             border-radius: 10px;
             text-align: center;
@@ -166,20 +167,10 @@
     }
 }
 
-<!--       window.onload = function() {-->
-<!--            const noOrders = "{{ no_orders }}";-->
-<!--            if (noOrders === "True") {-->
-<!--                alert("Contact customer service to get orders");-->
-<!--                window.location.href = "{% url 'order_management' %}";-->
-<!--            }-->
-<!--        }-->
-
 
         window.onclick = function(event) {
             var modal = document.getElementById('modal');
             if (event.target == modal) {
-<!--                modal.style.display = "none";-->
-<!--                document.getElementById('orderManagement').style.filter = 'none';-->
                 window.location.href = "{% url 'order_management' %}";
             }
         }
@@ -227,15 +218,303 @@
             <button class="submit-order" type="submit">Submit Order</button>
         </form>
         {% else %}
+        {% if request.user.ordercount.no_of_submitted_order > 19 %}
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <a href="{% url 'order_management' %}" class="close">&times;</a>
+                <p id="modal-message" class="modal-message text-success">Congratulation ! You have completed 20 orders,Now you can withdraw!</p>
+            </div>
+        {% else %}
               <div class="modal" id="modal">
         <div class="modal-content">
             <a href="{% url 'order_management' %}" class="close">&times;</a>
             <p id="modal-message" class="modal-message">No orders available at the moment. Please contact customer service for more information. Thank you!</p>
         </div>
     </div>
+         {% endif %}
         {% endif %}
 
     </div>
 </body>
 </html>
+ -->
 
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Submission</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://source.unsplash.com/1600x900/?nature,water') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 10px;
+        }
+        .order-card {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .product-item {
+            background-color: #f0f8ff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+        }
+        .product-image {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .order-summary {
+            background-color: #ff9a9e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 1em;
+        }
+        .submit-order {
+            width: 100%;
+            background-color: #008CBA;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .submit-order:hover {
+            background-color: #005f8a;
+        }
+        .alert {
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+            display: none;
+            font-size: 1em;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .modal {
+            display: flex;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .modal-message {
+            color: #dc3545;
+            font-size: 1.2rem;
+            font-weight: bold;
+            animation: blink 1.5s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @media (max-width: 576px) {
+            .order-card {
+                padding: 15px;
+                max-width: 300px;
+            }
+            h1 {
+                font-size: 1.2em;
+                padding: 8px;
+            }
+            .product-item {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+            .product-image {
+                width: 50px;
+                height: 50px;
+            }
+            .order-summary {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            .submit-order {
+                padding: 10px;
+                font-size: 1em;
+            }
+            .alert {
+                font-size: 0.9em;
+            }
+            .modal-content {
+                width: 90%;
+                max-width: 320px;
+            }
+            .modal-message {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <script>
+        async function submitOrder(event) {
+            event.preventDefault();
+            const orderIds = [];
+            {% if combined_lucky_orders %}
+                {% for order in combined_lucky_orders %}
+                    orderIds.push("{{ order.id }}");
+                {% endfor %}
+            {% elif simple_order %}
+                orderIds.push("{{ simple_order.id }}");
+            {% endif %}
+
+            const response = await fetch("{% url 'grab_order' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    order_ids: orderIds.join(','),
+                    total_amount: {{ total_amount }},
+                })
+            });
+
+            const result = await response.json();
+            const alertBox = document.getElementById('alertBox');
+            alertBox.style.display = 'block';
+
+            if (result.success) {
+                alertBox.className = 'alert alert-success';
+                alertBox.innerHTML = result.message;
+                setTimeout(() => {
+                    window.location.href = "{% url 'order_management' %}";
+                }, 1500);
+
+            } else {
+                alertBox.className = 'alert alert-danger';
+                alertBox.innerHTML = result.message;
+            }
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById('modal');
+            if (event.target == modal) {
+                window.location.href = "{% url 'order_management' %}";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="order-card">
+        {% if combined_lucky_orders %}
+            <h1>Combined Lucky Orders</h1>
+            <div id="productsContainer">
+                {% for order in combined_lucky_orders %}
+                    <div class="product-item">
+                        <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">
+                        <div><strong>{{ order.product_name }}</strong> - ${{ order.product_price }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="order-summary">
+                <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
+                <p><strong>Commission:</strong> ${{ commission }}</p>
+                <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
+            </div>
+            <br>
+            <div id="alertBox" class="alert"></div>
+            <form onsubmit="submitOrder(event)">
+                <button class="submit-order" type="submit">Submit Order</button>
+            </form>
+        {% elif simple_order %}
+            <h1>Order ID: {{ simple_order.order_id }}</h1>
+            <div id="productsContainer">
+                <div class="product-item">
+                    <img src="{{ simple_order.product_img.url }}" class="product-image" alt="{{ simple_order.product_name }}">
+                    <div><strong>{{ simple_order.product_name }}</strong> - ${{ simple_order.product_price }}</div>
+                </div>
+            </div>
+            <div class="order-summary">
+                <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
+                <p><strong>Commission:</strong> ${{ commission }}</p>
+                <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
+            </div>
+            <br>
+            <div id="alertBox" class="alert"></div>
+            <form onsubmit="submitOrder(event)">
+                <button class="submit-order" type="submit">Submit Order</button>
+            </form>
+        {% else %}
+            {% if request.user.ordercount.no_of_submitted_order > 19 %}
+                <div class="modal" id="modal">
+                    <div class="modal-content">
+                        <a href="{% url 'order_management' %}" class="close">&times;</a>
+                        <p id="modal-message" class="modal-message text-success">Congratulations! You have completed 20 orders. Now you can withdraw!</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="modal" id="modal">
+                    <div class="modal-content">
+                        <a href="{% url 'order_management' %}" class="close">&times;</a>
+                        <p id="modal-message" class="modal-message">No orders available at the moment. Please contact customer service for more information. Thank you!</p>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
