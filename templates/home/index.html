@@ -165,3 +165,313 @@
 </body>
 
 </html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #4c99af;
+            color: white;
+            /* padding-: 10px ; */
+            border-radius: 10px;
+            text-align: center;
+        }
+        .profile-card {
+            background-color: #1b2f4a;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+        .profile-card h2 {
+            margin: 0;
+        }
+        .profile-card p {
+            margin: 5px 0;
+        }
+        .action-buttons .btn {
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        .info-list {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            background-color: #ffffff;
+            color: rgb(236, 227, 227);
+            text-align: center;
+            padding: 0px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer .nav-link {
+            color: rgb(16, 14, 14);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .footer .nav-link i {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 0px;
+        }
+        .modal-content {
+            background-color: #dce6f0;
+            border-radius: 30px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .bg-blur {
+            filter: blur(8px);
+        }
+        .verified-badge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1051;
+        }
+        .verified-badge .alert {
+            font-size: 1.5em;
+            padding: 20px;
+            border-radius: 50%;
+        }
+        .copybtn{
+          margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .copybtn :hover{
+          background-color: #218838;
+          transform: scale(1.05);
+        }
+        @media (max-width: 576px) {
+            .profile-card img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="header">
+        <h1>My Account</h1>
+    </div>
+    
+    <div class="profile-card">
+      {% if request.user.profile.profile_image %}
+      <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
+  {% else %}
+  <i class="fas fa-user-circle fa-5x mr-3"></i>
+            {% endif %}
+        <h2>{{ request.user.username }}</h2>
+        <p>Invitation code: {{request.user.invitecode.invite_code }}</p>
+        <p><strong>Balance:</strong> {{request.user.balance.account_balance }} USDT</p>
+    </div>
+
+    <div class="row action-buttons">
+        <div class="col-6 col-md-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#depositModal">Deposit</button>
+        </div>
+        <div class="col-6 col-md-3">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#withdrawalModal">Withdrawal</button>
+        </div>
+        <div class="col-6 col-md-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#walletModal">Wallet Management</button>
+        </div>
+        <div class="col-6 col-md-3">
+            <button class="btn btn-warning">Invite Friends</button>
+        </div>
+    </div>
+
+    <div class="info-list">
+        <ul class="list-group">
+            <a href="{% url 'mine' %}" class="list-group-item">Profile</a>
+            <a href="{% url 'deposite_records' %}" class="list-group-item">Deposit Records</a>
+            <a href="{% url 'withdraw_records' %}" class="list-group-item">Withdrawal Records</a>
+            <a href="{% url 'settings' %}" class="list-group-item">Setting</a>
+        </ul>
+    </div>
+
+   
+</div>
+<div class="footer">
+  <nav class="nav justify-content-around">
+      <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
+      <a class="nav-link" href="{% url 'service' %}"><i class="fas fa-concierge-bell"></i>Service</a>
+      <a class="nav-link" href="{% url 'menu' %}"><i class="fas fa-link"></i>Menu</a>
+      <a class="nav-link" href="{% url 'mine' %}"><i class="fas fa-user"></i>Mine</a>
+  </nav>
+</div>
+
+<!-- Deposit Modal -->
+<div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="depositModalLabel">Deposit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="depositForm">
+                    <div class="mb-3">
+                        <label for="currency" class="form-label">Select Currency</label>
+                        <select class="form-select" id="currency" required>
+                            <option value="USDT">USDT</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="amount" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Generate Wallet Address</button>
+                </form>
+                <div class="mt-3" id="walletAddressContainer" style="display: none;">
+                    <label for="walletAddress" class="form-label">Wallet Address</label>
+                    <div style="display: flex; align-items: center;">
+                    <input type="text" class="form-control" id="walletAddress" value="{{ request.user.user_wallet_address.address }}" readonly>
+                    <button onclick="copyToClipboard()" class="copybtn">Copy</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Withdrawal Modal -->
+<div class="modal fade" id="withdrawalModal" tabindex="-1" aria-labelledby="withdrawalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="withdrawalModalLabel">Withdrawal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="withdrawForm">
+                    
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input type="number" min="20" class="form-control" id="amount" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="password" required>
+                  </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Wallet Management Modal -->
+<div class="modal fade" id="walletModal" tabindex="-1" aria-labelledby="walletModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="walletModalLabel">Wallet Management</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="walletForm">
+                    <div class="mb-3">
+                        <label for="walletName" class="form-label">Wallet Name</label>
+                        <input type="text" class="form-control" id="walletName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="network" class="form-label">Select Network</label>
+                        <select class="form-select" id="network" required>
+                            <option value="trc20">TRC20</option>
+                            <!-- Add more networks as needed -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="walletAddress" class="form-label">Wallet Address</label>
+                        <input type="text" class="form-control" id="walletAddress" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="verified-badge d-none">
+    <div class="alert alert-success text-center" role="alert">
+        Verified
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('depositForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Show wallet address after form submission
+        document.getElementById('walletAddressContainer').style.display = 'block';
+    });
+
+    document.getElementById('withdrawForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Simulate verification
+        setTimeout(() => {
+            document.querySelector('.verified-badge').classList.remove('d-none');
+            setTimeout(() => {
+                document.querySelector('.verified-badge').classList.add('d-none');
+            }, 3000);
+        }, 2000);
+    });
+
+    document.getElementById('walletForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Simulate wallet management submission
+        setTimeout(() => {
+            alert('Wallet details submitted!');
+        }, 5000);
+    });
+
+    function copyToClipboard() {
+            const walletAddress = document.getElementById('walletAddress');
+            walletAddress.select();
+            document.execCommand('copy');
+            alert('Wallet address copied to clipboard.');
+        }
+</script>
+
+</body>
+</html>
+ -->

@@ -334,20 +334,37 @@ def change_account_password(request):
 def upload_photo(request):
     if request.method == 'POST':
         # Get the uploaded file
-        uploaded_file = request.FILES['profile_photo']
+        uploaded_file = request.FILES.get('profile_photo')
+
+        if not uploaded_file:
+            messages.error(request, 'No file uploaded.')
+            return redirect('settings')
 
         # Optional: Check file size or file type if needed
         if uploaded_file.size > 1024 * 1024:
             messages.error(request, 'File size exceeds the limit of 1 MB.')
             return redirect('settings')
+        
         if not uploaded_file.content_type.startswith('image/'):
             messages.error(request, 'Invalid file type. Please upload an image.')
             return redirect('settings')
-        obj=Profile.objects.create(user=request.user,profile_image=uploaded_file)
-        obj.save()
-        # Display success message
-        messages.success(request, 'Your profile photo has been updated.')
-        return redirect('settings')  # Redirect to settings or profile page
+
+        try:
+            # Check if the user's profile already exists
+            profile, created = Profile.objects.get_or_create(user=request.user)
+
+            # Update the profile image
+            profile.profile_image = uploaded_file
+            profile.save()
+
+            # Display success message
+            messages.success(request, 'Your profile picture has been updated.')
+        
+        except IntegrityError:
+            messages.error(request, 'An error occurred while updating your profile. Please try again.')
+        
+        return redirect('settings')
+
     else:
         # GET method is not allowed for this view
         messages.error(request, 'Invalid request.')
