@@ -245,7 +245,7 @@
 </body>
 </html> -->
 
-
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -431,7 +431,7 @@
                       {% endif %}
         <div>
             <h2>{{ request.user.username }}</h2>
-            <p>ID: {{request.user.email }}</p>
+            <p>ID: {{request.user.email|mask_email }}</p>
         </div>
     </div>
 
