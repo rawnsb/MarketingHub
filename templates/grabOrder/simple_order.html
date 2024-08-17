@@ -243,7 +243,7 @@
                 <button class="submit-order" type="submit">Submit Order</button>
             </form>
         {% elif simple_order %}
-            <h1>Order ID: {{ simple_order.id }}</h1>
+        <h1>Order ID: {{ simple_order.id }}</h1>
             <div id="productsContainer">
                 <div class="product-item">
                     <img src="{{ simple_order.original_order.product.image.url }}" class="product-image" alt="{{ simple_order.original_order.product.name }}">

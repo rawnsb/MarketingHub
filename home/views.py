@@ -290,13 +290,13 @@ def grab_order(request):
         
         commission = total_amount * commission_rate
         commission = round(commission, 2)
-        expected_total = total_amount + commission
+        expected_total = round(total_amount + commission,2)
         expected_total = round(expected_total, 2)
     elif simple_order and simple_order.original_order and simple_order.original_order.product:
         total_amount = simple_order.original_order.product.price
         commission_rate = decimal.Decimal(simple_order.original_order.product.commission_rate) / 100
-        commission = total_amount * commission_rate
-        expected_total = total_amount + commission
+        commission = round(total_amount * commission_rate,2)
+        expected_total = round(total_amount + commission,2)
     else:
         total_amount = 0
         commission_rate = 0

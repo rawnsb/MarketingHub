@@ -125,6 +125,7 @@ class CustomerBatch(models.Model):
         return f'Custom Batch for {self.user.username} - {self.custom_batch_name}'
 
 class CustomerOrder(models.Model):
+    id = models.BigIntegerField(primary_key=True, editable=False)
     customer_batch = models.ForeignKey(CustomerBatch, related_name='customer_orders', on_delete=models.CASCADE)
     original_order = models.ForeignKey(Order, related_name='customer_copies', on_delete=models.CASCADE)
     custom_product = models.ForeignKey(Product, related_name='custom_orders', on_delete=models.CASCADE, null=True, blank=True)
@@ -135,3 +136,12 @@ class CustomerOrder(models.Model):
 
     def __str__(self):
         return f'Custom Order for {self.customer_batch.user.username}'
+    
+    def save(self, *args, **kwargs):
+        if not self.id:
+            # Generate a 7-digit or 9-digit random ID
+            self.id = random.randint(10000, 9999999)  # Adjust the range as needed
+            # Ensure the ID is unique
+            while CustomerOrder.objects.filter(id=self.id).exists():
+                self.id = random.randint(1000000, 999999999)
+        super().save(*args, **kwargs)
