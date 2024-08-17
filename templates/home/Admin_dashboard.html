@@ -138,8 +138,8 @@
             + Add Employee
         </button>
 
-        <a class="btn btn-primary my-3" href="{% url 'list_and_create_orders' %}">Create Simple Orders</a>
-<!--  <a class="btn btn-primary my-3" href="{% url 'list_and_create_orders' %}">Create Combo Orders</a>-->
+        <a class="btn btn-primary my-3 text-capitalize" href="{% url 'delete_unused_products' %}">Delete Unused Products</a>
+ <a class="btn btn-success my-3" href="{% url 'orders_panel' %}">Order Panel</a>
         {% include "Base/alert.html" %}
         <div class="accordion" id="employeesAccordion">
             {% for data in employees_data %}
@@ -160,7 +160,8 @@
                                         <th>Deposited Amount</th>
                                         <th>Withdrawn Amount</th>
                                         <th>Status</th>
-                                        <th>IP Address</th>
+                                        <th>SignUp Address</th>
+                                        <th>Active Address</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -179,6 +180,7 @@
                                          {% endif %}
                                           </td>
                                             <td>{{ customer.user_ip.ip_address }}</td>
+                                            <td class="text-danger">{{ customer.user_ip.login_ip }}</td>
      <td>
     <div class="row">
         <div class="col-4">
@@ -193,7 +195,8 @@
     </div>
     <div class="row mt-2">
         <div class="col-4">
-            <a href="{% url 'order_grant' customer.id %}" class="btn btn-secondary action-button w-100 text-truncate">Order Granted</a>
+            
+            <a href="{% url 'grant_batches_to_customer' customer.id %}" class="btn btn-secondary action-button w-100 text-truncate">Grant Batch</a>
         </div>
         <div class="col-4">
             <a href="{% url 'verify_kyc' customer.id %}" class="btn btn-dark action-button w-100 text-truncate">KYC</a>

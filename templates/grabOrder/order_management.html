@@ -194,5 +194,60 @@
             <p>Thank you for your cooperation.</p>
         </div>
     </div>
+
+    <!-- Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if combined_lucky_orders %}
+                    <h1>Combined Lucky Orders</h1>
+                    <div id="productsContainer">
+                        {% for order in combined_lucky_orders %}
+                            <div class="product-item">
+                                <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">
+                                <div><strong>{{ order.product_name }}</strong> - ${{ order.product_price }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="order-summary">
+                        <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
+                        <p><strong>Commission:</strong> ${{ commission }}</p>
+                        <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
+                    </div>
+                {% elif simple_order %}
+                    <h1>Order ID: {{ simple_order.order_id }}</h1>
+                    <div id="productsContainer">
+                        <div class="product-item">
+                            <img src="{{ simple_order.product_img.url }}" class="product-image" alt="{{ simple_order.product_name }}">
+                            <div><strong>{{ simple_order.product_name }}</strong> - ${{ simple_order.product_price }}</div>
+                        </div>
+                    </div>
+                    <div class="order-summary">
+                        <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
+                        <p><strong>Commission:</strong> ${{ commission }}</p>
+                        <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
+                    </div>
+                {% else %}
+                    <p>No orders available at the moment.</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <form onsubmit="submitOrder(event)">
+                    <button type="submit" class="btn btn-submit-order">Submit Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>
+

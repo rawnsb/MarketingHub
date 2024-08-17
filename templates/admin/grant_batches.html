@@ -1,0 +1,591 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Batches to Customers</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f9;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .btn {
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            box-shadow: 0px 4px 8px rgba(0, 91, 187, 0.5);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+            box-shadow: 0px 4px 8px rgba(33, 136, 56, 0.5);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+            box-shadow: 0px 4px 8px rgba(90, 98, 104, 0.5);
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.25);
+        }
+
+        .batch-item {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .batch-item:hover {
+            background-color: #d6d8db;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item img {
+            max-width: 60px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header,
+        .modal-footer {
+            border: none;
+        }
+
+        .modal-title {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .batch-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .batch-item button {
+                margin-top: 10px;
+            }
+
+            .order-item img {
+                max-width: 40px;
+            }
+
+            .form-group label {
+                font-size: 14px;
+            }
+
+            .form-control {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center"><strong>Grant Batches to Customers</strong></h2>
+        <a class="btn btn-primary py-3 my-3 text-capitalize" href="{% url 'Admin_dashboard' %}">Back to Admin dashboard</a>
+<!-- //Include messages for success/failure  -->
+{% include "Base/alert.html" %}
+        <!-- // Batch Display Section  -->
+        <div id="batchListSection">
+            <h4>Available Batches</h4>
+            <div id="batchList">
+                {% for batch in batches %}
+                <div class="batch-item" data-batch-id="{{ batch.id }}">
+                    <span class="text-capitalize">{{ batch.name }}</span>
+                    <div>
+                        <button class="btn btn-secondary btn-sm ml-2 view-orders-btn">View Orders</button>
+                        <a href="{% url 'grant_batch_to_customer' batch.id customer.id  %}" class="btn btn-success btn-sm ml-2 grant-batch-btn">Grant Batch</a>
+                        <a  href="{% url 'remove_granted_batch' batch.id customer.id %}" class="btn btn-danger btn-sm ml-2 remove-batch-btn">Remove Granted Batch</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- // Orders Display Section  -->
+        <div id="ordersDisplaySection" class="hidden mt-4">
+            <h3 class="font-italic">Orders in Batch: <strong class="text-capitalize" style="color: #007bff;" id="ordersBatchName"></strong></h3>
+            <div id="ordersList" class="order-list mb-4"></div>
+        </div>
+
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const batchListSection = document.getElementById('batchListSection');
+        const ordersDisplaySection = document.getElementById('ordersDisplaySection');
+        const ordersBatchName = document.getElementById('ordersBatchName');
+        const ordersList = document.getElementById('ordersList');
+
+        //Show orders when a batch is clicked
+        batchListSection.addEventListener('click', (event) => {
+            const batchItem = event.target.closest('.batch-item');
+            if (batchItem && event.target.classList.contains('view-orders-btn')) {
+                const batchId = batchItem.getAttribute('data-batch-id');
+                const batchName = batchItem.querySelector('span').textContent.trim();
+                ordersBatchName.textContent = batchName;
+                fetchOrdersForBatch(batchId);
+                ordersDisplaySection.classList.remove('hidden');
+            } else if (batchItem && event.target.classList.contains('grant-batch-btn')) {
+                const batchId = batchItem.getAttribute('data-batch-id');
+                grantBatchToCustomer(batchId);
+            }
+        });
+
+        //Fetch orders for the selected batch
+        function fetchOrdersForBatch(batchId) {
+            const fetchUrl = `{% url 'fetch_custom_orders' 0 customer.id %}`.replace('0', batchId);
+            fetch(fetchUrl)
+                .then(response => response.json())
+                .then(data => {
+                    ordersList.innerHTML = '';
+                    data.orders.forEach(order => {
+                        const orderItem = document.createElement('div');
+                        orderItem.className = 'order-item';
+                       ur = `{% url 'update_customer_order' 0 customer.id  %}`.replace('0',order.id)
+                        orderItem.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div>
+            <span><strong>Order ID:</strong> ${order.id} - <strong>Type:</strong> ${order.order_type} - <strong>Total:</strong> $${order.total_amount}</span>
+            <div style="margin-top: 10px;">
+                ${order.products.map(product => `<img src="${product.image_url}" alt="${product.name}" style="max-width: 60px; margin-right: 10px;">`).join('')}
+            </div>
+        </div>
+        <a href="${ur}" class="btn btn-primary btn-sm ml-2">Update Order</a>
+    </div>
+`;
+                        ordersList.appendChild(orderItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching orders:', error));
+        }
+
+        
+        function grantBatchToCustomer(batchId) {
+            
+            // Implement the logic to grant the batch to a customer
+        }
+    </script>
+</body>
+
+</html> 
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Batches to Customers</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f9;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .btn {
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            box-shadow: 0px 4px 8px rgba(0, 91, 187, 0.5);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+            box-shadow: 0px 4px 8px rgba(33, 136, 56, 0.5);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+            box-shadow: 0px 4px 8px rgba(90, 98, 104, 0.5);
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.25);
+        }
+
+        .batch-item {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .batch-item:hover {
+            background-color: #d6d8db;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+        }
+
+        .order-item img {
+            max-width: 60px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header,
+        .modal-footer {
+            border: none;
+        }
+
+        .modal-title {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .batch-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .batch-item button {
+                margin-top: 10px;
+            }
+
+            .order-item img {
+                max-width: 40px;
+            }
+
+            .form-group label {
+                font-size: 14px;
+            }
+
+            .form-control {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center"><strong>Grant Batches to Customers</strong></h2>
+        <a class="btn btn-primary py-3 my-3 text-capitalize" href="{% url 'Admin_dashboard' %}">Back to Admin dashboard</a>
+        //Include messages for success/failure
+        {% include "Base/alert.html" %}
+        //Batch Display Section
+        <div id="batchListSection">
+            <h4>Available Batches</h4>
+            <div id="batchList">
+                {% for batch in batches %}
+                <div class="batch-item" data-batch-id="{{ batch.id }}">
+                    <span class="text-capitalize">{{ batch.name }}</span>
+                    <div>
+                        <button class="btn btn-secondary btn-sm ml-2 view-orders-btn">View Orders</button>
+                        <a href="{% url 'grant_batch_to_customer' batch.id customer.id  %}" class="btn btn-success btn-sm ml-2 grant-batch-btn">Grant Batch</a>
+                        <a href="{% url 'remove_granted_batch' batch.id customer.id %}" class="btn btn-danger btn-sm ml-2 remove-batch-btn">Remove Granted Batch</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        // Orders Display Section 
+        <div id="ordersDisplaySection" class="hidden mt-4">
+            <h3 class="font-italic">Orders in Batch: <strong class="text-capitalize" style="color: #007bff;" id="ordersBatchName"></strong></h3>
+            <div id="ordersList" class="order-list mb-4"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const batchListSection = document.getElementById('batchListSection');
+        const ordersDisplaySection = document.getElementById('ordersDisplaySection');
+        const ordersBatchName = document.getElementById('ordersBatchName');
+        const ordersList = document.getElementById('ordersList');
+
+        // Show orders when a batch is clicked
+        batchListSection.addEventListener('click', (event) => {
+            const batchItem = event.target.closest('.batch-item');
+            if (batchItem && event.target.classList.contains('view-orders-btn')) {
+                const batchId = batchItem.getAttribute('data-batch-id');
+                const batchName = batchItem.querySelector('span').textContent.trim();
+                ordersBatchName.textContent = batchName;
+                fetchOrdersForBatch(batchId);
+                ordersDisplaySection.classList.remove('hidden');
+            }
+        });
+
+        // Fetch orders for the selected batch
+        function fetchOrdersForBatch(batchId) {
+            const fetchUrl = `{% url 'fetch_custom_orders' 0 customer.id %}`.replace('0', batchId);
+            fetch(fetchUrl)
+                .then(response => response.json())
+                .then(data => {
+                    ordersList.innerHTML = '';
+                    data.orders.forEach(order => {
+                        const orderItem = document.createElement('div');
+                        orderItem.className = 'order-item';
+                        orderItem.innerHTML = `
+                            <form id="update-order-${order.id}">
+                                <div class="form-group">
+                                    <label for="orderId-${order.id}">Order ID:</label>
+                                    <input type="text" class="form-control" id="orderId-${order.id}" value="${order.id}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="orderType-${order.id}">Order Type:</label>
+                                    <input type="text" class="form-control" id="orderType-${order.id}" value="${order.order_type}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="totalAmount-${order.id}">Total Amount:</label>
+                                    <input type="text" class="form-control" id="totalAmount-${order.id}" value="${order.total_amount}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productName-${order.id}">Product Name:</label>
+                                    <input type="text" class="form-control" id="productName-${order.id}" value="${order.products.length > 0 ? order.products[0].name : ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice-${order.id}">Product Price:</label>
+                                    <input type="text" class="form-control" id="productPrice-${order.id}" value="${order.products.length > 0 ? order.products[0].price : ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productCommission-${order.id}">Commission Rate:</label>
+                                    <input type="text" class="form-control" id="productCommission-${order.id}" value="${order.products.length > 0 ? order.products[0].commission_rate : ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Product Image:</label>
+                                    <div>
+                                        <img src="${order.products.length > 0 ? order.products[0].image_url : ''}" alt="${order.products.length > 0 ? order.products[0].name : ''}" style="max-width: 100px;">
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary update-order-btn" data-order-id="${order.id}">Update Order</button>
+                            </form>
+                        `;
+                        ordersList.appendChild(orderItem);
+                    });
+
+                    // Add event listeners to update buttons
+                    document.querySelectorAll('.update-order-btn').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const orderId = button.getAttribute('data-order-id');
+                            updateOrder(orderId);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching orders:', error));
+        }
+
+        // Function to update order details
+        function updateOrder(orderId) {
+            const form = document.getElementById(`update-order-${orderId}`);
+            const formData = new FormData(form);
+
+            fetch(`/update_order/${orderId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Order updated successfully!');
+                    } else {
+                        alert('Failed to update order.');
+                    }
+                })
+                .catch(error => console.error('Error updating order:', error));
+        }
+    </script>
+</body>
+
+</html> -->

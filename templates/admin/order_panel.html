@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management Panel</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f9;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #218838;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+
+        .order-item {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item img {
+            max-width: 60px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .order-summary {
+            background-color: #f8d7da;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header, .modal-footer {
+            border: none;
+        }
+
+        .modal-title {
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="text-center">
+           <strong> Order Management Panel </strong></h2>
+
+        <!-- Batch Creation Section -->
+        <!-- <div id="createBatchSection" {% if batch %}class="hidden"{% endif %}>
+            <h4>Create Batch</h4>
+            <form id="createBatchForm" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="batch_name">Batch Name:</label>
+                    <input type="text" name="batch_name" class="form-control" id="batch_name" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-3">Create Batch</button>
+            </form>
+        </div> -->
+
+        <!-- Buttons to create Simple and Lucky Orders -->
+        <div id="orderButtons" class="text-center mb-4 {% if not batch %}hidden{% endif %}">
+            <h4> <strong> Batch:</strong> <span class="text-capitalize" id="currentBatchName">{{ batch.name }}</span></h4>
+            <button id="createSimpleOrderBtn" class="btn btn-primary btn-lg mx-2">Create Simple Order</button>
+            <button id="createLuckyOrderBtn" class="btn btn-success btn-lg mx-2">Create Lucky Order</button>
+        </div>
+
+        <!-- Simple Order Form -->
+        <div id="simpleOrderForm" class="order-form hidden">
+            <h4>Create Simple Order</h4>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="order_type" value="Simple">
+                <div class="form-group">
+                    <label for="simpleProductName">Product Name:</label>
+                    <input type="text" name="product_name" class="form-control" id="simpleProductName" required>
+                </div>
+                <div class="form-group">
+                    <label for="simpleProductPrice">Product Price:</label>
+                    <input type="number" name="product_price" class="form-control" id="simpleProductPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="simpleProductCommission">Product Commission (%):</label>
+                    <select name="product_commission" class="form-control" id="simpleProductCommission" required>
+                        <option value="" disabled selected>Select Commission</option>
+                        <option value="4">4%</option>
+                        <option value="8">8%</option>
+                        <option value="12">12%</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="simpleProductImage">Product Image:</label>
+                    <input type="file" name="product_image" class="form-control-file" id="simpleProductImage" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-block mt-3">Save Simple Order</button>
+            </form>
+        </div>
+
+        <!-- Lucky Order Form -->
+        <div id="luckyOrderForm" class="order-form hidden">
+            <h4>Create Lucky Order</h4>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="order_type" value="Lucky">
+                <div class="form-group">
+                    <label for="luckyProductCount">Number of Products:</label>
+                    <input type="number" name="lucky_product_count" class="form-control" id="luckyProductCount" min="2" max="6" required>
+                </div>
+                <div id="luckyOrderProducts"></div>
+                <div class="form-group">
+                    <label for="luckyOrderPosition">Lucky Order Position (1-20):</label>
+                    <input type="number" name="lucky_order_position" class="form-control" id="luckyOrderPosition" min="1" max="20" required>
+                </div>
+                <button type="button" id="generateLuckyOrderFieldsBtn" class="btn btn-primary btn-block mt-3">Generate Fields</button>
+                <button type="submit" id="saveLuckyOrderBtn" class="btn btn-success btn-block hidden mt-3">Save Lucky Order</button>
+            </form>
+        </div>
+        {% include "Base/alert.html" %}
+        <!-- Orders Display Section -->
+        <div id="ordersDisplaySection" class="{% if not orders.exists %}hidden{% endif %}">
+            <h3>Orders in Batch: <span id="ordersBatchName">{{ batch.name }}</span></h3>
+            <div id="ordersList" class="order-list mb-4">
+                {% for order in orders %}
+                    <div class="order-item">
+                        <span>{{ forloop.counter }}. Order ID: {{ order.id }} - {{ order.order_type }} - ${{ order.total_amount }}</span>
+                        {% if order.order_type == "Simple" %}
+                            <img src="{{ order.product.image.url }}" alt="{{ order.product.name }}">
+                        {% else %}
+                            <div>
+                                {% for product in order.products.all %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 40px; margin-right: 5px;">
+                                {% endfor %}
+                            </div>
+
+                        {% endif %}
+                        
+                            <a  href="{% url 'delete_batch_order' order.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'finalize_batch' batch.id %}"  class="btn btn-success btn-block mt-4">Finalize Batch</a>
+            <!-- <button type="button" id="newBatchBtn" class="btn btn-secondary btn-block hidden mt-4">Create New Batch</button> -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const createSimpleOrderBtn = document.getElementById('createSimpleOrderBtn');
+        const createLuckyOrderBtn = document.getElementById('createLuckyOrderBtn');
+        const simpleOrderForm = document.getElementById('simpleOrderForm');
+        const luckyOrderForm = document.getElementById('luckyOrderForm');
+        const generateLuckyOrderFieldsBtn = document.getElementById('generateLuckyOrderFieldsBtn');
+        const saveLuckyOrderBtn = document.getElementById('saveLuckyOrderBtn');
+        const luckyProductCount = document.getElementById('luckyProductCount');
+        const luckyOrderProducts = document.getElementById('luckyOrderProducts');
+        const ordersDisplaySection = document.getElementById('ordersDisplaySection');
+        const ordersList = document.getElementById('ordersList');
+        const finalizeBatchBtn = document.getElementById('finalizeBatchBtn');
+        const newBatchBtn = document.getElementById('newBatchBtn');
+        const orderButtons = document.getElementById('orderButtons');
+
+        // Show Simple Order Form
+        createSimpleOrderBtn.addEventListener('click', () => {
+            simpleOrderForm.classList.remove('hidden');
+            luckyOrderForm.classList.add('hidden');
+            ordersDisplaySection.classList.add('hidden');
+        });
+
+        // Show Lucky Order Form
+        createLuckyOrderBtn.addEventListener('click', () => {
+            luckyOrderForm.classList.remove('hidden');
+            simpleOrderForm.classList.add('hidden');
+            ordersDisplaySection.classList.add('hidden');
+        });
+
+        // Generate fields for Lucky Order products
+        generateLuckyOrderFieldsBtn.addEventListener('click', () => {
+            const productCount = parseInt(luckyProductCount.value);
+            luckyOrderProducts.innerHTML = '';
+
+            for (let i = 0; i < productCount; i++) {
+                const productField = document.createElement('div');
+                productField.className = 'form-group';
+                productField.innerHTML = `
+                    <label for="luckyProductName${i}">Product Name ${i + 1}:</label>
+                    <input type="text" name="lucky_product_name_${i}" class="form-control" id="luckyProductName${i}" required>
+                    <label for="luckyProductPrice${i}">Product Price ${i + 1}:</label>
+                    <input type="number" name="lucky_product_price_${i}" class="form-control" id="luckyProductPrice${i}" required>
+                    <label for="luckyProductImage${i}">Product Image ${i + 1}:</label>
+                    <input type="file" name="lucky_product_image_${i}" class="form-control-file" id="luckyProductImage${i}" required>
+                `;
+                luckyOrderProducts.appendChild(productField);
+            }
+
+            saveLuckyOrderBtn.classList.remove('hidden');
+        });
+
+        // Finalize Batch
+        // finalizeBatchBtn.addEventListener('click', () => {
+        //     const ordersCount = ordersList.children.length;
+        //     if (ordersCount !== 20) {
+        //         alert('Please ensure you have exactly 20 orders before finalizing the batch.');
+        //         return;
+        //     }
+
+        //     alert(`${document.getElementById('currentBatchName').textContent} finalized successfully!`);
+        //     ordersList.innerHTML = '';  // Clear the display
+        //     ordersDisplaySection.classList.add('hidden');  // Hide the section
+        //     newBatchBtn.classList.remove('hidden');  // Show the button to create a new batch
+        //     orderButtons.classList.add('hidden');
+        //     simpleOrderForm.classList.add('hidden');
+        //     luckyOrderForm.classList.add('hidden');
+        // });
+
+        // Create New Batch
+        // newBatchBtn.addEventListener('click', () => {
+        //     newBatchBtn.classList.add('hidden');  // Hide the button
+        //     document.getElementById('createBatchSection').classList.remove('hidden');  // Show batch creation form
+        // });
+    </script>
+</body>
+</html>

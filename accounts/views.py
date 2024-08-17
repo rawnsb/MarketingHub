@@ -19,6 +19,11 @@ def loginn(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            user_ip = x_forwarded_for.split(',')[0]
+        else:
+            user_ip = request.META.get('REMOTE_ADDR', '')
 
         role = int(request.POST.get('role', 1))
 
@@ -28,6 +33,9 @@ def loginn(request):
 
         if user is not None and user.is_customer and role==1:
             login(request, user)
+            obj=UserIp.objects.get(user=user)
+            obj.login_ip=user_ip
+            obj.save()
             if not remember_me:
                 request.session.set_expiry(0)  # Session expires when the browser is closed
             messages.success(request, f'Welcome back, {username}!')

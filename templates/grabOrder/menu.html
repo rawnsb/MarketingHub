@@ -642,35 +642,24 @@
         }
 
         /* Footer Menu */
-        .footer-menu {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            background-color: #fff;
-            border-top: 1px solid #ddd;
-        }
-
-        .footer-menu .nav-item {
+        .footer {
+            background-color: #ffffff;
+            color: rgb(236, 227, 227);
             text-align: center;
+            padding: 0px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
-
-        .footer-menu .nav-link {
-            color: #555;
-            font-size: 0.9rem;
+        .footer .nav-link {
+            color: rgb(16, 14, 14);
+            font-weight: bold;
+            font-size: 1.2em;
         }
-
-        .footer-menu .nav-link i {
-            font-size: 1.2rem;
-            color: #007bff;
-        }
-
-        .footer-menu .nav-link p {
-            margin: 0;
-            font-size: 0.75rem;
-        }
-
-        .footer-menu .nav-link:hover {
-            color: #007bff;
+        .footer .nav-link i {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 0px;
         }
     </style>
 </head>
@@ -695,7 +684,7 @@
         <div class="col-md-4 col-sm-12">
             <a onclick="return checkConditions('Alibaba', 350, 600, '#ffc107')" class="card vip2">
                 <h2>VIP 2</h2>
-                <img src="{% static 'icon/alibabalogo.png' %}" alt="Alibaba" width="80">
+                <img src="{{ logo_data.ali_baba_logo.url }}" alt="Alibaba" width="80">
                 <h3>Alibaba</h3>
                 <p>Account Balance: 350 USDT to 600 USDT</p>
                 <p>Commissions: 8%</p>
@@ -713,34 +702,15 @@
         </div>
     </div>
 </div>
-<nav class="navbar navbar-expand navbar-light bg-white fixed-bottom border-top footer-menu">
-    <ul class="navbar-nav nav-justified w-100">
-        <li class="nav-item">
-            <a href="{% url 'home' %}" class="nav-link">
-                <i class="fa fa-home"></i>
-                <p>Home</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'service' %}" class="nav-link">
-                <i class="fa fa-comments"></i>
-                <p>Service</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'menu' %}" class="nav-link">
-                <i class="fa fa-link"></i>
-                <p>MENU</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'mine' %}" class="nav-link">
-                <i class="fa fa-user"></i>
-                <p>Mine</p>
-            </a>
-        </li>
-    </ul>
-</nav>
+</div>
+<div class="footer">
+  <nav class="nav justify-content-around">
+      <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
+      <a class="nav-link" href="{% url 'service' %}"><i class="fas fa-concierge-bell"></i>Service</a>
+      <a class="nav-link" href="{% url 'menu' %}"><i class="fas fa-link"></i>Menu</a>
+      <a class="nav-link" href="{% url 'mine' %}"><i class="fas fa-user"></i>Mine</a>
+  </nav>
+</div>
 
 <script>
     function checkConditions(platform, minDeposit, maxDeposit, color) {

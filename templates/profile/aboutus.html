@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About EcomBoost Hub</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            animation: fadeInRight 1s ease-in-out;
+        }
+
+        p, ul {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 50px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        section img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 0 20px 20px 0;
+            animation: fadeInLeft 1s ease-in-out;
+        }
+
+        section div {
+            flex: 1;
+            padding: 20px;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        /* Section-specific background colors */
+        section#about {
+            background-color: #ecf0f1;
+        }
+
+        section#how-it-works {
+            background-color: #e8f8f5;
+        }
+
+        section#instructions {
+            background-color: #fcf3cf;
+        }
+
+        section#usdt-info {
+            background-color: #f9ebea;
+        }
+
+        section#why-choose-us {
+            background-color: #f9e79f;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #2980b9;
+            color: white;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            section {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            section img {
+                margin: 0 0 20px 0;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            section img {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Welcome to EcomBoost Hub</h1>
+            
+
+        </header>
+
+        <section id="about">
+            <img src="{{ about.about_ist.url }}" alt="Empowering People Through Ecommerce" class="image">
+            <div>
+                <h2>About EcomBoost Hub</h2>
+                <p>
+                    EcomBoost Hub is a pioneering platform that connects individuals with the world's top three e-commerce
+                    giants: Alibaba, AliExpress, and Amazon. We offer a unique opportunity for anyone to start earning money
+                    by promoting products from these platforms. With EcomBoost Hub, you can leverage the power of global
+                    e-commerce to earn commissions by simply promoting products.
+                </p>
+                <p>
+                    Our mission is to empower everyday people to achieve financial independence by tapping into the vast
+                    potential of e-commerce. Whether you're looking for a side income or a full-time opportunity, EcomBoost Hub
+                    provides the tools and resources to help you succeed.
+                </p>
+                <p>
+                    Founded with the vision of democratizing e-commerce, EcomBoost Hub has quickly grown into a trusted platform
+                    for thousands of users worldwide. We believe that everyone should have the chance to participate in the
+                    global economy, and we strive to make this a reality through our innovative platform.
+                </p>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <img src="{{about.about_2nd.url}}" alt="Ecommerce Growth Success" class="image">
+            <div>
+                <h2>How It Works</h2>
+                <ul>
+                    <li>Create an account on EcomBoost Hub.</li>
+                    <li>Make a one-time deposit to start promoting up to 20 products.</li>
+                    <li>Choose products from Alibaba, AliExpress, or Amazon to promote.</li>
+                    <li>Earn commissions based on the platform:
+                        <ul>
+                            <li>Amazon: 4% commission</li>
+                            <li>Alibaba: 8% commission</li>
+                            <li>AliExpress: Up to 12% commission</li>
+                        </ul>
+                    </li>
+                    <li>If you get a combo order, you can earn a 20% commission on the total amount.</li>
+                    <li>Submit 20 orders and withdraw your earnings easily.</li>
+                </ul>
+                <p>
+                    The process is simple, fun, and highly rewarding. Whether you're promoting a single product or handling a
+                    combo order, EcomBoost Hub makes it easy to earn money from the world's largest online marketplaces.
+                </p>
+            </div>
+        </section>
+
+        <section id="instructions">
+        <img src="{{about.about_3rd.url}}" alt="Trusted Platform Security" class="image">
+            <div>
+                <h2>Important Instructions</h2>
+                <p>
+                    Here are a few things to keep in mind as you start your journey with EcomBoost Hub:
+                </p>
+                <ul>
+                    <li>Simple orders from Amazon may have lower commissions (4%), but they are consistent and reliable.</li>
+                    <li>Promoting products on Alibaba (8%) and AliExpress (up to 12%) can yield higher returns.</li>
+                    <li>Combo orders offer the best opportunity with a 20% commission on the total order value.</li>
+                    <li>Once you've submitted 20 orders, you'll be eligible to withdraw your earnings.</li>
+                    <li>Always keep an eye out for combo orders as they provide the highest earning potential.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="usdt-info">
+            <img src="{{about.about_4th.url}}" alt="Global Community Collaboration" class="image">
+            <div>
+                <h2>Using USDT on EcomBoost Hub</h2>
+                <p>
+                    The best and easiest way to upload your funds on EcomBoost Hub is by transferring USDT to your account. After
+                    hitting the request for deposit and generating the wallet address, simply enter the wallet address and
+                    transfer the USDT. Once the transaction is verified, your account will be updated, and you can start
+                    promoting products immediately.
+                </p>
+                <p>
+                    Our platform's integration with USDT means that anyone, anywhere in the world, can easily participate by
+                    converting their local currency to USDT. This makes EcomBoost Hub accessible to everyone, no matter where
+                    they are.
+                </p>
+                <p>
+                    In a world where instability and conflict are increasingly common, EcomBoost Hub provides a secure and
+                    reliable way for people to earn money and secure their futures. Through our platform, you can earn unlimited
+                    money while ensuring that all your earnings are halal.
+                </p>
+                <p>
+                    Note that every time you withdraw funds from the platform, 5% of the amount will be deducted as tax, which
+                    contributes to the platform's sustainability.
+                </p>
+            </div>
+        </section>
+
+        <section id="why-choose-us">
+            <img src="{{about.about_5th.url}}" alt="Global Ecommerce Opportunity" class="image">
+            <div>
+                <h2>Why Choose EcomBoost Hub?</h2>
+                <ul>
+                    <li><strong>Global Reach:</strong> We connect you with the world's largest e-commerce platforms, giving you
+                        access to a vast array of products to promote.</li>
+                    <li><strong>Flexible Earnings:</strong> Earn commissions based on the products you promote and the platform
+                        you choose.</li>
+                    <li><strong>Simple and Easy:</strong> Our platform is designed to be user-friendly, making it easy for anyone
+                        to start earning money.</li>
+                    <li><strong>High Earning Potential:</strong> With combo orders, you can earn up to 20% commission on the
+                        total order value.</li>
+                    <li><strong>Trusted and Secure:</strong> EcomBoost Hub is a trusted platform with secure transactions and
+                        reliable payouts.</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="footer">
+            <p>&copy; 2024 EcomBoost Hub. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

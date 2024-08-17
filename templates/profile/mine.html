@@ -369,26 +369,7 @@
             padding: 10px;
             font-size: 1rem;
         }
-        .footer {
-            background-color: #ffffff;
-            color: rgb(236, 227, 227);
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-        }
-        .footer .nav-link {
-            color: rgb(16, 14, 14);
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        .footer .nav-link i {
-            display: block;
-            font-size: 1em;
-            margin-bottom: 0px;
-        }
+        
         @media (max-width: 576px) {
             .profile-header {
                 flex-direction: row;
@@ -416,6 +397,25 @@
                 width: 100%;
                 margin-bottom: 80px; /* Ensure it's above the footer */
             }
+        }
+        .footer {
+            background-color: #ffffff;
+            color: rgb(236, 227, 227);
+            text-align: center;
+            padding: 0px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer .nav-link {
+            color: rgb(16, 14, 14);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .footer .nav-link i {
+            display: block;
+            font-size: 1em;
+            margin-bottom: 0px;
         }
     </style>
 </head>
@@ -469,10 +469,10 @@
 
     <div class="button-grid">
         <a href="{% url 'deposite' %}" class="btn btn-1"><i class="fas fa-wallet"></i><br>Recharge Balance</a>
-        <a href="{% url 'withdraw' %}" class="btn btn-2"><i class="fas fa-money-bill-wave"></i><br>Withdraw Money</a>
+        <a href="{% url 'withdraw' %}" class="btn btn-2 bg-secondary"><i class="fas fa-money-bill-wave"></i><br>Withdraw Money</a>
         <a href="{% url 'change_account_password' %}" class="btn btn-3"><i class="fas fa-key"></i><br>Change Password</a>
         <a href="{% url 'change_payment_password' %}" class="btn btn-4"><i class="fas fa-shield-alt"></i><br>Change Withdrawal Password</a>
-        <a href="#" class="btn btn-5"><i class="fas fa-info-circle"></i><br>About Us</a>
+        <a href="{% url 'about_us' %}" class="btn btn-5"><i class="fas fa-info-circle"></i><br>About Us</a>
         <a href="#" class="btn btn-6"><i class="fas fa-globe"></i><br>Change Language</a>
     </div>
 

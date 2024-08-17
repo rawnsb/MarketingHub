@@ -99,45 +99,7 @@ def deposite(request):
 def deposite_records(request):
     obj=Deposit.objects.filter(user=request.user).order_by('-created_at')
     return render(request,"home/deposite_record.html",{"Deposite_records":obj})
-# from django.db import transaction
-#
-# @login_required
-# @csrf_exempt
-# def withdraw(request):
-#     if request.method == 'POST':
-#         existing_withdrawal = Withdraw.objects.filter(user=request.user, processed=False).exists()
-#         if existing_withdrawal:
-#             return JsonResponse({
-#                 'status': 'error',
-#                 'message': 'You already have a pending withdrawal. Please wait until it is processed.'
-#             }, status=400)
-#         amount = request.POST.get('withdrawalAmount')
-#         password = request.POST.get('withdrawalPassword')
-#     #     if request.user.check_password(password):
-#     #         obj=Withdraw.objects.create(user=request.user, amount=amount, password=password)
-#     #         return JsonResponse({'status': 'processing','withdrawal_id':obj.uid, 'message': 'Withdrawal is processing.'}, status=200)
-#     #     else:
-#     #         return JsonResponse({'status': 'error', 'message': 'Incorrect password.'}, status=400)
-#     # return render(request, 'home/withdraw.html')
-#         if not request.user.check_password(password):
-#             return JsonResponse({'status': 'error', 'message': 'Incorrect password.'}, status=400)
-#
-#             # Transaction to ensure atomicity
-#         with transaction.atomic():
-#             try:
-#                 balance = AccountBalance.objects.select_for_update().get(user=request.user)
-#                 if balance.account_balance >= amount:
-#                     balance.update_balance_on_withdrawal(amount)
-#                     withdraw_obj = Withdraw.objects.create(user=request.user, amount=amount, password=password)
-#                     return JsonResponse({'status': 'processing', 'withdrawal_id': withdraw_obj.uid,
-#                                          'message': 'Withdrawal is processing.'}, status=200)
-#                 else:
-#                     return JsonResponse({'status': 'error', 'message': 'Insufficient funds for withdrawal.'},
-#                                         status=400)
-#             except AccountBalance.DoesNotExist:
-#                 return JsonResponse({'status': 'error', 'message': 'Account balance not found.'}, status=400)
-#
-#     return render(request, 'home/withdraw.html')
+
 
 from django.db import transaction
 from django.http import JsonResponse
@@ -145,7 +107,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import Withdraw, AccountBalance
 from accounts.models import PaymentPassword
-from adminControl.models import SimpleOrder
+
 
 @login_required
 @csrf_exempt
@@ -218,10 +180,11 @@ def settings_page(request):
         'languages': settings.LANGUAGES,
         'language_code': request.session.get(settings.LANGUAGE_SESSION_KEY, settings.LANGUAGE_CODE)
     })
-
+from adminControl.models import ExtraPictures
 @login_required
 def menu(request):
-    return render(request,"grabOrder/menu.html")
+    Ali_baba_logo=ExtraPictures.objects.all().first()
+    return render(request,"grabOrder/menu.html",{'logo_data':Ali_baba_logo})
 
 @login_required
 def order_management(request):
@@ -239,9 +202,13 @@ def order_management(request):
     return render(request,"grabOrder/order_management.html",{'color': color})
 
 
+
 import json
-from adminControl.models import SubmittedOrder
-import json
+import decimal
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from adminControl.models import CustomerOrder, CustomerBatch
 
 @login_required
 def grab_order(request):
@@ -250,70 +217,88 @@ def grab_order(request):
             data = json.loads(request.body.decode('utf-8'))
             order_ids = data.get('order_ids').split(',')
             total_order_amount = decimal.Decimal(data.get('total_amount'))
-            print(order_ids)
 
             if request.user.balance.account_balance < total_order_amount:
                 gap = total_order_amount - request.user.balance.account_balance
-                gap_obj=GapAmount.objects.get(user=request.user)
-                gap_obj.gap_amount=gap
+                gap_obj = GapAmount.objects.get(user=request.user)
+                gap_obj.gap_amount = gap
                 gap_obj.save()
                 return JsonResponse(
-                    {"success": False, "message": f"Insufficient balance. Please deposit {gap} to claim this order."})
-
+                    {"success": False, "message": f"Insufficient balance. Please deposit {gap} usdt to claim this order."})
+            print(order_ids)
             for order_id in order_ids:
-                order = get_object_or_404(SubmittedOrder, id=order_id, submitted_by=request.user)
-                order.is_submitted = True
-                order.save()
+                print("order id",order_id)
+                customer_order = get_object_or_404(CustomerOrder, id=order_id, customer_batch__user=request.user,is_submitted=False)
+                customer_order.is_submitted = True
+                customer_order.save()
 
-                cm = (decimal.Decimal(order.product_commission) / 100)
-                price = order.product_price
-                cmr = cm * price
+                if customer_order.original_order.order_type == 'Lucky':
+                    # Calculate commission for all products in the Lucky order
+                    total_commission = decimal.Decimal(0)
+                    for product in customer_order.original_order.products.all():
+                        cm = (decimal.Decimal(product.commission_rate) / 100)
+                        price = product.price
+                        cmr = cm * price
+                        total_commission += cmr
 
-                request.user.balance.account_balance += cmr
-                request.user.balance.update_daily_commission(cmr)
-            request.user.ordercount.no_of_submitted_order += 1
-            request.user.ordercount.save()
+                    request.user.balance.account_balance += total_commission
+                    request.user.balance.update_daily_commission(total_commission)
+                    request.user.ordercount.no_of_submitted_order += 1
+                    request.user.ordercount.save()
+                else:  # Simple order
+                    cm = (decimal.Decimal(customer_order.original_order.product.commission_rate) / 100)
+                    price = customer_order.original_order.product.price
+                    cmr = cm * price
 
+                    request.user.balance.account_balance += cmr
+                    request.user.balance.update_daily_commission(cmr)
+                    request.user.ordercount.no_of_submitted_order += 1
+                    request.user.ordercount.save()
 
             return JsonResponse({"success": True, "message": "Order(s) submitted successfully."})
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "message": "Invalid JSON data."})
         except Exception as e:
-            return JsonResponse({"success": False, "message": str(e)})
+            return JsonResponse({"success": False, "message": "order already submitted"})
 
-        # GET request handling
-    next_order = SubmittedOrder.objects.filter(is_submitted=False, check_box=True, submitted_by=request.user).order_by(
-        'index').first()
+    # GET request handling
+    next_order = CustomerOrder.objects.filter(is_submitted=False, customer_batch__user=request.user).order_by(
+        'original_order__lucky_order_position').first()
 
     combined_lucky_orders = []
     simple_order = None
 
     if next_order:
-        if next_order.label == 'lucky':
+        if next_order.original_order.order_type == 'Lucky':
             combined_lucky_orders = list(
-                SubmittedOrder.objects.filter(label='lucky', is_submitted=False, check_box=True,
-                                              submitted_by=request.user).order_by('index')[:3]
+                next_order.original_order.products.all()
             )
-        elif next_order.label == 'simple':
+        elif next_order.original_order.order_type == 'Simple':
             simple_order = next_order
 
     if combined_lucky_orders:
-        total_amount = sum(order.product_price for order in combined_lucky_orders)
-        commission_rate = sum(decimal.Decimal(order.product_commission) for order in combined_lucky_orders) / len(combined_lucky_orders) / 100
+        total_amount = sum(product.price for product in combined_lucky_orders)
+        commission_rate = sum(product.commission_rate for product in combined_lucky_orders) / len(combined_lucky_orders) / 100
         
         commission = total_amount * commission_rate
         commission = round(commission, 2)
         expected_total = total_amount + commission
         expected_total = round(expected_total, 2)
-    else:
-        total_amount = simple_order.product_price if simple_order else 0
-        commission_rate = decimal.Decimal(simple_order.product_commission) / 100 if simple_order else 0
+    elif simple_order and simple_order.original_order and simple_order.original_order.product:
+        total_amount = simple_order.original_order.product.price
+        commission_rate = decimal.Decimal(simple_order.original_order.product.commission_rate) / 100
         commission = total_amount * commission_rate
         expected_total = total_amount + commission
+    else:
+        total_amount = 0
+        commission_rate = 0
+        commission = 0
+        expected_total = 0
     
     no_orders = not combined_lucky_orders and simple_order is None
 
     return render(request, "grabOrder/simple_order.html", {
+        "next_order":next_order,
         "combined_lucky_orders": combined_lucky_orders,
         "simple_order": simple_order,
         "no_orders": no_orders,
@@ -330,5 +315,12 @@ def grab_order(request):
 def service(request):
     return render(request,"home/service.html")
 
+from adminControl.models import ExtraPictures
+@login_required
+def about_us(request):
+    ob=ExtraPictures.objects.all().first()
+    return render(request,"profile/aboutus.html",{'about':ob})
+
 def custom_404_view(request, exception):
     return render(request, 'home/404.html', status=404)
+

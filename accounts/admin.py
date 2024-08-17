@@ -28,7 +28,7 @@ class UserAdmin(BaseUserAdmin):
                                    'is_admin', 'is_employee', 'is_customer',
                                    'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
-        ('Additional Info', {'fields': ('invitation_code',)}),
+        ('Additional Info', {'fields': ('invitation_code','batches')}),
     )
     add_fieldsets = (
         (None, {

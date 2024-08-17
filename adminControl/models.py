@@ -61,43 +61,77 @@ class AdminTelegram(models.Model):
             return telegram_links[random_index].telegram_link
         return None
 
-
-import random
-
-
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-class SimpleOrder(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="simple_orders")
-    product_name = models.CharField(max_length=300)
-    product_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    product_commission = models.CharField(max_length=300)
-    order_id = models.CharField(max_length=7, blank=True,null=True)
-    product_img = models.ImageField(upload_to='simple_orders/', null=True, blank=True)
-    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, editable=False)
-    label = models.CharField(max_length=10)
-    def save(self, *args, **kwargs):
-        if not self.order_id:
-            self.order_id = self.generate_unique_order_id()
-            while SimpleOrder.objects.filter(order_id=self.order_id).exists():
-                self.order_id = self.generate_unique_order_id()
-        if not self.content_type:
-            self.content_type = ContentType.objects.get_for_model(self.__class__)
-        super(SimpleOrder, self).save(*args, **kwargs)
-
-    @staticmethod
-    def generate_unique_order_id():
-        return str(random.randint(100000, 999999))
+class ExtraPictures(models.Model):
+    ali_baba_logo=models.ImageField(upload_to="Logo")
+    about_ist=models.ImageField(upload_to="about_pics")
+    about_2nd=models.ImageField(upload_to="about_pics")
+    about_3rd=models.ImageField(upload_to="about_pics")
+    about_4th=models.ImageField(upload_to="about_pics")
+    about_5th=models.ImageField(upload_to="about_pics")
 
     def __str__(self):
-        return f"Order {self.order_id} by {self.user.username}"
+        return "extra pictures"
 
 
-class SubmittedOrder(SimpleOrder):
-    submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,
-                                     related_name="submitted_orders")
-    is_submitted = models.BooleanField(default=False)
-    check_box = models.BooleanField(default=False)
-    index = models.IntegerField( null=True, blank=True)
+
+
+
+class Batch(models.Model):
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self):
-        return f"Order {self.order_id} by {self.user.username}, submitted by {self.submitted_by.username if self.submitted_by else 'N/A'}"
+        return self.name
+
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    commission_rate = models.DecimalField(max_digits=5, decimal_places=2)
+    image = models.ImageField(upload_to='product_images/')
+
+    def __str__(self):
+        return self.name
+
+class Order(models.Model):
+    SIMPLE = 'Simple'
+    LUCKY = 'Lucky'
+    ORDER_TYPES = [
+        (SIMPLE, 'Simple'),
+        (LUCKY, 'Lucky')
+    ]
+
+    batch = models.ForeignKey(Batch, related_name='orders', on_delete=models.CASCADE)
+    order_type = models.CharField(max_length=10, choices=ORDER_TYPES)
+    product = models.ForeignKey(Product, related_name='orders', on_delete=models.CASCADE, null=True, blank=True)
+    lucky_order_position = models.IntegerField(null=True, blank=True)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    products = models.ManyToManyField(Product, related_name='lucky_orders', blank=True)
+
+    def __str__(self):
+        return f'{self.order_type} Order - {self.product.name if self.product else "Multiple Products"}'
+
+User.add_to_class('batches', models.ManyToManyField(Batch, related_name='users', blank=True))
+
+
+# clone
+
+class CustomerBatch(models.Model):
+    user = models.ForeignKey(User, related_name='customer_batches', on_delete=models.CASCADE)
+    original_batch = models.ForeignKey(Batch, related_name='customer_copies', on_delete=models.CASCADE)
+    custom_batch_name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Custom Batch for {self.user.username} - {self.custom_batch_name}'
+
+class CustomerOrder(models.Model):
+    customer_batch = models.ForeignKey(CustomerBatch, related_name='customer_orders', on_delete=models.CASCADE)
+    original_order = models.ForeignKey(Order, related_name='customer_copies', on_delete=models.CASCADE)
+    custom_product = models.ForeignKey(Product, related_name='custom_orders', on_delete=models.CASCADE, null=True, blank=True)
+    custom_lucky_order_position = models.IntegerField(null=True, blank=True)
+    custom_total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    custom_products = models.ManyToManyField(Product, related_name='custom_lucky_orders', blank=True)
+    is_submitted=models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Custom Order for {self.customer_batch.user.username}'

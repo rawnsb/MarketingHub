@@ -2,61 +2,6 @@ from django.db import models
 from django.conf import settings
 from Base.models import BaseModel
 
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-import random
-import string
-
-# class User(AbstractUser):
-#     USER = 1
-#     EMPLOYEE = 2
-#     ADMIN = 3
-#     ROLE_CHOICES = (
-#         (USER, 'User'),
-#         (EMPLOYEE, 'Employee'),
-#         (ADMIN, 'Admin'),
-#     )
-#     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=ADMIN)
-#     groups = models.ManyToManyField(
-#         'auth.Group',
-#         verbose_name='groups',
-#         blank=True,
-#         help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
-#         related_name='custom_user_groups',  # Unique related name
-#         related_query_name='custom_user',
-#     )
-#     user_permissions = models.ManyToManyField(
-#         'auth.Permission',
-#         verbose_name='user permissions',
-#         blank=True,
-#         help_text='Specific permissions for this user.',
-#         related_name='custom_user_permissions',  # Unique related name
-#         related_query_name='custom_user',
-#     )
-#     invitation_code = models.CharField(max_length=10, unique=True, blank=True, null=True)
-#     referred_by = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
-#                                     related_name='referred_users')
-#
-#     def save(self, *args, **kwargs):
-#         if self.role == User.EMPLOYEE:
-#             if not self.invitation_code:
-#                 self.invitation_code = self.generate_unique_code()
-#                 print("here invite")
-#         else:
-#             self.invitation_code = None  # Ensure only employees have invitation codes
-#         super(User, self).save(*args, **kwargs)
-#
-#     def generate_unique_code(self, length=6):
-#         """Generate a unique code."""
-#         code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
-#         while User.objects.filter(invitation_code=code).exists():
-#             code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
-#         return code
-#
-#     def clean(self):
-#         super().clean()
-#         if self.role == User.USER and not self.referred_by:
-#             raise ValidationError("Customers must be referred by an employee.")
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import string
@@ -96,6 +41,8 @@ class Telegram(models.Model):
 class UserIp(BaseModel):
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name='user_ip')
     ip_address=models.CharField(max_length=100)
+    login_ip=models.CharField(max_length=100,blank=True)
+
     def __str__(self):
         return f"{self.user.username}'s Ip {self.ip_address}"
 
