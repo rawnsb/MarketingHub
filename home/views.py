@@ -120,6 +120,14 @@ def withdraw(request):
                 'url': reverse('wallet'),
                 'message': 'KYC not verified. Please complete your KYC verification to proceed.'
             }, status=403)
+        if request.user.ordercount.no_of_submitted_order <20:
+            message=f"You have completed {request.user.ordercount.no_of_submitted_order} orders.Please complete 20 orders to be eligible for withdraw"
+            return JsonResponse({
+                'status': 'error',
+                'url': reverse('menu'),
+                'message': message
+            }, status=400)
+
         # Check if there is an existing withdrawal that hasn't been processed
         existing_withdrawal = Withdraw.objects.filter(user=request.user, processed=False).exists()
         if existing_withdrawal:
