@@ -111,7 +111,10 @@
               <th>Deposited Amount</th>
               <th>Withdrawn Amount</th>
               <th>Status</th>
-              <th>IP Address</th>
+              <th>Login IP Address</th>
+              <th>Active IP Address</th>
+             <th>Orders Submitted</th>
+             
             </tr>
           </thead>
           <tbody id="teamMembers">
@@ -125,10 +128,12 @@
                                 {% if user.is_active %}
                                     <span class="text-success">Active</span>
                                 {% else %}
-                                    <span class="text-danger">Inactive</span>
+                                    <span class="text-danger">InActive</span>
                                 {% endif %}
                             </td>
               <td>{{ user.user_ip.ip_address }}</td>
+              <td class="text-danger">{{ user.user_ip.login_ip }}</td>
+              <td >{{ user.ordercount.no_of_submitted_order }}</td>
             </tr>
             {% endfor %}
           </tbody>
