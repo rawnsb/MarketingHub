@@ -136,6 +136,26 @@ def update_wallet(request, id):
         'user': user,
         'withdrawal_address': kyc.wallet_address if kyc else "KYC Not Verified"  # Handle case where KYC is None
     })
+@login_required
+def change_action(request, id):
+    user = get_object_or_404(User, id=id)
+    user.is_active = not user.is_active
+    user.save()
+    
+    status = "activated" if user.is_active else "deactivated"
+    messages.success(request, f'The user {user.username} has been successfully {status}.')
+    
+    return redirect("Admin_dashboard")
+@login_required
+def reset_order_numbers(request, id):
+    user = get_object_or_404(User, id=id)
+    user.ordercount.no_of_submitted_order = 0
+    user.ordercount.save()
+
+    messages.success(request, f'Order count for {user.username} has been successfully reset to 0.')
+
+    return redirect("Admin_dashboard")
+
 
 # new
 from .models import Batch,Order,Product

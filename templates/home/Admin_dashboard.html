@@ -162,6 +162,7 @@
                                         <th>Status</th>
                                         <th>SignUp Address</th>
                                         <th>Active Address</th>
+                                        <th>Orders Submitted</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -173,14 +174,15 @@
                                             <td>${{ customer.balance.total_deposit }}</td>
                                             <td>${{ customer.balance.total_withdrawal }}</td>
                                             <td>
-                                         {% if user.is_active %}
+                                         {% if customer.is_active %}
                                            <span class="text-success">Active</span>
                                         {% else %}
-                                          <span class="text-danger">In-Active</span>
+                                          <span class="text-danger">InActive</span>
                                          {% endif %}
                                           </td>
                                             <td>{{ customer.user_ip.ip_address }}</td>
                                             <td class="text-danger">{{ customer.user_ip.login_ip }}</td>
+                                            <td >{{ customer.ordercount.no_of_submitted_order }}</td>
      <td>
     <div class="row">
         <div class="col-4">
@@ -200,6 +202,18 @@
         </div>
         <div class="col-4">
             <a href="{% url 'verify_kyc' customer.id %}" class="btn btn-dark action-button w-100 text-truncate">KYC</a>
+        </div>
+        <div class="col-4">
+            <a href="{% url 'update_wallet' customer.id %}" class="btn btn-primary action-button w-100 text-truncate">Wallet Address</a>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4">
+            
+            <a href="{% url 'change_action' customer.id %}" class="btn btn-danger action-button w-100 text-truncate">Active/Inactice</a>
+        </div>
+        <div class="col-4">
+            <a href="{% url 'reset_order_numbers' customer.id %}" class="btn btn-info action-button w-100 text-truncate">Reset Orders</a>
         </div>
         <div class="col-4">
             <a href="{% url 'update_wallet' customer.id %}" class="btn btn-primary action-button w-100 text-truncate">Wallet Address</a>
