@@ -139,9 +139,9 @@ class CustomerOrder(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.id:
-            # Generate a 7-digit or 9-digit random ID
-            self.id = random.randint(10000, 9999999)  # Adjust the range as needed
-            # Ensure the ID is unique
-            while CustomerOrder.objects.filter(id=self.id).exists():
-                self.id = random.randint(1000000, 999999999)
+            last_order = CustomerOrder.objects.all().order_by('id').last()
+            if last_order:
+                self.id = last_order.id + 1
+            else:
+                self.id = 2341567  # Start ID for the first order
         super().save(*args, **kwargs)

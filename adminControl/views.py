@@ -159,7 +159,7 @@ def reset_order_numbers(request, id):
 
 # new
 from .models import Batch,Order,Product
-
+@login_required
 def orders_panel(request):
     if request.method == 'POST':
         batch_name = request.POST.get('batch_name')
@@ -175,6 +175,7 @@ def orders_panel(request):
     })
 
 from django.http import JsonResponse
+@login_required
 def fetch_orders(request, batch_id):
     # Get the batch based on the provided batch_id
     batch = get_object_or_404(Batch, id=batch_id)
@@ -212,7 +213,7 @@ def fetch_orders(request, batch_id):
 
 
 
-
+@login_required
 def add_orders(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
     current_order_count = Order.objects.filter(batch=batch).count()
@@ -233,7 +234,7 @@ def add_orders(request, batch_id):
                 product_price = float(product_price)
                 product_commission_rate = float(product_commission)
                 commission_amount = product_price * (product_commission_rate / 100)
-                total_amount = product_price + commission_amount
+                # total_amount = product_price + commission_amount
 
                 product = Product.objects.create(
                     name=product_name,
@@ -275,7 +276,7 @@ def add_orders(request, batch_id):
             
             total_amount = sum(product.price for product in products)
             commission_amount = total_amount * 0.2  # Assuming a 20% commission on the total amount
-            total_amount += commission_amount
+            # total_amount += commission_amount
 
             order = Order.objects.create(
                 batch=batch,
@@ -294,6 +295,7 @@ def add_orders(request, batch_id):
         'orders': orders,
         'remaining_orders': 20 - orders.count()
     })
+@login_required
 def finalize_batch(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
     orders = Order.objects.filter(batch=batch)
@@ -304,7 +306,7 @@ def finalize_batch(request, batch_id):
     # Add finalization logic here (if any)
     messages.success(request, f'Batch "{batch.name}" finalized successfully with {orders.count()} orders.')
     return redirect('orders_panel')
-
+@login_required
 def delete_batch_order(request,order_id):
     order = get_object_or_404(Order, id=order_id)
     batch_id = order.batch.id
@@ -321,6 +323,7 @@ def delete_batch_order(request,order_id):
 
 
 # grant order new
+@login_required
 def grant_batches_to_customer(request, customer_id):
     customer = get_object_or_404(User, id=customer_id)
     batches = Batch.objects.all()
@@ -342,7 +345,7 @@ def grant_batches_to_customer(request, customer_id):
 #         messages.success(request, f"Batch {batch.name} granted to {customer.username}.")
 
 #     return redirect('grant_batches_to_customer', customer_id=customer.id)
-
+@login_required
 def grant_batch_to_customer(request, batch_id, customer_id):
     batch = get_object_or_404(Batch, id=batch_id)
     customer = get_object_or_404(User, id=customer_id)
@@ -386,7 +389,7 @@ def grant_batch_to_customer(request, batch_id, customer_id):
 #         messages.warning(request, f"Batch {batch.name} was not granted to {customer.username}.")
 
 #     return redirect('grant_batches_to_customer', customer_id=customer.id)
-
+@login_required
 def remove_granted_batch(request, batch_id, customer_id):
     batch = get_object_or_404(Batch, id=batch_id)
     customer = get_object_or_404(User, id=customer_id)
@@ -404,6 +407,7 @@ def remove_granted_batch(request, batch_id, customer_id):
     return redirect('grant_batches_to_customer', customer_id=customer.id)
 
 # fetch orders
+@login_required
 def fetch_custom_orders(request, batch_id,customer_id):
     
     # Get the batch based on the provided batch_id
@@ -594,10 +598,10 @@ def update_customer_order(request, order_id, customer_id):
                 customer_order.save()
 
                 # Recalculate the total amount based on the new product
-                new_total_amount = float(new_product.price) + (float(new_product.price) * (float(new_product.commission_rate) * 0.01))
+                new_total_amount = float(new_product.price)
             else:
                 # No changes, keep the current total amount
-                new_total_amount = float(product.price) + (float(product.price) * (float(product.commission_rate) * 0.01))
+                new_total_amount = float(product.price) 
 
         else:  # For 'Lucky' orders with multiple products
             for product in customer_order.custom_products.all():
@@ -622,10 +626,10 @@ def update_customer_order(request, order_id, customer_id):
                     customer_order.custom_products.add(new_product)
 
                     # Recalculate the total amount for this product
-                    new_total_amount += float(new_product.price) + (float(new_product.price) * (float(new_product.commission_rate) / 100))
+                    new_total_amount += float(new_product.price) 
                 else:
                     # No changes, keep the current total amount for this product
-                    new_total_amount += float(product.price) + (float(product.price) * (float(product.commission_rate) / 100))
+                    new_total_amount += float(product.price) 
 
         # Update the total amount with the new calculated value
         customer_order.custom_total_amount = new_total_amount

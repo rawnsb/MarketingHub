@@ -241,14 +241,16 @@
                 .then(response => response.json())
                 .then(data => {
                     ordersList.innerHTML = '';
+                    counter=0;
                     data.orders.forEach(order => {
                         const orderItem = document.createElement('div');
                         orderItem.className = 'order-item';
+                        counter++;
                        ur = `{% url 'update_customer_order' 0 customer.id  %}`.replace('0',order.id)
                         orderItem.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <div>
-            <span><strong>Order ID:</strong> ${order.id} - <strong>Type:</strong> ${order.order_type} - <strong>Total:</strong> $${order.total_amount}</span>
+            <span>${counter}. <strong>Order ID:</strong> ${order.id} - <strong>Type:</strong> ${order.order_type} - <strong>Total:</strong> $${order.total_amount}</span>
             <div style="margin-top: 10px;">
                 ${order.products.map(product => `<img src="${product.image_url}" alt="${product.name}" style="max-width: 60px; margin-right: 10px;">`).join('')}
             </div>

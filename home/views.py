@@ -271,7 +271,7 @@ def grab_order(request):
 
     # GET request handling
     next_order = CustomerOrder.objects.filter(is_submitted=False, customer_batch__user=request.user).order_by(
-        'original_order__lucky_order_position').first()
+        'id').first()
 
     combined_lucky_orders = []
     simple_order = None
@@ -279,7 +279,7 @@ def grab_order(request):
     if next_order:
         if next_order.original_order.order_type == 'Lucky':
             combined_lucky_orders = list(
-                next_order.original_order.products.all()
+                next_order.custom_products.all()
             )
         elif next_order.original_order.order_type == 'Simple':
             simple_order = next_order
@@ -290,13 +290,13 @@ def grab_order(request):
         
         commission = total_amount * commission_rate
         commission = round(commission, 2)
-        expected_total = round(total_amount + commission,2)
+        expected_total = round(request.user.balance.account_balance + commission,2)
         expected_total = round(expected_total, 2)
     elif simple_order and simple_order.original_order and simple_order.original_order.product:
         total_amount = simple_order.original_order.product.price
         commission_rate = decimal.Decimal(simple_order.original_order.product.commission_rate) / 100
         commission = round(total_amount * commission_rate,2)
-        expected_total = round(total_amount + commission,2)
+        expected_total = round(request.user.balance.account_balance + commission,2)
     else:
         total_amount = 0
         commission_rate = 0

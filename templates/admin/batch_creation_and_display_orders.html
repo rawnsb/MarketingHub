@@ -236,11 +236,13 @@
                     ordersList.innerHTML = '';
 
                     // Append fetched orders to the orders list
+                    counter=0;
                     data.orders.forEach(order => {
                         const orderItem = document.createElement('div');
                         orderItem.className = 'order-item';
+                        counter++;
                         orderItem.innerHTML = `
-                            <span>Order ID: ${order.id} - ${order.order_type} - $${order.total_amount}</span>
+                            <span>${ counter }. Order ID: ${order.id} - ${order.order_type} - $${order.total_amount}</span>
                             <div>
                                 ${order.products.map(product => `<img src="${product.image_url}" alt="${product.name}">`).join('')}
                             </div>

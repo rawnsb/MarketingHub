@@ -9,6 +9,8 @@ from home.models import AccountBalance,OrderCount,GapAmount
 from Employee.models import EmployeeDeposit
 from adminControl.models import AdminTelegram,WalletAddress
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
+@csrf_protect
 def loginn(request):
     if request.user.is_authenticated and request.user.is_customer:
         return redirect('/home/index/')
@@ -43,7 +45,7 @@ def loginn(request):
         else:
             messages.error(request, 'Invalid username or password')
     return render(request,"accounts/login.html")
-
+@csrf_protect
 def Employee_login(request):
     if request.user.is_authenticated and request.user.is_customer:
         return redirect('/home/index/')
@@ -79,7 +81,7 @@ def Employee_dashboard(request):
     print(context)
 
     return render(request, "home/Employee_dashboard.html", context)
-
+@csrf_protect
 def Admin_login(request):
     if request.user.is_authenticated and request.user.is_customer:
         return redirect('/home/index/')
@@ -205,6 +207,7 @@ def Admin_dasboard(request):
 #             messages.error(request, 'Passwords do not match')
 #     return render(request,"accounts/signup.html")
 from django.db import transaction
+@csrf_protect
 def register(request):
     # if User.is_authenticated:
     #     messages.info(request, 'You have already logged in. Please logout first to register a new account.')
@@ -337,7 +340,7 @@ def change_account_password(request):
         return redirect('/home/mine/')  # Redirect to a profile or a similar page
 
     return render(request, 'accounts/change_account_password.html')
-
+from django.db import IntegrityError
 @login_required
 def upload_photo(request):
     if request.method == 'POST':
@@ -349,8 +352,8 @@ def upload_photo(request):
             return redirect('settings')
 
         # Optional: Check file size or file type if needed
-        if uploaded_file.size > 1024 * 1024:
-            messages.error(request, 'File size exceeds the limit of 1 MB.')
+        if uploaded_file.size > 5*1024 * 1024:
+            messages.error(request, 'File size exceeds the limit of 5 MB.')
             return redirect('settings')
         
         if not uploaded_file.content_type.startswith('image/'):
@@ -377,9 +380,10 @@ def upload_photo(request):
         # GET method is not allowed for this view
         messages.error(request, 'Invalid request.')
         return redirect('settings')
-
+from django.http import HttpResponse
 from django.utils.translation import activate
 from django.conf import settings
+@login_required
 def select_language(request):
     if request.method == 'POST':
         language_code = request.POST.get('language_code')
