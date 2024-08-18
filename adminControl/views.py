@@ -239,7 +239,7 @@ def add_orders(request, batch_id):
                 product_price = float(product_price)
                 product_commission_rate = float(product_commission)
                 commission_amount = product_price * (product_commission_rate / 100)
-                # total_amount = product_price + commission_amount
+                total_amount = product_price 
 
                 product = Product.objects.create(
                     name=product_name,
