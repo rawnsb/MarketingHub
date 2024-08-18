@@ -246,8 +246,8 @@
         <h1>Order ID: {{ simple_order.id }}</h1>
             <div id="productsContainer">
                 <div class="product-item">
-                    <img src="{{ simple_order.original_order.product.image.url }}" class="product-image" alt="{{ simple_order.original_order.product.name }}">
-                    <div><strong>{{ simple_order.original_order.product.name }}</strong> - ${{ simple_order.original_order.product.price }}</div>
+                    <img src="{{ simple_order.custom_product.image.url }}" class="product-image" alt="{{ simple_order.custom_product.name }}">
+                    <div><strong>{{ simple_order.custom_product.name }}</strong> - ${{ simple_order.custom_product.price }}</div>
                 </div>
             </div>
             <div class="order-summary">

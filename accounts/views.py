@@ -212,6 +212,10 @@ def register(request):
     # if User.is_authenticated:
     #     messages.info(request, 'You have already logged in. Please logout first to register a new account.')
     #     return redirect("/home/settings/")
+    invite_code = request.GET.get('invite_code', '')  # Get invite_code from URL
+    context = {
+        'invite_code': invite_code,
+    }
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -288,7 +292,7 @@ def register(request):
             messages.success(request, 'Your account has been created successfully')
             return redirect('/')
 
-    return render(request, "accounts/signup.html")
+    return render(request, "accounts/signup.html",context)
 @login_required
 def logout_user(request):
     logout(request)

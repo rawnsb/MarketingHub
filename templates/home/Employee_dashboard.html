@@ -196,12 +196,15 @@
     <script>
       function copyCode() {
         const invitationalCode = document.getElementById("invitationalCode").textContent;
-        navigator.clipboard.writeText(invitationalCode).then(
+        const baseURL = `${window.location.protocol}//${window.location.host}`;
+        invitationallink=`${baseURL}/signup/?invite_code=${invitationalCode}` ;
+
+        navigator.clipboard.writeText(invitationallink).then(
           () => {
-            alert("Invitational code copied!");
+            alert("Invitational Link copied!");
           },
           () => {
-            alert("Failed to copy the code.");
+            alert("Failed to copy the Invitational Link.");
           }
         );
       }

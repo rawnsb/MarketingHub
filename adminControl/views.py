@@ -155,6 +155,11 @@ def reset_order_numbers(request, id):
     messages.success(request, f'Order count for {user.username} has been successfully reset to 0.')
 
     return redirect("Admin_dashboard")
+def delete_customer(request,id):
+    user = get_object_or_404(User, id=id)
+    user.delete()
+    messages.success(request, f'Customer {user.username} has been successfully deleted.')
+    return redirect("Admin_dashboard")
 
 
 # new

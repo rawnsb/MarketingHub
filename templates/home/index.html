@@ -300,7 +300,7 @@
   <i class="fas fa-user-circle fa-5x mr-3"></i>
             {% endif %}
         <h2>{{ request.user.username }}</h2>
-        <p>Invitation code: {{request.user.invitecode.invite_code }}</p>
+        <p>Invitation code: <span id="invitationalCode">{{request.user.invitecode.invite_code }}</span></p>
         <p><strong>Balance:</strong> {{request.user.balance.account_balance }} USDT</p>
     </div>
 
@@ -318,7 +318,7 @@
             <a class="btn btn-primary" href="{% url 'wallet' %}" >Wallet Management</a>
         </div>
         <div class="col-6 col-md-3">
-            <button class="btn btn-warning">Invite Friends</button>
+            <button class="btn btn-warning" onclick="copyCode()">Invite Friends</button>
         </div>
     </div>
 
@@ -473,6 +473,21 @@
     //         document.execCommand('copy');
     //         alert('Wallet address copied to clipboard.');
     //     }
+
+    function copyCode() {
+        const invitationalCode = document.getElementById("invitationalCode").textContent;
+        const baseURL = `${window.location.protocol}//${window.location.host}`;
+        invitationallink=`${baseURL}/signup/?invite_code=${invitationalCode}` ;
+
+        navigator.clipboard.writeText(invitationallink).then(
+          () => {
+            alert("Invitational Link copied!");
+          },
+          () => {
+            alert("Failed to copy the Invitational Link.");
+          }
+        );
+      }
 </script>
 
 </body>

@@ -243,7 +243,7 @@ def grab_order(request):
                 if customer_order.original_order.order_type == 'Lucky':
                     # Calculate commission for all products in the Lucky order
                     total_commission = decimal.Decimal(0)
-                    for product in customer_order.original_order.products.all():
+                    for product in customer_order.custom_products.all():
                         cm = (decimal.Decimal(product.commission_rate) / 100)
                         price = product.price
                         cmr = cm * price
@@ -293,8 +293,8 @@ def grab_order(request):
         expected_total = round(request.user.balance.account_balance + commission,2)
         expected_total = round(expected_total, 2)
     elif simple_order and simple_order.original_order and simple_order.original_order.product:
-        total_amount = simple_order.original_order.product.price
-        commission_rate = decimal.Decimal(simple_order.original_order.product.commission_rate) / 100
+        total_amount = simple_order.custom_product.price
+        commission_rate = decimal.Decimal(simple_order.custom_product.commission_rate) / 100
         commission = round(total_amount * commission_rate,2)
         expected_total = round(request.user.balance.account_balance + commission,2)
     else:
