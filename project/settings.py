@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,6 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # settings.py
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Serve collected assets only (docker entrypoint runs collectstatic). Avoids finder edge cases.
+WHITENOISE_USE_FINDERS = False
 
 # Additional locations of static files
 STATICFILES_DIRS = [
@@ -31,15 +37,33 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n@anrp9&m&)y$rlnecbeivu93=nu($230l0vqm4+4iwdaqt@82'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-n@anrp9&m&)y$rlnecbeivu93=nu($230l0vqm4+4iwdaqt@82',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
+_allowed_hosts = os.environ.get('ALLOWED_HOSTS', '').strip()
+if _allowed_hosts:
+    ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts.split(',') if h.strip()]
+elif DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://markethub.up.railway.app']
+_csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '').strip()
+if _csrf_origins:
+    CSRF_TRUSTED_ORIGINS = [x.strip() for x in _csrf_origins.split(',') if x.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'https://markethub.up.railway.app',
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+        'http://localhost:8001',
+        'http://127.0.0.1:8001',
+    ]
 
 
 # Application definition
@@ -65,14 +89,15 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -99,13 +124,44 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# Set DATABASE_URL for PostgreSQL (e.g. Docker). If unset, SQLite is used for local dev.
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+_database_url = os.environ.get('DATABASE_URL')
+if _database_url:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=_database_url,
+            conn_max_age=600,
+            ssl_require=os.environ.get('DATABASE_SSL_REQUIRE', '').lower() in ('1', 'true', 'yes'),
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+# Cache / sessions: use Redis when REDIS_URL is set (e.g. Docker). Otherwise local memory cache
+# and database-backed sessions (safe for runserver and single-worker dev).
+_redis_url = os.environ.get('REDIS_URL', '').strip()
+if _redis_url:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': _redis_url,
+        }
+    }
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'marketinghub-locmem',
+        }
+    }
 
 
 # Password validation
@@ -182,7 +238,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 # LOCALE_PATHS = [
 #     Path(__file__).resolve().parent / 'locale',
 # ]
-import os
 from django.utils.translation import gettext_lazy as _
 
 # Internationalization
