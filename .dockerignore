@@ -9,3 +9,5 @@ media
 staticfiles
 db.sqlite3
 *.sqlite3
+
+postgres_data/

@@ -15,3 +15,5 @@ docker-compose.override.yml
 
 .cursor/*
 !.cursor/skills/
+
+postgres_data/
