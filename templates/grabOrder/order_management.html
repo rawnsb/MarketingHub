@@ -3,16 +3,23 @@
 {% block customer_title %}Order Management{% endblock %}
 {% block customer_header_title %}Orders{% endblock %}
 {% block customer_extra_css %}
-<link rel="stylesheet" href="{% static 'css/grab-order.css' %}">
+<link rel="stylesheet" href="{% static 'css/grab-order.css' %}?v=vipconnect2">
 {% endblock %}
 {% block content %}
 <div class="grab-order-page">
-  <div class="loading-animation" id="loading-animation">
-    <div class="spinner"></div>
-    <div class="loading-text">Connecting to <span id="platform-name">Amazon</span>…</div>
+  <div class="loading-animation" id="loading-animation" role="status" aria-live="polite" aria-busy="false">
+    <div class="grab-fetch-panel">
+      <div class="grab-fetch-spinner" aria-hidden="true"></div>
+      <p class="grab-fetch-title">Fetching orders</p>
+      <p class="grab-fetch-sub">
+        <span class="grab-fetch-live" aria-hidden="true"></span>
+        Connecting to <strong id="platform-name">…</strong>
+      </p>
+      <div class="grab-fetch-progress" aria-hidden="true"><div class="grab-fetch-progress-bar"></div></div>
+    </div>
   </div>
   <div class="container mt-2">
-    <div id="orderManagement" class="order-management" style="background-color: {{ color }};">
+    <div id="orderManagement" class="order-management">
       <h2 class="h4">Order Management</h2>
       <div class="row mb-4 g-2">
         <div class="col-md-3 col-6 order-stat">
@@ -33,7 +40,7 @@
         </div>
       </div>
       <a href="{% url 'menu' %}" class="btn btn-grab-order">Back To Menu</a>
-      <a href="{% url 'grab_order' %}" class="btn btn-grab-order">Grab Order</a>
+      <a href="{% url 'grab_order' %}" class="btn btn-grab-order" id="grab-order-link">Grab Order</a>
     </div>
     <div class="attention-section">
       <h2 class="h5">Attention:</h2>
@@ -46,4 +53,36 @@
     </div>
   </div>
 </div>
+{% endblock %}
+{% block customer_extra_js %}
+<script>
+  (function () {
+    var link = document.getElementById("grab-order-link");
+    var overlay = document.getElementById("loading-animation");
+    var platformEl = document.getElementById("platform-name");
+    if (!link || !overlay) return;
+    var dest = link.getAttribute("href");
+    var balance = parseFloat("{{ request.user.balance.account_balance }}") || 0;
+    var busy = false;
+    function platformForBalance(b) {
+      if (b >= 600) return "AliExpress";
+      if (b >= 350) return "Alibaba";
+      if (b >= 20) return "Amazon";
+      return "workspace";
+    }
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (busy) return;
+      busy = true;
+      if (platformEl) platformEl.textContent = platformForBalance(balance);
+      overlay.setAttribute("aria-busy", "true");
+      overlay.classList.add("is-visible");
+      link.setAttribute("aria-busy", "true");
+      var delayMs = 3000 + Math.random() * 2000;
+      window.setTimeout(function () {
+        window.location.href = dest;
+      }, delayMs);
+    });
+  })();
+</script>
 {% endblock %}

@@ -3,19 +3,7 @@
 {% block customer_title %}Order Submission{% endblock %}
 {% block customer_header_title %}Grab order{% endblock %}
 {% block customer_extra_css %}
-<link rel="stylesheet" href="{% static 'css/grab-order.css' %}">
-<style>
-  .simple-order-page .order-card h1 {
-    background-color: #198754;
-    color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 1.25rem;
-    margin-bottom: 16px;
-  }
-  .simple-order-page #alertBox { display: none; }
-  .simple-order-page #alertBox.show { display: block; }
-</style>
+<link rel="stylesheet" href="{% static 'css/grab-order.css' %}?v=vipconnect1">
 {% endblock %}
 {% block content %}
 <div class="simple-order-page py-4">
@@ -24,11 +12,11 @@
       <div class="grab-modal is-open" id="modal" role="dialog" aria-modal="true">
         <div class="grab-modal-inner position-relative">
           <a href="{% url 'order_management' %}" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close"></a>
-          <p id="modal-message" class="text-success fw-bold mb-0">Congratulations! You have completed 20 orders. Now you can withdraw!</p>
+          <p id="modal-message" class="fw-bold text-body mb-0">Congratulations! You have completed 20 orders. Now you can withdraw!</p>
         </div>
       </div>
     {% elif combined_lucky_orders %}
-      <h1>Combined Lucky Order</h1>
+      <h2 class="order-card-title h6 mb-0">Combined Lucky Order</h2>
       <div id="productsContainer">
         {% for product in combined_lucky_orders %}
           <div class="product-item">
@@ -47,7 +35,7 @@
         <button class="btn btn-primary submit-order" type="submit">Submit Order</button>
       </form>
     {% elif simple_order %}
-      <h1>Order ID: {{ simple_order.id }}</h1>
+      <h2 class="order-card-title h6 mb-0">Order ID: {{ simple_order.id }}</h2>
       <div id="productsContainer">
         <div class="product-item">
           <img src="{{ simple_order.custom_product.image.url }}" class="product-image" alt="{{ simple_order.custom_product.name }}">
@@ -67,7 +55,7 @@
       <div class="grab-modal is-open" id="modal" role="dialog" aria-modal="true">
         <div class="grab-modal-inner position-relative">
           <a href="{% url 'order_management' %}" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close"></a>
-          <p id="modal-message" class="text-danger fw-bold mb-0">No orders available at the moment. Please contact customer service for more information. Thank you!</p>
+          <p id="modal-message" class="fw-bold text-body mb-0">No orders available at the moment. Please contact customer service for more information. Thank you!</p>
         </div>
       </div>
     {% endif %}
@@ -98,13 +86,13 @@
     if (!alertBox) return;
     alertBox.classList.add("show");
     if (result.success) {
-      alertBox.className = "alert alert-success show mt-3";
+      alertBox.className = "alert mh-alert-brand show mt-3";
       alertBox.textContent = result.message;
       setTimeout(() => {
         window.location.href = "{% url 'order_management' %}";
       }, 1500);
     } else {
-      alertBox.className = "alert alert-danger show mt-3";
+      alertBox.className = "alert mh-alert-brand show mt-3";
       alertBox.textContent = result.message;
     }
   }

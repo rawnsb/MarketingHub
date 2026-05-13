@@ -3,40 +3,54 @@
 {% block customer_title %}VIP Commissions{% endblock %}
 {% block customer_header_title %}Menu{% endblock %}
 {% block customer_extra_css %}
-<link rel="stylesheet" href="{% static 'css/grab-order.css' %}">
+<link rel="stylesheet" href="{% static 'css/grab-order.css' %}?v=vipconnect1">
 {% endblock %}
 {% block content %}
 <div class="vip-menu-page">
-  <div id="loading" class="align-items-center justify-content-center flex-column" role="status" aria-live="polite">
-    <div class="h4 text-primary">Loading…</div>
-    <div class="text-muted">Connecting to <span id="platform-name"></span></div>
+  <div id="loading" class="vip-connect-overlay d-none" role="status" aria-live="polite" aria-busy="false">
+    <div class="vip-connect-panel">
+      <div class="vip-connect-spinner" aria-hidden="true"></div>
+      <p class="vip-connect-title">Connecting securely</p>
+      <p class="vip-connect-sub">
+        <span class="vip-connect-live" aria-hidden="true"></span>
+        Linking to <strong id="platform-name" class="vip-connect-platform">…</strong>
+      </p>
+      <div class="vip-connect-progress" aria-hidden="true">
+        <div class="vip-connect-progress-bar"></div>
+      </div>
+      <ul class="vip-connect-steps" aria-hidden="true">
+        <li><span class="vip-connect-step-dot"></span>Session handshake</li>
+        <li><span class="vip-connect-step-dot"></span>Syncing workspace</li>
+        <li><span class="vip-connect-step-dot"></span>Preparing orders</li>
+      </ul>
+    </div>
   </div>
   <div class="vip-card-wrap">
     <div class="col-md-4 col-sm-12 d-flex justify-content-center">
-      <a href="#" onclick="return checkConditions('Amazon', 20, 350, '#007bff')" class="card vip-card vip1">
+      <a href="#" onclick="return checkConditions('Amazon', 20, 350)" class="card vip-card vip1">
         <h2>VIP 1</h2>
         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" width="80" height="48" loading="lazy">
         <h3 class="h6 mt-2">Amazon</h3>
-        <p class="small mb-1">Account Balance: 20 USDT to 350 USDT</p>
-        <p class="small mb-0 text-primary fw-semibold">Commissions: 4%</p>
+        <p class="small mb-1">Account balance: 20 USDT to 350 USDT</p>
+        <p class="small mb-0 fw-semibold text-secondary">Commissions: 4%</p>
       </a>
     </div>
     <div class="col-md-4 col-sm-12 d-flex justify-content-center">
-      <a href="#" onclick="return checkConditions('Alibaba', 350, 600, '#ffc107')" class="card vip-card vip2">
+      <a href="#" onclick="return checkConditions('Alibaba', 350, 600)" class="card vip-card vip2">
         <h2>VIP 2</h2>
         <img src="{{ logo_data.ali_baba_logo.url }}" alt="Alibaba" width="80" height="48" loading="lazy">
         <h3 class="h6 mt-2">Alibaba</h3>
-        <p class="small mb-1">Account Balance: 350 USDT to 600 USDT</p>
-        <p class="small mb-0 fw-semibold">Commissions: 8%</p>
+        <p class="small mb-1">Account balance: 350 USDT to 600 USDT</p>
+        <p class="small mb-0 fw-semibold text-secondary">Commissions: 8%</p>
       </a>
     </div>
     <div class="col-md-4 col-sm-12 d-flex justify-content-center">
-      <a href="#" onclick="return checkConditions('AliExpress', 600, Infinity, '#dc3545')" class="card vip-card vip3">
+      <a href="#" onclick="return checkConditions('AliExpress', 600, Infinity)" class="card vip-card vip3">
         <h2>VIP 3</h2>
         <img src="https://logotic.me/system/assets/uploads/vector-files/aliexpress-logo-1643122910-logotic-1668778354-logotic-brand.svg" alt="AliExpress" width="80" height="48" loading="lazy">
         <h3 class="h6 mt-2">AliExpress</h3>
-        <p class="small mb-1">Account Balance: more than 600 USDT</p>
-        <p class="small mb-0 text-danger fw-semibold">Commissions: 12%</p>
+        <p class="small mb-1">Account balance: more than 600 USDT</p>
+        <p class="small mb-0 fw-semibold text-secondary">Commissions: 12%</p>
       </a>
     </div>
   </div>
@@ -49,6 +63,7 @@
     if (deposit >= minDeposit && deposit < maxDeposit) {
       document.getElementById("platform-name").innerText = platform;
       const el = document.getElementById("loading");
+      el.setAttribute("aria-busy", "true");
       el.classList.add("is-visible");
       setTimeout(function () {
         window.location.href = "{% url 'order_management' %}";
