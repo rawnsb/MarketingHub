@@ -78,7 +78,6 @@ def Employee_dashboard(request):
     context = {
         'referred_users': referred_users
     }
-    print(context)
 
     return render(request, "home/Employee_dashboard.html", context)
 @csrf_protect
@@ -123,14 +122,11 @@ def Admin_dasboard(request):
         if not username or not password:
             messages.error(request, "Username and password are required.")
             return redirect('Admin_dashboard')
-        print("here",username,password)
 
         # Create a new employee
         try:
-            print("hello created s")
             emp=User.objects.create_user(username=username, password=password,is_employee=True)
             EmployeeDeposit.objects.create(employee=emp)
-            print("hello created")
             messages.success(request, f'Employee {username} added successfully.')
             return redirect('Admin_dashboard')
         except Exception as e:

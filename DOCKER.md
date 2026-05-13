@@ -21,6 +21,8 @@
 
 3. Open **http://localhost:8000/** (or the port you set with `WEB_HOST_PORT`, e.g. **http://localhost:8001/**).
 
+If Gunicorn logs show **`WORKER TIMEOUT`** (default was 30s), the container now uses **`GUNICORN_TIMEOUT`** (default **120** in [`docker/entrypoint.sh`](docker/entrypoint.sh)). Raise it only if some views legitimately run longer; otherwise find the slow request or stuck client. **`(no URI read)`** after a timeout often means the client never finished sending the HTTP request (closed tab, bad proxy, or wrong URL/port).
+
 Compose sets **`DATABASE_URL`** to the `db` service and **`REDIS_URL`** to the `redis` service. When `REDIS_URL` is set, Django uses **Redis** for the default cache and for **sessions** (shared across Gunicorn workers). If you unset `REDIS_URL`, Django falls back to in-memory cache and database sessions.
 
 ### Port 8000 already in use

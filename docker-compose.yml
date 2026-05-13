@@ -37,6 +37,7 @@ services:
       CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000,http://localhost:8001,http://127.0.0.1:8001,https://markethub.up.railway.app}
       # Gunicorn bind *inside* the container; must match ports mapping "...:8000". Use WEB_HOST_PORT for the host side only.
       PORT: "8000"
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
     depends_on:
       db:
         condition: service_healthy
