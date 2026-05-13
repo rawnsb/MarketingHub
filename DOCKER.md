@@ -37,13 +37,23 @@ You can set **`WEB_HOST_PORT`** in your `.env` file next to the other variables 
 
 **Static files:** Gunicorn does not serve `/static/` by itself. The container runs **`collectstatic`** on each start ([`docker/entrypoint.sh`](docker/entrypoint.sh)), and **[WhiteNoise](https://whitenoise.readthedocs.io/)** middleware in [`project/settings.py`](project/settings.py) serves the Django admin CSS and JS from `STATIC_ROOT`. Migrations run in the same entrypoint before Gunicorn starts.
 
+If the admin login page looks unstyled, open **`http://127.0.0.1:<WEB_HOST_PORT>/static/admin/css/base.css`** (same host and port as the admin page). You should see raw CSS, not a Django “Page not found” HTML page. If you see HTML, rebuild the web image (`docker compose build --no-cache web`) and recreate the container (`docker compose up -d web`), then hard-refresh the browser (cache can hold old 404s). Run **`docker compose down --remove-orphans`** if you ever used `docker compose run web …` without `--entrypoint` — that can leave extra `web-run-*` containers running.
+
 ## First-time admin user
 
+With the stack already up (`docker compose up -d`):
+
 ```bash
-docker compose run --rm web python manage.py createsuperuser
+docker compose exec web python manage.py createsuperuser
 ```
 
-Then visit **http://localhost:8000/admin/**
+For a one-off container (no Gunicorn), override the entrypoint:
+
+```bash
+docker compose run --rm --no-deps --entrypoint python web manage.py createsuperuser
+```
+
+Then visit **http://localhost:8000/admin/** (or your `WEB_HOST_PORT`).
 
 ## Data volumes
 
