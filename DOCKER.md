@@ -35,8 +35,7 @@ Then use **http://localhost:8001/**. Add the same origin to **`CSRF_TRUSTED_ORIG
 
 You can set **`WEB_HOST_PORT`** in your `.env` file next to the other variables (see [`.env.example`](.env.example)). The **`web`** service always listens on port **8000 inside the container** (Compose sets `PORT=8000` there). Only **`WEB_HOST_PORT`** changes the port on your Mac; if `PORT` in `.env` pointed Gunicorn at another port inside the container, the browser would hit “connection reset” because Docker still forwarded to **8000**.
 
-
-Django runs **migrations** and **collectstatic** on each web container start (see [`docker/entrypoint.sh`](docker/entrypoint.sh)).
+**Static files:** Gunicorn does not serve `/static/` by itself. The container runs **`collectstatic`** on each start ([`docker/entrypoint.sh`](docker/entrypoint.sh)), and **[WhiteNoise](https://whitenoise.readthedocs.io/)** middleware in [`project/settings.py`](project/settings.py) serves the Django admin CSS and JS from `STATIC_ROOT`. Migrations run in the same entrypoint before Gunicorn starts.
 
 ## First-time admin user
 
