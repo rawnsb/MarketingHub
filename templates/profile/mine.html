@@ -1,512 +1,73 @@
-<!-- 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding-bottom: 80px; /* Space for footer */
-        }
-        .profile-header {
-            background-color: #1b2f4a;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .profile-header img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            margin-right: 15px;
-        }
-        .profile-header h2 {
-            margin: 0;
-            font-size: 1.4rem;
-        }
-        .profile-header p {
-            margin: 5px 0 0 0;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-        .balance-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .balance-card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-size: 0.9rem;
-        }
-        .balance-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        .balance-card h4 {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 1rem;
-            color: #333;
-        }
-        .balance-card .balance-amount {
-            font-size: 1.2rem;
-            margin-bottom: 0;
-            color: #555;
-        }
-        .balance-card .balance-currency {
-            font-size: 0.8rem;
-            color: #777;
-        }
-        .actions {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .actions .btn {
-            width: 60%;
-            margin: 0 auto;
-            border-radius: 10px;
-            font-weight: bold;
-            background-color: #ff7f50;
-            color: #fff;
-        }
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .button-grid .btn {
-            padding: 15px;
-            font-size: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-1 { background-color: #6495ed; color: white; }
-        .btn-2 { background-color: #32cd32; color: white; }
-        .btn-3 { background-color: #ff6347; color: white; }
-        .btn-4 { background-color: #20b2aa; color: white; }
-        .btn-5 { background-color: #ffd700; color: #333; }
-        .btn-6 { background-color: #9370db; color: white; }
-
-        .signout-btn {
-            width: 100%;
-            border-radius: 10px;
-            font-weight: bold;
-            margin: 20px 0;
-            display: block;
-            background-color: #dc3545;
-            color: white;
-            text-align: center;
-            padding: px;
-            font-size: 1rem;
-        }
-        .footer {
-            background-color: #ffffff;
-            color: rgb(236, 227, 227);
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-        }
-        .footer .nav-link {
-            color: rgb(16, 14, 14);
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-        .footer .nav-link i {
-            display: block;
-            font-size: 1em;
-            margin-bottom: 0px;
-        }
-        @media (max-width: 576px) {
-            .profile-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .profile-header img {
-                width: 70px;
-                height: 70px;
-            }
-            .profile-header h2, .profile-header p {
-                margin-left: 10px;
-                flex-grow: 1;
-            }
-            .balance-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .button-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .actions .btn {
-                width: 100%;
-            }
-            .signout-btn {
-                width: 100%;
-                margin-bottom: 80px; /* Ensure it's above the footer */
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="container-fluid">
-    <div class="profile-header">
-        
-        {% if request.user.profile.profile_image %}
-                <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
-            {% else %}
-            <i class="fas fa-user-circle fa-5x mr-3"></i>
-                      {% endif %}
-        <div>
-            <h2>{{ request.user.username }}</h2>
-            <p>ID: {{request.user.email }}</p>
-        </div>
-    </div>
-
-    <div class="balance-grid">
-        <div class="balance-card" style="background-color: #87cefa;">
-            <h4>Account Balance</h4>
-            <p class="balance-amount">{{ request.user.balance.account_balance }} <span class="balance-currency">USDT</span></p>
-        </div>
-        <div class="balance-card" style="background-color: #98fb98;">
-            <h4>Total Commission</h4>
-            <p class="balance-amount">{{ request.user.balance.total_commission }} <span class="balance-currency">USDT</span></p>
-        </div>
-        <div class="balance-card" style="background-color: #ff7f7f;">
-            <h4>Cash Gap</h4>
-            <p class="balance-amount">{{ request.user.gapamount.gap_amount }} <span class="balance-currency">USDT</span></p>
-        </div>
-        <div class="balance-card" style="background-color: #66cdaa;">
-            <h4>Amount Under Review</h4>
-            {% with latest_withdraw=request.user.withdraw_set.all|dictsort:"-created_at"|first %}
-        {% if latest_withdraw %}
-            {% if latest_withdraw.processed %}
-                <h3 class="mb-0">0.00 USDT</h3>
-            {% else %}
-                <p class="balance-amount">{{ latest_withdraw.amount }} <span class="balance-currency">USDT</span></p>
-            {% endif %}
-        {% else %}
-        <p class="balance-amount">0.00 <span class="balance-currency">USDT</span></p>
-        {% endif %}
-    {% endwith %}
-            //<p class="balance-amount">0.00 <span class="balance-currency">USDT</span></p> --
-        </div>
-    </div>
-
-    <div class="actions">
-        <button class="btn">Invite Friends</button>
-    </div>
-
-    <div class="button-grid">
-        <a href="{% url 'deposite' %}" class="btn btn-1"><i class="fas fa-wallet"></i><br>Recharge Balance</a>
-        <a href="{% url 'withdraw' %}" class="btn btn-2"><i class="fas fa-money-bill-wave"></i><br>Withdraw Money</a>
-        <a href="{% url 'change_account_password' %}" class="btn btn-3"><i class="fas fa-key"></i><br>Change Password</a>
-        <a href="{% url 'change_payment_password' %}" class="btn btn-4"><i class="fas fa-shield-alt"></i><br>Change Withdrawal Password</a>
-        <a href="#" class="btn btn-5"><i class="fas fa-info-circle"></i><br>About Us</a>
-        <a href="#" class="btn btn-6"><i class="fas fa-globe"></i><br>Change Language</a>
-    </div>
-
-    <a href="{% url 'logout' %}" class="signout-btn">Sign Out</a href="{% url 'logout' %}">
-
-    <div class="footer">
-        <nav class="nav justify-content-around">
-            <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
-            <a class="nav-link" href="{% url 'service' %}"><i class="fas fa-concierge-bell"></i>Service</a>
-            <a class="nav-link" href="{% url 'menu' %}"><i class="fas fa-link"></i>Menu</a>
-            <a class="nav-link" href="{% url 'mine' %}"><i class="fas fa-user"></i>Mine</a>
-        </nav>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html> -->
-
+{% extends "home/base_customer.html" %}
 {% load custom_filters %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-        .container-fluid {
-            padding-bottom: 100px; /* Ensure there's space for the footer */
-        }
-        .profile-header {
-            background-color: #1b2f4a;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .profile-header img {
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            margin-right: 15px;
-        }
-        .profile-header h2 {
-            margin: 0;
-            font-size: 1.4rem;
-        }
-        .profile-header p {
-            margin: 5px 0 0 0;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-        .balance-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .balance-card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-size: 0.9rem;
-        }
-        .balance-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        .balance-card h4 {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 1rem;
-            color: #333;
-        }
-        .balance-card .balance-amount {
-            font-size: 1.2rem;
-            margin-bottom: 0;
-            color: #555;
-        }
-        .balance-card .balance-currency {
-            font-size: 0.8rem;
-            color: #777;
-        }
-        .actions {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .actions .btn {
-            width: 60%;
-            margin: 0 auto;
-            border-radius: 10px;
-            font-weight: bold;
-            background-color: #ff7f50;
-            color: #fff;
-        }
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .button-grid .btn {
-            padding: 15px;
-            font-size: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .btn-1 { background-color: #6495ed; color: white; }
-        .btn-2 { background-color: #32cd32; color: white; }
-        .btn-3 { background-color: #ff6347; color: white; }
-        .btn-4 { background-color: #20b2aa; color: white; }
-        .btn-5 { background-color: #ffd700; color: #333; }
-        .btn-6 { background-color: #9370db; color: white; }
-
-        .signout-btn {
-            width: 100%;
-            border-radius: 10px;
-            font-weight: bold;
-            margin: 20px 0;
-            display: block;
-            background-color: #dc3545;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-size: 1rem;
-        }
-        
-        @media (max-width: 576px) {
-            .profile-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .profile-header img {
-                width: 70px;
-                height: 70px;
-            }
-            .profile-header h2, .profile-header p {
-                margin-left: 10px;
-                flex-grow: 1;
-            }
-            .balance-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .button-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .actions .btn {
-                width: 100%;
-            }
-            .signout-btn {
-                width: 100%;
-                margin-bottom: 80px; /* Ensure it's above the footer */
-            }
-        }
-        .footer {
-            background-color: #ffffff;
-            color: rgb(236, 227, 227);
-            text-align: center;
-            padding: 0px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-        .footer .nav-link {
-            color: rgb(16, 14, 14);
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-        .footer .nav-link i {
-            display: block;
-            font-size: 1em;
-            margin-bottom: 0px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container-fluid">
-    <div class="profile-header">
-        
-        {% if request.user.profile.profile_image %}
-                <img src="{{ request.user.profile.profile_image.url }}" alt="Profile Picture" class="profile-pic rounded-circle">
-            {% else %}
-            <i class="fas fa-user-circle fa-5x mr-3"></i>
-                      {% endif %}
-        <div>
-            <h2>{{ request.user.username }}</h2>
-            <p>ID: {{request.user.email|mask_email }}</p>
-        </div>
+{% block customer_title %}Profile{% endblock %}
+{% block customer_header_title %}Profile{% endblock %}
+{% block content %}
+<div class="mine-page">
+  <div class="profile-header">
+    {% if request.user.profile.profile_image %}
+      <img src="{{ request.user.profile.profile_image.url }}" alt="Profile picture" class="profile-pic rounded-circle">
+    {% else %}
+      <i class="fas fa-user-circle fa-4x me-2" aria-hidden="true"></i>
+    {% endif %}
+    <div>
+      <h2>{{ request.user.username }}</h2>
+      <p>ID: {{ request.user.email|mask_email }}</p>
     </div>
+  </div>
 
-    <div class="balance-grid">
-        <div class="balance-card" style="background-color: #87cefa;">
-            <h4>Account Balance</h4>
-            <p class="balance-amount">{{ request.user.balance.account_balance }} <span class="balance-currency">USDT</span></p>
-        </div>
-        <div class="balance-card" style="background-color: #98fb98;">
-            <h4>Total Commission</h4>
-            <p class="balance-amount">{{ request.user.balance.total_commission }} <span class="balance-currency">USDT</span></p>
-        </div>
-        <div class="balance-card" style="background-color: #ff7f7f;">
-            <h4>Cash Gap</h4>
-            <p class="balance-amount">{{ request.user.gapamount.gap_amount }} <span class="balance-currency">USDT</span></p>
-        </div>
-        <div class="balance-card" style="background-color: #66cdaa;">
-            <h4>Amount Under Review</h4>
-            <p class="balance-amount">
-                {% if withdrawal %}
-                    {{ withdrawal.amount }} <span class="balance-currency">USDT</span>
-                {% else %}
-                    0.00 <span class="balance-currency">USDT</span>
-                {% endif %}
-            </p>
-            
-        
-            <!-- <p class="balance-amount">0.00 <span class="balance-currency">USDT</span></p> -->
-        </div>
+  <div class="balance-grid">
+    <div class="balance-card" style="background-color: #87cefa;">
+      <h4>Account Balance</h4>
+      <p class="balance-amount">{{ request.user.balance.account_balance }} <span class="balance-currency">USDT</span></p>
     </div>
-
-    <div class="actions">
-        <input type='hidden' id="invitationalCode" value="{{ request.user.invitation_code }}">
-        <button class="btn" onclick="copyCode()" >Invite Friends</button>
+    <div class="balance-card" style="background-color: #98fb98;">
+      <h4>Total Commission</h4>
+      <p class="balance-amount">{{ request.user.balance.total_commission }} <span class="balance-currency">USDT</span></p>
     </div>
-
-    <div class="button-grid">
-        <a href="{% url 'deposite' %}" class="btn btn-1"><i class="fas fa-wallet"></i><br>Recharge Balance</a>
-        <a href="{% url 'withdraw' %}" class="btn btn-2 bg-secondary"><i class="fas fa-money-bill-wave"></i><br>Withdraw Money</a>
-        <a href="{% url 'change_account_password' %}" class="btn btn-3"><i class="fas fa-key"></i><br>Change Password</a>
-        <a href="{% url 'change_payment_password' %}" class="btn btn-4"><i class="fas fa-shield-alt"></i><br>Change Withdrawal Password</a>
-        <a href="{% url 'about_us' %}" class="btn btn-5"><i class="fas fa-info-circle"></i><br>About Us</a>
-        <a href="#" class="btn btn-6"><i class="fas fa-globe"></i><br>Change Language</a>
+    <div class="balance-card" style="background-color: #ff7f7f;">
+      <h4>Cash Gap</h4>
+      <p class="balance-amount">{{ request.user.gapamount.gap_amount }} <span class="balance-currency">USDT</span></p>
     </div>
+    <div class="balance-card" style="background-color: #66cdaa;">
+      <h4>Amount Under Review</h4>
+      <p class="balance-amount">
+        {% if withdrawal %}
+          {{ withdrawal.amount }} <span class="balance-currency">USDT</span>
+        {% else %}
+          0.00 <span class="balance-currency">USDT</span>
+        {% endif %}
+      </p>
+    </div>
+  </div>
 
-    <a href="{% url 'logout' %}" class="signout-btn">Sign Out</a href="{% url 'logout' %}">
+  <div class="actions">
+    <input type="hidden" id="invitationalCode" value="{{ request.user.invitation_code }}">
+    <button type="button" class="btn" onclick="copyCode()">Invite Friends</button>
+  </div>
 
+  <div class="button-grid">
+    <a href="{% url 'deposite' %}" class="btn btn-1"><i class="fas fa-wallet" aria-hidden="true"></i><br>Recharge Balance</a>
+    <a href="{% url 'withdraw' %}" class="btn btn-2 bg-secondary"><i class="fas fa-money-bill-wave" aria-hidden="true"></i><br>Withdraw Money</a>
+    <a href="{% url 'change_account_password' %}" class="btn btn-3"><i class="fas fa-key" aria-hidden="true"></i><br>Change Password</a>
+    <a href="{% url 'change_payment_password' %}" class="btn btn-4"><i class="fas fa-shield-alt" aria-hidden="true"></i><br>Change Withdrawal Password</a>
+    <a href="{% url 'about_us' %}" class="btn btn-5"><i class="fas fa-info-circle" aria-hidden="true"></i><br>About Us</a>
+    <a href="#" class="btn btn-6"><i class="fas fa-globe" aria-hidden="true"></i><br>Change Language</a>
+  </div>
+
+  <a href="{% url 'logout' %}" class="signout-btn">Sign Out</a>
 </div>
-
-<div class="footer">
-    <nav class="nav justify-content-around">
-        <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home"></i>Home</a>
-        <a class="nav-link" href="{% url 'service' %}"><i class="fas fa-concierge-bell"></i>Service</a>
-        <a class="nav-link" href="{% url 'menu' %}"><i class="fas fa-link"></i>Menu</a>
-        <a class="nav-link" href="{% url 'mine' %}"><i class="fas fa-user"></i>Mine</a>
-    </nav>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+{% block customer_extra_js %}
 <script>
-
-function copyCode() {
-        const invitationalCode = document.getElementById("invitationalCode").value;
-        const baseURL = `${window.location.protocol}//${window.location.host}`;
-        invitationallink=`${baseURL}/signup/?invite_code=${invitationalCode}` ;
-
-        navigator.clipboard.writeText(invitationallink).then(
-          () => {
-            alert("Invitational Link copied!");
-          },
-          () => {
-            alert("Failed to copy the Invitational Link.");
-          }
-        );
-      }
+  function copyCode() {
+    const invitationalCode = document.getElementById("invitationalCode").value;
+    const baseURL = `${window.location.protocol}//${window.location.host}`;
+    const invitationallink = `${baseURL}/signup/?invite_code=${invitationalCode}`;
+    navigator.clipboard.writeText(invitationallink).then(
+      () => { alert("Invitational Link copied!"); },
+      () => { alert("Failed to copy the Invitational Link."); }
+    );
+  }
 </script>
-</body>
-</html>
+{% endblock %}

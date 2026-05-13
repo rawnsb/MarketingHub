@@ -1,253 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f7ff;
-            overflow-x: hidden;
-        }
-        .order-management {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-        }
-        .order-management h2 {
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .order-stat {
-            margin-bottom: 15px;
-        }
-        .order-stat span {
-            display: block;
-            font-size: 1.2rem;
-            color: #343a40;
-        }
-        .order-stat span.value {
-            font-weight: bold;
-        }
-        .btn-grab-order {
-            background: #6f42c1;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background 0.3s;
-            margin: 10px 0;
-        }
-        .btn-grab-order:hover {
-            background: #563d7c;
-            color: #fff;
-        }
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(139, 69, 19, 0.3);
-            animation: float 20s infinite, color-change 5s infinite;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(50px, -50px); }
-            50% { transform: translate(-50px, -100px); }
-            75% { transform: translate(-100px, -50px); }
-            100% { transform: translate(0, 0); }
-        }
-        @keyframes color-change {
-            0% { background-color: rgba(139, 69, 19, 0.3); }
-            50% { background-color: rgba(255, 215, 0, 0.3); }
-            100% { background-color: rgba(139, 69, 19, 0.3); }
-        }
-        .watermark {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            color: rgba(0, 0, 0, 0.1);
-            transform: rotate(-45deg);
-            pointer-events: none;
-        }
-        .loading-animation {
-            display: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            top: 0;
-            left: 0;
-            z-index: 9999;
-            text-align: center;
-            line-height: 100vh;
-            font-size: 2rem;
-            color: #007bff;
-        }
-        .loading-animation .spinner {
-            display: inline-block;
-            width: 80px;
-            height: 80px;
-            border: 8px solid rgba(0, 123, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #007bff;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loading-text {
-            font-size: 1.5rem;
-            margin-top: 10px;
-        }
-        .attention-section {
-            background-color: #ffc107;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            text-align: left;
-        }
-        .attention-section h2 {
-            color: #343a40;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .attention-section ul {
-            padding-left: 20px;
-            list-style-type: square;
-            color: #343a40;
-        }
-        .attention-section ul li {
-            margin-bottom: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        .attention-section p {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #343a40;
-        }
-        @media (max-width: 576px) {
-            .container{
-                margin-top: 0px;
-                padding-top: 0px;
-                height: 30px;
-            }
-            .order-management h2, .attention-section h2 {
-                font-size: 1.5rem;
-            }
-            .order-stat span, .attention-section ul li {
-                font-size: 1rem;
-            }
-            .btn-grab-order {
-                padding: 10px;
-                font-size: 1rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="loading-animation" id="loading-animation">
-        <div class="spinner"></div>
-        <div class="loading-text">Connecting to <span id="platform-name">Amazon</span>...</div>
-    </div>
-    {% include "Base/alert.html" %}
-    <div class="container mt-5">
-        <div id="orderManagement" class="order-management" style="background-color: {{ color }} ;">
-            <h2>Order Management</h2>
-            <div class="row mb-5">
-                <div class="col-md-3 col-6 order-stat">
-                    <span>Account Balance:</span>
-                    <span class="value">{{ request.user.balance.account_balance }} USDT</span>
-                </div>
-                <div class="col-md-3 col-6 order-stat">
-                    <span>Total Commission:</span>
-                    <span class="value">{{ request.user.balance.total_commission }} USDT</span>
-                </div>
-                <div class="col-md-3 col-6 order-stat">
-                    <span>Today Commission:</span>
-                    <span class="value">{{ request.user.balance.today_commission }} USDT</span>
-                </div>
-                <div class="col-md-3 col-6 order-stat">
-                    <span>Submitted Orders:</span>
-                    <span class="value">{{ request.user.ordercount.no_of_submitted_order }}</span>
-                </div>
-            </div>
-            <a href="{% url 'menu' %}" class="btn btn-grab-order">Back To Menu</a>
-            <a href="{% url 'grab_order' %}" class="btn btn-grab-order">Grab Order</a>
+{% extends "home/base_customer.html" %}
+{% load static %}
+{% block customer_title %}Order Management{% endblock %}
+{% block customer_header_title %}Orders{% endblock %}
+{% block customer_extra_css %}
+<link rel="stylesheet" href="{% static 'css/grab-order.css' %}">
+{% endblock %}
+{% block content %}
+<div class="grab-order-page">
+  <div class="loading-animation" id="loading-animation">
+    <div class="spinner"></div>
+    <div class="loading-text">Connecting to <span id="platform-name">Amazon</span>…</div>
+  </div>
+  <div class="container mt-2">
+    <div id="orderManagement" class="order-management" style="background-color: {{ color }};">
+      <h2 class="h4">Order Management</h2>
+      <div class="row mb-4 g-2">
+        <div class="col-md-3 col-6 order-stat">
+          <span>Account Balance:</span>
+          <span class="value">{{ request.user.balance.account_balance }} USDT</span>
         </div>
-        <div class="attention-section">
-            <h2>Attention:</h2>
-            <ul>
-                <li><strong>Task Assignment:</strong> Your task has been assigned randomly by the system.</li>
-                <li><strong>Urgency:</strong> Please complete the task promptly to avoid any potential issues.</li>
-                <li><strong>Deadline:</strong> You have 72 hours to complete the task. If you require additional time, please contact customer service immediately.</li>
-            </ul>
-            <p>Thank you for your cooperation.</p>
+        <div class="col-md-3 col-6 order-stat">
+          <span>Total Commission:</span>
+          <span class="value">{{ request.user.balance.total_commission }} USDT</span>
         </div>
-    </div>
-
-    <!-- Order Modal -->
-<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="orderModalLabel">Order Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                {% if combined_lucky_orders %}
-                    <h1>Combined Lucky Orders</h1>
-                    <div id="productsContainer">
-                        {% for order in combined_lucky_orders %}
-                            <div class="product-item">
-                                <img src="{{ order.product_img.url }}" class="product-image" alt="{{ order.product_name }}">
-                                <div><strong>{{ order.product_name }}</strong> - ${{ order.product_price }}</div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="order-summary">
-                        <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
-                        <p><strong>Commission:</strong> ${{ commission }}</p>
-                        <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
-                    </div>
-                {% elif simple_order %}
-                    <h1>Order ID: {{ simple_order.order_id }}</h1>
-                    <div id="productsContainer">
-                        <div class="product-item">
-                            <img src="{{ simple_order.product_img.url }}" class="product-image" alt="{{ simple_order.product_name }}">
-                            <div><strong>{{ simple_order.product_name }}</strong> - ${{ simple_order.product_price }}</div>
-                        </div>
-                    </div>
-                    <div class="order-summary">
-                        <p><strong>Order Amount:</strong> ${{ total_amount }}</p>
-                        <p><strong>Commission:</strong> ${{ commission }}</p>
-                        <p><strong>Expected Total:</strong> ${{ expected_total }}</p>
-                    </div>
-                {% else %}
-                    <p>No orders available at the moment.</p>
-                {% endif %}
-            </div>
-            <div class="modal-footer">
-                <form onsubmit="submitOrder(event)">
-                    <button type="submit" class="btn btn-submit-order">Submit Order</button>
-                </form>
-            </div>
+        <div class="col-md-3 col-6 order-stat">
+          <span>Today Commission:</span>
+          <span class="value">{{ request.user.balance.today_commission }} USDT</span>
         </div>
+        <div class="col-md-3 col-6 order-stat">
+          <span>Submitted Orders:</span>
+          <span class="value">{{ request.user.ordercount.no_of_submitted_order }}</span>
+        </div>
+      </div>
+      <a href="{% url 'menu' %}" class="btn btn-grab-order">Back To Menu</a>
+      <a href="{% url 'grab_order' %}" class="btn btn-grab-order">Grab Order</a>
     </div>
+    <div class="attention-section">
+      <h2 class="h5">Attention:</h2>
+      <ul>
+        <li><strong>Task Assignment:</strong> Your task has been assigned randomly by the system.</li>
+        <li><strong>Urgency:</strong> Please complete the task promptly to avoid any potential issues.</li>
+        <li><strong>Deadline:</strong> You have 72 hours to complete the task. If you require additional time, please contact customer service immediately.</li>
+      </ul>
+      <p class="mb-0">Thank you for your cooperation.</p>
+    </div>
+  </div>
 </div>
-
-
-</body>
-</html>
-
+{% endblock %}

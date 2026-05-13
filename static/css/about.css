@@ -1,0 +1,77 @@
+/* About page (scoped — avoids clashing with Bootstrap `.container`) */
+.about-page .about-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.about-page header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.about-page h1 {
+  color: #2c3e50;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 10px;
+}
+.about-page h2 {
+  color: #2980b9;
+  margin-bottom: 20px;
+  font-size: clamp(1.25rem, 3vw, 1.8rem);
+}
+.about-page p,
+.about-page ul {
+  margin-bottom: 20px;
+}
+.about-page ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+.about-page section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 20px;
+  border-radius: 10px;
+}
+.about-page section:nth-child(even) {
+  flex-direction: row-reverse;
+}
+.about-page section img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin: 0 20px 20px 0;
+}
+.about-page section div {
+  flex: 1;
+  min-width: 240px;
+  padding: 20px;
+}
+.about-page section#about { background-color: #ecf0f1; }
+.about-page section#how-it-works { background-color: #e8f8f5; }
+.about-page section#instructions { background-color: #fcf3cf; }
+.about-page section#usdt-info { background-color: #f9ebea; }
+.about-page section#why-choose-us { background-color: #f9e79f; }
+.about-page .about-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 16px;
+  background-color: #2980b9;
+  color: #fff;
+  border-radius: 0 0 10px 10px;
+}
+@media (max-width: 768px) {
+  .about-page section {
+    flex-direction: column;
+  }
+  .about-page section img {
+    margin: 0 0 20px 0;
+  }
+}

@@ -1,0 +1,188 @@
+/* Order management (customer flow) */
+.grab-order-page .order-management {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  text-align: center;
+  position: relative;
+}
+.grab-order-page .order-management h2 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.grab-order-page .order-stat {
+  margin-bottom: 15px;
+}
+.grab-order-page .order-stat span {
+  display: block;
+  font-size: 1.1rem;
+  color: #343a40;
+}
+.grab-order-page .order-stat span.value {
+  font-weight: bold;
+}
+.grab-order-page .btn-grab-order {
+  background: #6f42c1;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  margin: 8px 4px;
+  text-decoration: none;
+  display: inline-block;
+}
+.grab-order-page .btn-grab-order:hover {
+  background: #563d7c;
+  color: #fff;
+}
+.grab-order-page .loading-animation {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.92);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-size: 1.25rem;
+  color: #0d6efd;
+}
+.grab-order-page .loading-animation.is-visible {
+  display: flex;
+}
+.grab-order-page .loading-animation .spinner {
+  width: 72px;
+  height: 72px;
+  border: 6px solid rgba(13, 110, 253, 0.25);
+  border-radius: 50%;
+  border-top-color: #0d6efd;
+  animation: grab-spin 0.9s linear infinite;
+}
+@keyframes grab-spin {
+  to { transform: rotate(360deg); }
+}
+.grab-order-page .attention-section {
+  background-color: #ffc107;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+.grab-order-page .product-image {
+  max-width: 120px;
+  height: auto;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+/* VIP menu */
+.vip-menu-page .vip-card-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.vip-menu-page .card.vip-card {
+  max-width: 320px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  background: #fff;
+}
+.vip-menu-page .card.vip-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+.vip-menu-page .vip-card h2 {
+  font-size: 1.15rem;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 10px 10px 0 0;
+  margin: -1.25rem -1.25rem 0.75rem -1.25rem;
+}
+.vip-menu-page .vip1 h2 { background-color: #0d6efd; }
+.vip-menu-page .vip2 h2 { background-color: #ffc107; color: #212529 !important; }
+.vip-menu-page .vip3 h2 { background-color: #dc3545; }
+.vip-menu-page #loading {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.92);
+  z-index: 9999;
+}
+.vip-menu-page #loading.is-visible {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Simple order submit */
+.simple-order-page .order-card {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 1.25rem;
+  border-radius: 12px;
+  max-width: 380px;
+  margin: 0 auto;
+  text-align: center;
+}
+.simple-order-page .product-item {
+  background-color: #f0f8ff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+.simple-order-page .product-image {
+  width: 56px;
+  height: 56px;
+  margin-right: 10px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.simple-order-page .order-summary {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.simple-order-page .submit-order {
+  width: 100%;
+  margin-top: 16px;
+}
+.simple-order-page .grab-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1055;
+  background: rgba(0, 0, 0, 0.45);
+  align-items: center;
+  justify-content: center;
+}
+.simple-order-page .grab-modal.is-open {
+  display: flex;
+}
+.simple-order-page .grab-modal-inner {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}

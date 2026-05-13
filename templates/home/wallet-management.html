@@ -1,541 +1,61 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Wallet Management</title>-->
-<!--    <link rel="stylesheet" href="styles.css">-->
-<!--    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
-<!--    <style>-->
-<!--        @keyframes fadeIn {-->
-<!--            from { opacity: 0; transform: translateY(20px); }-->
-<!--            to { opacity: 1; transform: translateY(0); }-->
-<!--        }-->
-
-<!--        body {-->
-<!--            font-family: 'Roboto', sans-serif;-->
-<!--            background: linear-gradient(135deg, #74EBD5 0%, #9FACE6 100%);-->
-<!--            display: flex;-->
-<!--            justify-content: center;-->
-<!--            align-items: center;-->
-<!--            min-height: 100vh;-->
-<!--            margin: 0;-->
-<!--            animation: fadeIn 1s ease-in-out;-->
-<!--        }-->
-
-<!--        .container {-->
-<!--            background-color: #fff;-->
-<!--            padding: 30px;-->
-<!--            border-radius: 15px;-->
-<!--            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);-->
-<!--            max-width: 500px;-->
-<!--            width: 90%;-->
-<!--            animation: fadeIn 1s ease-in-out;-->
-<!--        }-->
-
-<!--        h2, h4 {-->
-<!--            color: #333;-->
-<!--            text-align: center;-->
-<!--            margin-bottom: 20px;-->
-<!--        }-->
-
-<!--        h4 {-->
-<!--            margin-top: 30px;-->
-<!--        }-->
-
-<!--        .form-group label {-->
-<!--            font-weight: bold;-->
-<!--            color: #333;-->
-<!--        }-->
-
-<!--        .form-group input,-->
-<!--        .form-group select {-->
-<!--            margin-bottom: 15px;-->
-<!--            border-radius: 5px;-->
-<!--            border: 1px solid #ddd;-->
-<!--            padding: 10px;-->
-<!--            width: 100%;-->
-<!--            transition: border-color 0.3s ease;-->
-<!--        }-->
-
-<!--        .form-group input:focus,-->
-<!--        .form-group select:focus {-->
-<!--            border-color: #007bff;-->
-<!--            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);-->
-<!--        }-->
-
-<!--        .btn-primary {-->
-<!--            background-color: #007bff;-->
-<!--            border: none;-->
-<!--            width: 100%;-->
-<!--            padding: 10px;-->
-<!--            border-radius: 5px;-->
-<!--            transition: background-color 0.3s ease, transform 0.3s ease;-->
-<!--        }-->
-
-<!--        .btn-primary:hover {-->
-<!--            background-color: #0056b3;-->
-<!--            transform: scale(1.05);-->
-<!--        }-->
-
-<!--        .btn-primary:focus {-->
-<!--            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);-->
-<!--        }-->
-
-<!--        .timer {-->
-<!--            display: flex;-->
-<!--            justify-content: center;-->
-<!--            align-items: center;-->
-<!--            height: 200px;-->
-<!--            width: 200px;-->
-<!--            border: 10px solid #007bff;-->
-<!--            border-radius: 50%;-->
-<!--            margin: 20px auto;-->
-<!--            font-size: 24px;-->
-<!--            color: #007bff;-->
-<!--            animation: fadeIn 1s ease-in-out;-->
-<!--        }-->
-
-<!--        .hidden {-->
-<!--            display: none;-->
-<!--        }-->
-
-<!--        .rate {-->
-<!--            font-size: 12px;-->
-<!--            color: #007bff;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-
-<!--<body>-->
-
-<!--    <div class="container">-->
-<!--        <h2>Wallet Management</h2>-->
-<!--        <form id="kycForm">-->
-<!--            <h4>KYC Verification</h4>-->
-<!--            <div class="form-group">-->
-<!--                <label for="idCardFront">ID Card Front</label>-->
-<!--                <input type="file" class="form-control" id="idCardFront" required>-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="idCardBack">ID Card Back</label>-->
-<!--                <input type="file" class="form-control" id="idCardBack" required>-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="faceVideo">Face Recognition Video</label>-->
-<!--                <input type="file" class="form-control" id="faceVideo" accept="video/*" capture="camera" required>-->
-<!--            </div>-->
-<!--            <h4>Withdrawal Account Details</h4>-->
-<!--            <div class="form-group">-->
-<!--                <label for="walletType">Select Wallet Type</label>-->
-<!--                <select class="form-control" id="walletType" required>-->
-<!--                    <option value="">Select</option>-->
-<!--                    <option value="usdt">USDT <span class="rate" id="usdtRate"></span></option>-->
-<!--                    <option value="solana">Solana <span class="rate" id="solRate"></span></option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="walletAddress">Wallet Address</label>-->
-<!--                <input type="text" class="form-control" id="walletAddress" placeholder="Enter wallet address" required>-->
-<!--            </div>-->
-<!--            <button type="button" class="btn btn-primary" onclick="submitKycForm()">Submit</button>-->
-<!--        </form>-->
-<!--        <div id="verificationMessage" class="hidden">-->
-<!--            <div class="timer" id="timer"></div>-->
-<!--            <p class="text-center mt-3">Your verification is in process. Please wait...</p>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    <script>-->
-<!--        document.addEventListener('DOMContentLoaded', function() {-->
-<!--            fetch('https://ipapi.co/json/')-->
-<!--                .then(response => response.json())-->
-<!--                .then(data => {-->
-<!--                    const currency = data.currency;-->
-<!--                    fetchRates(currency);-->
-<!--                })-->
-<!--                .catch(error => console.error('Error fetching IP address and location:', error));-->
-
-<!--            function fetchRates(currency) {-->
-<!--                fetch(`http://127.0.0.1:8000/home/wallet_management/`)-->
-<!--                    .then(response => response.json())-->
-<!--                    .then(data => {-->
-<!--                        document.getElementById('usdtRate').innerText = `(${data.tether[currency.toLowerCase()]} ${currency})`;-->
-<!--                        document.getElementById('solRate').innerText = `(${data.solana[currency.toLowerCase()]} ${currency})`;-->
-<!--                    })-->
-<!--                    .catch(error => console.error('Error fetching cryptocurrency rates:', error));-->
-<!--            }-->
-<!--        });-->
-
-<!--        function startTimer(duration, display) {-->
-<!--            let timer = duration, minutes, seconds;-->
-<!--            const interval = setInterval(() => {-->
-<!--                minutes = parseInt(timer / 60, 10);-->
-<!--                seconds = parseInt(timer % 60, 10);-->
-
-<!--                minutes = minutes < 10 ? "0" + minutes : minutes;-->
-<!--                seconds = seconds < 10 ? "0" + seconds : seconds;-->
-
-<!--                display.textContent = minutes + ":" + seconds;-->
-
-<!--                if (&#45;&#45;timer < 0) {-->
-<!--                    clearInterval(interval);-->
-<!--                    alert('Congratulations, you are verified and can now withdraw your money.');-->
-<!--                }-->
-<!--            }, 1000);-->
-<!--        }-->
-
-<!--        function submitKycForm() {-->
-<!--            const form = document.getElementById('kycForm');-->
-<!--            if (form.checkValidity()) {-->
-<!--                form.classList.add('hidden');-->
-<!--                document.getElementById('verificationMessage').classList.remove('hidden');-->
-
-<!--                const timerDisplay = document.getElementById('timer');-->
-<!--                startTimer(1 * 60, timerDisplay); // 15 minutes in seconds-->
-<!--            } else {-->
-<!--                form.reportValidity();-->
-<!--            }-->
-<!--        }-->
-<!--    </script>-->
-<!--</body>-->
-
-<!-- </html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet Management</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #74EBD5 0%, #9FACE6 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 90%;
-            animation: fadeIn 1s ease-in-out;
-        }
-        h2, h4 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h4 {
-            margin-top: 30px;
-        }
-        .form-group label {
-            font-weight: bold;
-            color: #333;
-        }
-        .form-group input, .form-group select {
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            width: 100%;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus, .form-group select:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        .btn-primary:focus {
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        }
-        .timer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-            width: 200px;
-            border: 10px solid #007bff;
-            border-radius: 50%;
-            margin: 20px auto;
-            font-size: 24px;
-            color: #007bff;
-            animation: fadeIn 1s ease-in-out;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Wallet Management</h2>
-        <form id="kycForm" action="{% url 'wallet' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h4>KYC Verification</h4>
-            <div class="form-group">
-                <label for="idCardFront">ID Card Front</label>
-                <input type="file" class="form-control" id="idCardFront" name="idCardFront" required>
-            </div>
-            <div class="form-group">
-                <label for="idCardBack">ID Card Back</label>
-                <input type="file" class="form-control" id="idCardBack" name="idCardBack" required>
-            </div>
-            <div class="form-group">
-                <label for="faceVideo">Face Recognition Video</label>
-                <input type="file" class="form-control" id="faceVideo" name="faceVideo" accept="video/*" capture="camera" required>
-            </div>
-            <h4>Withdrawal Account Details</h4>
-            <div class="form-group">
-                <label for="walletType">Select Wallet Type</label>
-                <select class="form-control" id="walletType" name="walletType" required>
-                    <option value="">Select</option>
-                    <option value="usdt">USDT</option>
-                    <option value="solana">Solana</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="walletAddress">Wallet Address</label>
-                <input type="text" class="form-control" id="walletAddress" name="walletAddress" placeholder="Enter wallet address" required>
-            </div>
-            <button type="submit" class="btn btn-primary" >Submit</button>
-        </form>
+{% extends "home/base_customer.html" %}
+{% block customer_title %}Wallet Management{% endblock %}
+{% block customer_header_title %}Wallet{% endblock %}
+{% block content %}
+<div class="flow-card">
+  <h2 class="h5 text-center mb-4">Wallet Management</h2>
+  {% if request.user.kyc.is_verified %}
+    <div class="alert alert-success" role="alert">
+      <strong>Success!</strong> You are verified for withdrawal.
+      <br>
+      <em>Note:</em> If you want to change your wallet address, please contact customer care.
     </div>
-
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet Management</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #74EBD5 0%, #9FACE6 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-            margin: 20px;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        h2 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.75rem;
-            font-weight: bold;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        h4 {
-            color: #333;
-            text-align: center;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 1.25rem;
-            font-weight: bold;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .form-group label {
-            color: #333;
-            font-weight: bold;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            transition: border-color 0.3s ease;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: none;
-        }
-
-        .custom-file {
-            margin-bottom: 20px;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .custom-file-input {
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            transition: border-color 0.3s ease;
-        }
-
-        .custom-file-input:focus ~ .custom-file-label {
-            border-color: #007bff;
-            box-shadow: none;
-        }
-
-        .custom-file-label {
-            border-radius: 8px;
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-
-        .btn-primary:focus {
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding: 30px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            h4 {
-                font-size: 1.2rem;
-            }
-
-            .btn-primary {
-                font-size: 1rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <h2>Wallet Management</h2>
-        {% if request.user.kyc.is_verified %}
-        <div class="alert alert-success">
-            <strong>Success!</strong> You are verified for withdrawal.
-            <br>
-    <em>Note:</em> If you want to change your wallet address, please contact customer care.
-        </div>
-
-        {% else %}
-        <form id="kycForm" action="{% url 'wallet' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h4>KYC Verification</h4>
-            <div class="form-group">
-                <label for="idCardFront">ID Card Front</label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="idCardFront" name="idCardFront" required>
-                    <label class="custom-file-label" for="idCardFront">Choose image</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="idCardBack">ID Card Back</label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="idCardBack" name="idCardBack" required>
-                    <label class="custom-file-label" for="idCardBack">Choose image</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="faceVideo">Face Recognition Video</label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="faceVideo" name="faceVideo" accept="video/*" capture="camera" required>
-                    <label class="custom-file-label" for="faceVideo">Choose video</label>
-                </div>
-            </div>
-            <h4>Withdrawal Account Details</h4>
-            <div class="form-group">
-                <label for="walletType">Select Wallet Type</label>
-                <select class="form-control" id="walletType" name="walletType" required>
-                    <option value="">Select</option>
-                    <option value="usdt">USDT</option>
-                    <option value="solana">Solana</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="walletAddress">Wallet Address</label>
-                <input type="text" class="form-control" id="walletAddress" name="walletAddress" placeholder="Enter wallet address" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        {% endif %}
-    </div>
-
-    <!-- Optional JavaScript -->
-    <script>
-        // Show the file name when a file is selected
-        document.querySelectorAll('.custom-file-input').forEach(input => {
-            input.addEventListener('change', function () {
-                let fileName = this.files[0].name;
-                this.nextElementSibling.innerHTML = fileName;
-            });
-        });
-    </script>
-</body>
-
-</html>
+  {% else %}
+    <form id="kycForm" action="{% url 'wallet' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h3 class="h6 text-secondary mb-3">KYC Verification</h3>
+      <div class="mb-3">
+        <label class="form-label" for="idCardFront">ID Card Front</label>
+        <input type="file" class="form-control" id="idCardFront" name="idCardFront" accept="image/*" required>
+        <small class="text-muted d-block mt-1" id="idCardFront-name"></small>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="idCardBack">ID Card Back</label>
+        <input type="file" class="form-control" id="idCardBack" name="idCardBack" accept="image/*" required>
+        <small class="text-muted d-block mt-1" id="idCardBack-name"></small>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="faceVideo">Face Recognition Video</label>
+        <input type="file" class="form-control" id="faceVideo" name="faceVideo" accept="video/*" capture="environment" required>
+        <small class="text-muted d-block mt-1" id="faceVideo-name"></small>
+      </div>
+      <h3 class="h6 text-secondary mb-3">Withdrawal Account Details</h3>
+      <div class="mb-3">
+        <label class="form-label" for="walletType">Select Wallet Type</label>
+        <select class="form-select" id="walletType" name="walletType" required>
+          <option value="">Select</option>
+          <option value="usdt">USDT</option>
+          <option value="solana">Solana</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="walletAddress">Wallet Address</label>
+        <input type="text" class="form-control" id="walletAddress" name="walletAddress" placeholder="Enter wallet address" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}
+{% block customer_extra_js %}
+<script>
+  document.querySelectorAll('input[type="file"]').forEach(function (input) {
+    input.addEventListener("change", function () {
+      const el = document.getElementById(this.id + "-name");
+      if (el && this.files && this.files[0]) {
+        el.textContent = this.files[0].name;
+      }
+    });
+  });
+</script>
+{% endblock %}

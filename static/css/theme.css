@@ -1,0 +1,489 @@
+/* MarketingHub shared theme — used with Bootstrap 5.3 + template inheritance */
+
+:root {
+  --mh-header-bg: #4c99af;
+  --mh-profile-dark: #1b2f4a;
+  --mh-page-bg: #f5f5f5;
+}
+
+/* ----- Auth (login) layout ----- */
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(45deg, #ff6f61, #ffcc33, #34e89e, #0f3443);
+  background-size: 400% 400%;
+  animation: mh-gradient-bg 15s ease infinite;
+  color: #fff;
+}
+
+@keyframes mh-gradient-bg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.auth-layout .auth-card {
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: mh-slide-up 0.6s ease-out;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+}
+
+@keyframes mh-slide-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.auth-layout .auth-card .card-header,
+.auth-layout .auth-card .card-footer {
+  background: transparent;
+  border: none;
+}
+
+.auth-layout .auth-card .card-header h2 {
+  color: #333;
+}
+
+.auth-layout .auth-card .form-label {
+  color: #333;
+}
+
+.auth-layout .auth-card .btn-auth-primary {
+  background: #0d6efd;
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.25rem;
+  transition: background 0.2s;
+}
+
+.auth-layout .auth-card .btn-auth-primary:hover {
+  background: #0b5ed7;
+}
+
+.auth-layout .auth-card .form-control {
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+}
+
+.auth-layout .auth-card .form-control:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.auth-layout .customer-service {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.auth-layout .customer-service img {
+  width: 50px;
+  transition: transform 0.2s, opacity 0.2s;
+  opacity: 0.85;
+}
+
+.auth-layout .customer-service img:hover {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+/* ----- Customer app shell ----- */
+.customer-app {
+  min-height: 100vh;
+  padding-bottom: 5.5rem;
+  background-color: var(--mh-page-bg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.customer-app .customer-header {
+  background-color: var(--mh-header-bg);
+  color: #fff;
+  border-radius: 0 0 10px 10px;
+  text-align: center;
+  padding: 0.75rem 1rem;
+}
+
+.customer-app .customer-profile-card {
+  background-color: var(--mh-profile-dark);
+  color: #fff;
+  padding: 1.25rem;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.customer-app .customer-profile-card img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0.5rem;
+  object-fit: cover;
+}
+
+.customer-app .customer-action-buttons .btn {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+}
+
+.customer-app .customer-info-list {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 0.5rem 0;
+  margin-bottom: 1.25rem;
+}
+
+.customer-app .customer-info-list .list-group-item {
+  border: none;
+  border-bottom: 1px solid #eee;
+}
+
+.customer-app .customer-info-list .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.customer-bottom-nav {
+  background-color: #fff;
+  border-top: 1px solid #dee2e6;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  padding: 0.35rem 0;
+}
+
+.customer-bottom-nav .nav-link {
+  color: #212529;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.customer-bottom-nav .nav-link i {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.1rem;
+}
+
+.customer-bottom-nav .nav-link.active {
+  color: var(--mh-header-bg);
+}
+
+.customer-app .modal-content {
+  border-radius: 1rem;
+}
+
+.customer-app .copybtn {
+  margin-left: 10px;
+  padding: 0.5rem 1rem;
+  background-color: #198754;
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.customer-app .copybtn:hover {
+  background-color: #157347;
+}
+
+/* ----- Profile / Mine page ----- */
+.mine-page .profile-header {
+  background-color: var(--mh-profile-dark);
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mine-page .profile-header img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.mine-page .profile-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.mine-page .profile-header p {
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.mine-page .balance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mine-page .balance-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 0.9rem;
+}
+
+.mine-page .balance-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.mine-page .balance-card h4 {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.mine-page .balance-card .balance-amount {
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  color: #555;
+}
+
+.mine-page .balance-card .balance-currency {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.mine-page .actions {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mine-page .actions .btn {
+  width: 60%;
+  margin: 0 auto;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: #ff7f50;
+  color: #fff;
+  border: none;
+}
+
+.mine-page .button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mine-page .button-grid .btn {
+  padding: 15px;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.mine-page .btn-1 { background-color: #6495ed; color: white; }
+.mine-page .btn-2 { background-color: #32cd32; color: white; }
+.mine-page .btn-3 { background-color: #ff6347; color: white; }
+.mine-page .btn-4 { background-color: #20b2aa; color: white; }
+.mine-page .btn-5 { background-color: #ffd700; color: #333; }
+.mine-page .btn-6 { background-color: #9370db; color: white; }
+
+.mine-page .signout-btn {
+  width: 100%;
+  border-radius: 10px;
+  font-weight: bold;
+  margin: 20px 0;
+  display: block;
+  background-color: #dc3545;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+@media (max-width: 576px) {
+  .mine-page .balance-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mine-page .button-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mine-page .actions .btn {
+    width: 100%;
+  }
+  .mine-page .signout-btn {
+    margin-bottom: 80px;
+  }
+}
+
+/* ----- Staff (admin / employee) shell ----- */
+.staff-app {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.staff-app .staff-navbar {
+  background-color: #343a40;
+  padding: 0.75rem 1rem;
+}
+
+.staff-app .staff-navbar .navbar-brand {
+  color: #fff;
+  font-weight: 600;
+}
+
+.staff-app .staff-navbar .btn-logout {
+  color: #fff;
+  border-color: #dc3545;
+}
+
+.staff-app .staff-navbar .btn-logout:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+/* Admin dashboard cards */
+.staff-admin .info-box {
+  padding: 16px;
+  margin: 8px 0;
+  color: #fff;
+  border-radius: 8px;
+}
+
+.staff-admin .bg-total { background-color: #0d6efd; }
+.staff-admin .bg-net { background-color: #198754; }
+.staff-admin .bg-users { background-color: #dc3545; }
+.staff-admin .bg-active { background-color: #ffc107; color: #212529 !important; }
+.staff-admin .bg-withdraw { background-color: #0dcaf0; color: #212529 !important; }
+
+.staff-admin .action-button {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.staff-admin .accordion-button:focus {
+  box-shadow: none;
+}
+
+.staff-employee .card-header {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.staff-employee table th {
+  background-color: #0d6efd;
+  color: #fff;
+  text-align: center;
+}
+
+.staff-employee table td {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .staff-employee .profile-info,
+  .staff-employee .team-members {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}
+
+/* ----- Customer flow pages (deposit / withdraw) ----- */
+.customer-app .flow-card {
+  max-width: 32rem;
+  margin-left: auto;
+  margin-right: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.customer-app .hidden {
+  display: none !important;
+}
+
+.customer-app .wallet-address {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.customer-app .wallet-address input {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+.customer-app .withdraw-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px;
+  border: 8px solid #198754;
+  border-radius: 50%;
+  margin: 1rem auto;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #198754;
+}
+
+@media (max-width: 576px) {
+  .staff-employee table thead {
+    display: none;
+  }
+  .staff-employee table,
+  .staff-employee table tbody,
+  .staff-employee table tr,
+  .staff-employee table td {
+    display: block;
+    width: 100%;
+  }
+  .staff-employee table tr {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.5rem;
+  }
+  .staff-employee table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  .staff-employee table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 10px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
