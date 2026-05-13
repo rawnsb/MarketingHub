@@ -2,20 +2,19 @@
 {% block customer_title %}Customer Service{% endblock %}
 {% block customer_header_title %}Service{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-center align-items-center py-5">
-  <div class="card shadow-lg border-0 overflow-hidden" style="max-width: 22rem;">
+<div class="d-flex justify-content-center align-items-start py-2 py-md-4">
+  <div class="mh-card w-100" style="max-width: 22rem;">
     <img
       src="https://img.freepik.com/free-photo/woman-working-call-centre_329181-13453.jpg"
-      class="card-img-top"
+      class="rounded-3 w-100 mb-3"
       alt="Customer service representative"
       width="360"
       height="240"
       loading="lazy"
     >
-    <div class="card-body text-center">
-      <h2 class="h5 card-title">Customer Service</h2>
-      <a href="{{ request.user.telegram_account.telegram_link }}" class="btn btn-primary w-100" rel="noopener noreferrer">Send Message</a>
-    </div>
+    <h2 class="h6 fw-semibold mb-2 text-center">Customer service</h2>
+    <p class="small text-secondary text-center mb-3">Reach our team on Telegram for help with your account.</p>
+    <a href="{{ request.user.telegram_account.telegram_link }}" class="btn btn-primary w-100 fw-semibold rounded-3" rel="noopener noreferrer">Send message</a>
   </div>
 </div>
 {% endblock %}

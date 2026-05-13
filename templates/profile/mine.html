@@ -4,33 +4,35 @@
 {% block customer_header_title %}Profile{% endblock %}
 {% block content %}
 <div class="mine-page">
-  <div class="profile-header">
+  <div class="mine-hero">
     {% if request.user.profile.profile_image %}
-      <img src="{{ request.user.profile.profile_image.url }}" alt="Profile picture" class="profile-pic rounded-circle">
+      <img src="{{ request.user.profile.profile_image.url }}" alt="Profile photo" width="72" height="72">
     {% else %}
-      <i class="fas fa-user-circle fa-4x me-2" aria-hidden="true"></i>
+      <span class="d-flex align-items-center justify-content-center rounded-circle bg-white bg-opacity-10 text-white" style="width:72px;height:72px;" aria-hidden="true">
+        <i class="fas fa-user fa-2x" aria-hidden="true"></i>
+      </span>
     {% endif %}
-    <div>
+    <div class="flex-grow-1 min-w-0">
       <h2>{{ request.user.username }}</h2>
-      <p>ID: {{ request.user.email|mask_email }}</p>
+      <p class="mine-hero-meta">ID: {{ request.user.email|mask_email }}</p>
     </div>
   </div>
 
-  <div class="balance-grid">
-    <div class="balance-card" style="background-color: #87cefa;">
-      <h4>Account Balance</h4>
+  <div class="mine-stat-grid">
+    <div class="mine-stat-card">
+      <h4>Account balance</h4>
       <p class="balance-amount">{{ request.user.balance.account_balance }} <span class="balance-currency">USDT</span></p>
     </div>
-    <div class="balance-card" style="background-color: #98fb98;">
-      <h4>Total Commission</h4>
+    <div class="mine-stat-card">
+      <h4>Total commission</h4>
       <p class="balance-amount">{{ request.user.balance.total_commission }} <span class="balance-currency">USDT</span></p>
     </div>
-    <div class="balance-card" style="background-color: #ff7f7f;">
-      <h4>Cash Gap</h4>
+    <div class="mine-stat-card">
+      <h4>Cash gap</h4>
       <p class="balance-amount">{{ request.user.gapamount.gap_amount }} <span class="balance-currency">USDT</span></p>
     </div>
-    <div class="balance-card" style="background-color: #66cdaa;">
-      <h4>Amount Under Review</h4>
+    <div class="mine-stat-card">
+      <h4>Under review</h4>
       <p class="balance-amount">
         {% if withdrawal %}
           {{ withdrawal.amount }} <span class="balance-currency">USDT</span>
@@ -41,21 +43,21 @@
     </div>
   </div>
 
-  <div class="actions">
-    <input type="hidden" id="invitationalCode" value="{{ request.user.invitation_code }}">
-    <button type="button" class="btn" onclick="copyCode()">Invite Friends</button>
+  <div class="mine-invite">
+    <input type="hidden" id="invitationalCode" value="{% if request.user.invitecode %}{{ request.user.invitecode.invite_code }}{% else %}{{ request.user.invitation_code }}{% endif %}">
+    <button type="button" class="btn btn-primary" onclick="copyCode()">Copy invite link</button>
   </div>
 
-  <div class="button-grid">
-    <a href="{% url 'deposite' %}" class="btn btn-1"><i class="fas fa-wallet" aria-hidden="true"></i><br>Recharge Balance</a>
-    <a href="{% url 'withdraw' %}" class="btn btn-2 bg-secondary"><i class="fas fa-money-bill-wave" aria-hidden="true"></i><br>Withdraw Money</a>
-    <a href="{% url 'change_account_password' %}" class="btn btn-3"><i class="fas fa-key" aria-hidden="true"></i><br>Change Password</a>
-    <a href="{% url 'change_payment_password' %}" class="btn btn-4"><i class="fas fa-shield-alt" aria-hidden="true"></i><br>Change Withdrawal Password</a>
-    <a href="{% url 'about_us' %}" class="btn btn-5"><i class="fas fa-info-circle" aria-hidden="true"></i><br>About Us</a>
-    <a href="#" class="btn btn-6"><i class="fas fa-globe" aria-hidden="true"></i><br>Change Language</a>
+  <div class="mine-tile-grid">
+    <a href="{% url 'deposite' %}" class="mine-tile"><i class="fas fa-arrow-down" aria-hidden="true"></i><span>Recharge balance</span></a>
+    <a href="{% url 'withdraw' %}" class="mine-tile"><i class="fas fa-arrow-up" aria-hidden="true"></i><span>Withdraw</span></a>
+    <a href="{% url 'change_account_password' %}" class="mine-tile"><i class="fas fa-key" aria-hidden="true"></i><span>Change password</span></a>
+    <a href="{% url 'change_payment_password' %}" class="mine-tile"><i class="fas fa-lock" aria-hidden="true"></i><span>Payment password</span></a>
+    <a href="{% url 'about_us' %}" class="mine-tile"><i class="fas fa-circle-info" aria-hidden="true"></i><span>About</span></a>
+    <a href="{% url 'settings' %}" class="mine-tile"><i class="fas fa-language" aria-hidden="true"></i><span>Language</span></a>
   </div>
 
-  <a href="{% url 'logout' %}" class="signout-btn">Sign Out</a>
+  <a href="{% url 'logout' %}" class="signout-btn">Sign out</a>
 </div>
 {% endblock %}
 {% block customer_extra_js %}

@@ -1,77 +1,92 @@
-/* About page (scoped — avoids clashing with Bootstrap `.container`) */
+/* About page — neutral enterprise styling */
 .about-page .about-inner {
   width: 100%;
-  max-width: 1200px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  padding: var(--mh-space-5, 1.25rem);
+  background-color: var(--mh-color-surface, #fff);
+  border: 1px solid var(--mh-color-border, #e2e8f0);
+  border-radius: var(--mh-radius-lg, 14px);
+  box-shadow: var(--mh-shadow-sm, 0 1px 2px rgba(15, 23, 42, 0.06));
 }
+
 .about-page header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: var(--mh-space-6, 1.5rem);
 }
+
 .about-page h1 {
-  color: #2c3e50;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  margin-bottom: 10px;
+  color: var(--mh-color-text, #0f172a);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-bottom: var(--mh-space-2, 0.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
+
 .about-page h2 {
-  color: #2980b9;
-  margin-bottom: 20px;
-  font-size: clamp(1.25rem, 3vw, 1.8rem);
+  color: var(--mh-color-text, #0f172a);
+  margin-bottom: var(--mh-space-4, 1rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  font-weight: 600;
 }
+
 .about-page p,
 .about-page ul {
-  margin-bottom: 20px;
+  margin-bottom: var(--mh-space-4, 1rem);
+  color: var(--mh-color-text-muted, #64748b);
+  line-height: 1.6;
 }
+
 .about-page ul {
   list-style-type: disc;
-  margin-left: 20px;
+  margin-left: 1.25rem;
 }
+
 .about-page section {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 40px;
-  padding: 20px;
-  border-radius: 10px;
+  align-items: flex-start;
+  margin-bottom: var(--mh-space-6, 1.5rem);
+  padding: var(--mh-space-5, 1.25rem);
+  border-radius: var(--mh-radius-md, 10px);
+  background: #f8fafc;
+  border: 1px solid var(--mh-color-border, #e2e8f0);
 }
+
 .about-page section:nth-child(even) {
   flex-direction: row-reverse;
 }
+
 .about-page section img {
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
   height: auto;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  margin: 0 20px 20px 0;
+  border-radius: var(--mh-radius-md, 10px);
+  box-shadow: var(--mh-shadow-sm, 0 1px 2px rgba(15, 23, 42, 0.06));
+  margin: 0 var(--mh-space-4, 1rem) var(--mh-space-4, 1rem) 0;
 }
+
 .about-page section div {
   flex: 1;
   min-width: 240px;
-  padding: 20px;
+  padding: var(--mh-space-3, 0.75rem);
 }
-.about-page section#about { background-color: #ecf0f1; }
-.about-page section#how-it-works { background-color: #e8f8f5; }
-.about-page section#instructions { background-color: #fcf3cf; }
-.about-page section#usdt-info { background-color: #f9ebea; }
-.about-page section#why-choose-us { background-color: #f9e79f; }
+
 .about-page .about-footer {
   text-align: center;
-  margin-top: 30px;
-  padding: 16px;
-  background-color: #2980b9;
-  color: #fff;
-  border-radius: 0 0 10px 10px;
+  margin-top: var(--mh-space-5, 1.25rem);
+  padding: var(--mh-space-4, 1rem);
+  background: #f1f5f9;
+  color: var(--mh-color-text-muted, #64748b);
+  border-radius: 0 0 var(--mh-radius-md, 10px) var(--mh-radius-md, 10px);
+  font-size: 0.875rem;
 }
+
 @media (max-width: 768px) {
   .about-page section {
     flex-direction: column;
   }
   .about-page section img {
-    margin: 0 0 20px 0;
+    margin: 0 0 var(--mh-space-4, 1rem) 0;
   }
 }

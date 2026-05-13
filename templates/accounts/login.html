@@ -1,6 +1,8 @@
 {% extends "accounts/base_login.html" %}
 {% block login_title %}Customer login{% endblock %}
-{% block login_heading %}<h2 class="h4 mb-0">Login</h2>{% endblock %}
+{% block auth_brand_title %}Sign in{% endblock %}
+{% block auth_brand_sub %}Use your username and password to access your dashboard.{% endblock %}
+{% block login_heading %}<h2 class="h5 mb-0">Login</h2>{% endblock %}
 {% block login_body %}
 <form action="{% url 'login' %}" method="post" novalidate>
   {% csrf_token %}
@@ -13,17 +15,21 @@
     <label class="form-label" for="password">Password</label>
     <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
   </div>
-  <div class="mb-3 form-check">
-    <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-    <label class="form-check-label" for="rememberMe">Remember me</label>
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+    <div class="form-check mb-0">
+      <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+      <label class="form-check-label small" for="rememberMe">Remember me</label>
+    </div>
+    <a href="#" class="auth-forgot-link small text-decoration-none">Forgot password?</a>
   </div>
   <button type="submit" class="btn btn-auth-primary w-100">Login</button>
 </form>
 {% endblock %}
 {% block login_footer %}
-<div class="card-footer text-center pb-4 px-4">
-  <a href="#" class="text-decoration-none">Forgot password?</a>
-  <span class="text-muted"> · </span>
-  <a href="{% url 'register' %}" class="text-decoration-none">Sign up</a>
+<div class="card-footer text-center pb-4 px-4 pt-0 border-0">
+  <p class="small text-secondary mb-0">
+    <span class="text-muted">New here?</span>
+    <a href="{% url 'register' %}" class="text-decoration-none auth-footer-links d-inline ms-1">Sign up</a>
+  </p>
 </div>
 {% endblock %}

@@ -1,17 +1,17 @@
-{% comment %}Bottom nav for customer shell — active state via url_name (no view changes).{% endcomment %}
+{% comment %}Bottom nav — equal columns via CSS grid; active state via url_name.{% endcomment %}
 <nav class="customer-bottom-nav" aria-label="Main navigation">
-  <ul class="nav nav-justified w-100 mb-0">
-    <li class="nav-item">
-      <a class="nav-link py-2{% if request.resolver_match.url_name == 'home' %} active{% endif %}" href="{% url 'home' %}"><i class="fas fa-home" aria-hidden="true"></i>Home</a>
+  <ul class="customer-bottom-nav__grid list-unstyled mb-0" role="list">
+    <li class="customer-bottom-nav__cell" role="listitem">
+      <a class="customer-bottom-nav__link{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}" href="{% url 'home' %}"><i class="fas fa-home" aria-hidden="true"></i><span>Home</span></a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link py-2{% if request.resolver_match.url_name == 'service' %} active{% endif %}" href="{% url 'service' %}"><i class="fas fa-concierge-bell" aria-hidden="true"></i>Service</a>
+    <li class="customer-bottom-nav__cell" role="listitem">
+      <a class="customer-bottom-nav__link{% if request.resolver_match.url_name == 'service' %} is-active{% endif %}" href="{% url 'service' %}"><i class="fas fa-headset" aria-hidden="true"></i><span>Service</span></a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link py-2{% if request.resolver_match.url_name == 'menu' or request.resolver_match.url_name == 'order_management' or request.resolver_match.url_name == 'grab_order' %} active{% endif %}" href="{% url 'menu' %}"><i class="fas fa-link" aria-hidden="true"></i>Menu</a>
+    <li class="customer-bottom-nav__cell" role="listitem">
+      <a class="customer-bottom-nav__link{% if request.resolver_match.url_name == 'menu' or request.resolver_match.url_name == 'order_management' or request.resolver_match.url_name == 'grab_order' %} is-active{% endif %}" href="{% url 'menu' %}"><i class="fas fa-link" aria-hidden="true"></i><span>Menu</span></a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link py-2{% if request.resolver_match.url_name == 'mine' %} active{% endif %}" href="{% url 'mine' %}"><i class="fas fa-user" aria-hidden="true"></i>Mine</a>
+    <li class="customer-bottom-nav__cell" role="listitem">
+      <a class="customer-bottom-nav__link{% if request.resolver_match.url_name == 'mine' %} is-active{% endif %}" href="{% url 'mine' %}"><i class="fas fa-user" aria-hidden="true"></i><span>Mine</span></a>
     </li>
   </ul>
 </nav>

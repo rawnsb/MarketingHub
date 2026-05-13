@@ -3,23 +3,26 @@
 {% block customer_header_title %}Deposits{% endblock %}
 {% block content %}
 <div class="flow-card">
-  <h2 class="h5 mb-4">Deposit Record</h2>
+  <h2 class="h5 mb-4 fw-semibold">Deposit records</h2>
   <div id="recordList">
     {% if Deposite_records %}
       {% for deposit in Deposite_records %}
-        <div class="border rounded p-3 mb-3 bg-light">
-          <p class="mb-1"><strong>Method:</strong> {{ deposit.deposit_method }}</p>
-          <p class="mb-1"><strong>Amount:</strong> ${{ deposit.deposited_amount }}</p>
-          <p class="mb-1"><strong>Wallet Address:</strong> {{ deposit.wallet_address }}</p>
-          <p class="mb-1">
-            <strong>Status:</strong>
-            <span class="{{ deposit.is_amount_received|yesno:'text-success,text-danger' }}">{{ deposit.is_amount_received|yesno:"Successful,Pending" }}</span>
+        <div class="border rounded-3 p-3 mb-3 bg-white shadow-sm">
+          <p class="mb-1 small"><span class="text-secondary">Method</span> <strong>{{ deposit.deposit_method }}</strong></p>
+          <p class="mb-1 small"><span class="text-secondary">Amount</span> <strong>${{ deposit.deposited_amount }}</strong></p>
+          <p class="mb-1 small text-break"><span class="text-secondary">Wallet</span> <strong>{{ deposit.wallet_address }}</strong></p>
+          <p class="mb-1 small">
+            <span class="text-secondary">Status</span>
+            <span class="{% if deposit.is_amount_received %}mh-status-done{% else %}mh-status-pending{% endif %}">{{ deposit.is_amount_received|yesno:"Successful,Pending" }}</span>
           </p>
-          <p class="small text-muted fst-italic mb-0">{{ deposit.updated_at }}</p>
+          <p class="small text-muted mb-0">{{ deposit.updated_at }}</p>
         </div>
       {% endfor %}
     {% else %}
-      <p class="text-muted mb-0">No deposit records found.</p>
+      <div class="mh-empty border rounded-3 bg-white" role="status">
+        <p class="mh-empty__title mb-1">No deposits yet</p>
+        <p class="small mb-0">When you fund your account, history will appear here.</p>
+      </div>
     {% endif %}
   </div>
 </div>

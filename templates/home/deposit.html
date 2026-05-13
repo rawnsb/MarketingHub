@@ -3,7 +3,7 @@
 {% block customer_header_title %}Deposit{% endblock %}
 {% block content %}
 <div class="flow-card">
-  <h2 class="h5 text-center mb-4 pb-2 border-bottom">Deposit</h2>
+  <h2 class="h5 text-center mb-4 pb-2 border-bottom fw-semibold">Deposit</h2>
   <form id="depositForm">
     {% csrf_token %}
     <div class="mb-3">
@@ -22,7 +22,7 @@
   </form>
   <div class="wallet-address hidden" id="walletAddressSection">
     <input type="text" class="form-control" id="walletAddress" readonly>
-    <button type="button" class="btn btn-success" onclick="copyToClipboard()">Copy</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="copyToClipboard()">Copy</button>
   </div>
 </div>
 {% endblock %}

@@ -4,17 +4,17 @@
 {% block content %}
 <div class="flow-card">
   <div id="showWithdraw">
-    <h2 class="h5 text-center mb-4 pb-2 border-bottom">Withdrawal</h2>
+    <h2 class="h5 text-center mb-4 pb-2 border-bottom fw-semibold">Withdrawal</h2>
     <form id="withdrawalForm" method="post">
-      <div class="mb-3">
-        <label class="visually-hidden" for="withdrawalAmount">Amount</label>
+  <div class="mb-3">
+        <label class="form-label" for="withdrawalAmount">Amount</label>
         <input type="number" class="form-control" min="0" id="withdrawalAmount" name="withdrawalAmount" placeholder="Enter amount" required>
       </div>
       <div class="mb-3">
-        <label class="visually-hidden" for="withdrawalPassword">Password</label>
+        <label class="form-label" for="withdrawalPassword">Withdrawal password</label>
         <input type="password" class="form-control" id="withdrawalPassword" name="withdrawalPassword" placeholder="Enter password" autocomplete="current-password" required>
       </div>
-      <button type="submit" class="btn btn-success w-100">Submit</button>
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
     </form>
   </div>
   <div id="processingMessage" class="hidden">

@@ -22,8 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Serve collected assets only (docker entrypoint runs collectstatic). Avoids finder edge cases.
-WHITENOISE_USE_FINDERS = False
+# When False, WhiteNoise serves only STATIC_ROOT (collected files). Local dev then keeps showing stale CSS
+# from the last collectstatic unless you re-run it. When True, finders use project /static/ (DEBUG builds).
+WHITENOISE_USE_FINDERS = os.environ.get('DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
 # Additional locations of static files
 STATICFILES_DIRS = [

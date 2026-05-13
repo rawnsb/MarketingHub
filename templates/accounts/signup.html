@@ -1,8 +1,9 @@
 {% extends "accounts/base_login.html" %}
 {% block login_title %}Sign up{% endblock %}
-{% block login_heading %}<h2 class="h4 mb-0">Sign Up</h2>{% endblock %}
+{% block auth_brand_title %}Create your account{% endblock %}
+{% block auth_brand_sub %}Join with an invite code and set a secure password to get started.{% endblock %}
+{% block login_heading %}<h2 class="h5 mb-0">Sign up</h2>{% endblock %}
 {% block login_body %}
-{% include "Base/alert.html" %}
 <form action="{% url 'register' %}" method="post" novalidate>
   {% csrf_token %}
   <input type="hidden" name="role" value="1">
@@ -26,15 +27,18 @@
     <label class="form-label" for="password">Password</label>
     <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" autocomplete="new-password" required>
   </div>
-  <div class="mb-3">
+  <div class="mb-4">
     <label class="form-label" for="confirmPassword">Confirm Password</label>
     <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" required>
   </div>
-  <button type="submit" class="btn btn-auth-primary w-100">Sign Up</button>
+  <button type="submit" class="btn btn-auth-primary w-100">Sign up</button>
 </form>
 {% endblock %}
 {% block login_footer %}
-<div class="card-footer text-center pb-4 px-4">
-  <a href="{% url 'login' %}" class="text-decoration-none">Already have an account? Login</a>
+<div class="card-footer text-center pb-4 px-4 pt-0 border-0">
+  <p class="small text-secondary mb-0">
+    <span class="text-muted">Already have an account?</span>
+    <a href="{% url 'login' %}" class="text-decoration-none auth-footer-links d-inline ms-1">Login</a>
+  </p>
 </div>
 {% endblock %}

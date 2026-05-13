@@ -1,6 +1,8 @@
 {% extends "accounts/base_login.html" %}
 {% block login_title %}Employee login{% endblock %}
-{% block login_heading %}<h2 class="h4 mb-0">Employee Login</h2>{% endblock %}
+{% block auth_brand_title %}Team member sign in{% endblock %}
+{% block auth_brand_sub %}Use your employee account to open the dashboard.{% endblock %}
+{% block login_heading %}<h2 class="h5 mb-0">Employee login</h2>{% endblock %}
 {% block login_body %}
 <form action="{% url 'Employee_login' %}" method="post" novalidate>
   {% csrf_token %}
@@ -21,7 +23,7 @@
 </form>
 {% endblock %}
 {% block login_footer %}
-<div class="card-footer text-center pb-4 px-4">
-  <a href="{% url 'Admin_login' %}" class="text-decoration-none">Admin Portal</a>
+<div class="card-footer text-center pb-4 px-4 pt-0 border-0">
+  <a href="{% url 'Admin_login' %}" class="text-decoration-none">Admin portal</a>
 </div>
 {% endblock %}

@@ -3,21 +3,24 @@
 {% block customer_header_title %}Withdrawals{% endblock %}
 {% block content %}
 <div class="flow-card">
-  <h2 class="h5 mb-4 text-center">Withdrawal Records</h2>
+  <h2 class="h5 mb-4 fw-semibold text-center">Withdrawal records</h2>
   <div id="recordList">
     {% if records %}
       {% for record in records %}
-        <div class="border-start border-success border-4 rounded p-3 mb-3 bg-light">
-          <p class="mb-1"><strong>Amount:</strong> {{ record.amount }}</p>
-          <p class="mb-1">
-            <strong>Status:</strong>
-            <span class="{{ record.processed|yesno:'text-success,text-danger' }}">{{ record.processed|yesno:'Successful,Pending' }}</span>
+        <div class="border-start border-3 border-primary rounded-3 p-3 mb-3 bg-white shadow-sm">
+          <p class="mb-1 small"><span class="text-secondary">Amount</span> <strong>{{ record.amount }}</strong></p>
+          <p class="mb-1 small">
+            <span class="text-secondary">Status</span>
+            <span class="{% if record.processed %}mh-status-done{% else %}mh-status-pending{% endif %}">{{ record.processed|yesno:'Successful,Pending' }}</span>
           </p>
-          <p class="small text-muted fst-italic mb-0">{{ record.updated_at }}</p>
+          <p class="small text-muted mb-0">{{ record.updated_at }}</p>
         </div>
       {% endfor %}
     {% else %}
-      <p class="text-muted mb-0">No withdrawal records found.</p>
+      <div class="mh-empty border rounded-3 bg-white" role="status">
+        <p class="mh-empty__title mb-1">No withdrawals yet</p>
+        <p class="small mb-0">Completed withdrawals will show up in this list.</p>
+      </div>
     {% endif %}
   </div>
 </div>

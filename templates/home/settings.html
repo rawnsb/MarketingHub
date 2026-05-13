@@ -30,12 +30,12 @@
   <form action="{% url 'logout' %}" method="post" class="mb-4 pb-3 border-bottom">
     {% csrf_token %}
     <h3 class="h6 text-secondary">{% trans "Logout" %}</h3>
-    <button type="submit" class="btn btn-danger w-100">{% trans "Logout" %}</button>
+    <button type="submit" class="btn btn-outline-primary w-100">{% trans "Logout" %}</button>
   </form>
 
   <div>
     <h3 class="h6 text-secondary">{% trans "Reset Orders" %}</h3>
-    <button type="button" class="btn btn-success w-100 mb-2" onclick="resetOrders()">{% trans "Reset Orders" %}</button>
+    <button type="button" class="btn btn-outline-primary w-100 mb-2" onclick="resetOrders()">{% trans "Reset Orders" %}</button>
     <p class="text-muted small mb-0">{% trans "Note: A 10% deposit fee will be charged for resetting orders." %}</p>
   </div>
 </div>
