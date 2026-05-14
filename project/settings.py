@@ -54,6 +54,18 @@ elif DEBUG:
 else:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# If ALLOWED_HOSTS is set explicitly, DEBUG no longer uses '*', so ngrok (new URL each
+# session) would raise DisallowedHost. Leading-dot entries match any subdomain of that zone.
+if DEBUG and ALLOWED_HOSTS != ['*']:
+    for _suffix in (
+        '.ngrok-free.app',
+        '.ngrok-free.dev',
+        '.ngrok.app',
+        '.ngrok.io',
+    ):
+        if _suffix not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(_suffix)
+
 _csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '').strip()
 if _csrf_origins:
     CSRF_TRUSTED_ORIGINS = [x.strip() for x in _csrf_origins.split(',') if x.strip()]
@@ -65,6 +77,16 @@ else:
         'http://localhost:8001',
         'http://127.0.0.1:8001',
     ]
+
+# CSRF does not support wildcards; for HTTPS ngrok add your current tunnel origin, e.g.
+# NGROK_ORIGIN=https://prehensile-gayla-proagreement.ngrok-free.dev
+# (comma-separated if you use several tunnels)
+_ngrok_origin = os.environ.get('NGROK_ORIGIN', '').strip()
+if DEBUG and _ngrok_origin:
+    CSRF_TRUSTED_ORIGINS = list(CSRF_TRUSTED_ORIGINS)
+    for _o in (x.strip() for x in _ngrok_origin.split(',') if x.strip()):
+        if _o not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(_o)
 
 
 # Application definition
