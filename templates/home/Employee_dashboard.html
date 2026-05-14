@@ -3,68 +3,120 @@
 {% block staff_nav_title %}Employee dashboard{% endblock %}
 {% block staff_body_class %}staff-employee{% endblock %}
 {% block staff_content %}
-<div class="dashboard-container">
-  <div class="container profile-info shadow-sm bg-white rounded">
-    <p class="mb-2"><strong>Username:</strong> <span id="usernameDisplay">{{ request.user.username }}</span></p>
-    <p class="mb-2"><strong>Total Net Deposit:</strong> <span id="netDeposit">${{ request.user.employee_deposit.net_deposit }}</span></p>
-    <p class="mb-0">
-      <strong>Invitational Code:</strong>
-      <span id="invitationalCode">{{ request.user.invitation_code }}</span>
-      <button type="button" class="btn btn-secondary btn-sm ms-2" onclick="copyCode()">Copy</button>
-    </p>
-  </div>
+<div class="employee-dashboard-page">
+  <section class="employee-panel" aria-labelledby="employee-summary-heading">
+    <h2 id="employee-summary-heading" class="employee-panel__title">Your overview</h2>
+    <div class="employee-stat-grid">
+      <div class="employee-stat">
+        <span class="employee-stat__label">Username</span>
+        <span class="employee-stat__value" id="usernameDisplay">{{ request.user.username }}</span>
+      </div>
+      <div class="employee-stat">
+        <span class="employee-stat__label">Total net deposit</span>
+        <span class="employee-stat__value" id="netDeposit">${{ request.user.employee_deposit.net_deposit }}</span>
+      </div>
+    </div>
+    <div class="employee-invite-row">
+      <span class="employee-stat__label mb-0 align-self-center">Invitation code</span>
+      <code id="invitationalCode">{{ request.user.invitation_code }}</code>
+      <button type="button" class="btn btn-primary btn-sm" id="copyInviteBtn" onclick="copyCode()" aria-label="Copy signup link with invitation code">
+        Copy link
+      </button>
+    </div>
+    <div id="copyInviteFeedback" class="employee-copy-feedback d-none alert alert-success py-2 mb-0 small" role="status" aria-live="polite"></div>
+  </section>
 
-  <div class="container team-members mt-4 shadow-sm bg-white rounded">
-    <h2 class="h5 mb-3">Team Members</h2>
-    <div class="table-responsive">
-      <table class="table table-striped">
+  <section class="employee-panel" aria-labelledby="team-heading">
+    <h2 id="team-heading" class="employee-panel__title">Team members</h2>
+    {% if referred_users %}
+    <div class="table-responsive staff-employee-table-wrap">
+      <table class="table table-striped staff-employee-table">
         <thead>
           <tr>
-            <th class="text-dark">Username</th>
-            <th class="text-dark">Net Deposit</th>
-            <th class="text-dark">Deposited Amount</th>
-            <th class="text-dark">Withdrawn Amount</th>
-            <th class="text-dark">Status</th>
-            <th class="text-dark">Login IP Address</th>
-            <th class="text-dark">Active IP Address</th>
-            <th class="text-dark">Orders Submitted</th>
+            <th scope="col">Username</th>
+            <th scope="col">Net deposit</th>
+            <th scope="col">Deposited</th>
+            <th scope="col">Withdrawn</th>
+            <th scope="col">Status</th>
+            <th scope="col">Login IP</th>
+            <th scope="col">Active IP</th>
+            <th scope="col">Orders</th>
           </tr>
         </thead>
         <tbody id="teamMembers">
           {% for user in referred_users %}
             <tr>
               <td data-label="Username">{{ user.username }}</td>
-              <td data-label="Net Deposit">${{ user.balance.net_deposit }}</td>
-              <td data-label="Deposited Amount">${{ user.balance.total_deposit }}</td>
-              <td data-label="Withdrawn Amount">${{ user.balance.total_withdrawal }}</td>
+              <td data-label="Net deposit">${{ user.balance.net_deposit }}</td>
+              <td data-label="Deposited">${{ user.balance.total_deposit }}</td>
+              <td data-label="Withdrawn">${{ user.balance.total_withdrawal }}</td>
               <td data-label="Status">
                 {% if user.is_active %}
-                  <span class="text-success">Active</span>
+                  <span class="employee-status-active">Active</span>
                 {% else %}
-                  <span class="text-danger">Inactive</span>
+                  <span class="employee-status-inactive">Inactive</span>
                 {% endif %}
               </td>
-              <td data-label="Login IP Address">{{ user.user_ip.ip_address }}</td>
-              <td data-label="Active IP Address" class="text-danger">{{ user.user_ip.login_ip }}</td>
-              <td data-label="Orders Submitted">{{ user.ordercount.no_of_submitted_order }}</td>
+              <td data-label="Login IP">{{ user.user_ip.ip_address }}</td>
+              <td data-label="Active IP" class="employee-ip-highlight">{{ user.user_ip.login_ip }}</td>
+              <td data-label="Orders">{{ user.ordercount.no_of_submitted_order }}</td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-  </div>
+    {% else %}
+    <div class="mh-empty" role="status">
+      <p class="mh-empty__title">No referred customers yet</p>
+      <p class="small mb-0">Share your invitation link so signups appear here.</p>
+    </div>
+    {% endif %}
+  </section>
 </div>
 {% endblock %}
 {% block staff_extra_js %}
 <script>
-  function copyCode() {
-    const invitationalCode = document.getElementById("invitationalCode").textContent.trim();
-    const baseURL = `${window.location.protocol}//${window.location.host}`;
-    const invitationallink = `${baseURL}/signup/?invite_code=${invitationalCode}`;
-    navigator.clipboard.writeText(invitationallink).then(
-      () => { alert("Invitational Link copied!"); },
-      () => { alert("Failed to copy the Invitational Link."); }
-    );
-  }
+  (function () {
+    function copyCode() {
+      var codeEl = document.getElementById("invitationalCode");
+      var feedback = document.getElementById("copyInviteFeedback");
+      var btn = document.getElementById("copyInviteBtn");
+      if (!codeEl) return;
+      var invitationalCode = codeEl.textContent.trim();
+      var baseURL = window.location.protocol + "//" + window.location.host;
+      var invitationallink = baseURL + "/signup/?invite_code=" + encodeURIComponent(invitationalCode);
+
+      function showFeedback(message, isError) {
+        if (!feedback) return;
+        feedback.textContent = message;
+        feedback.classList.remove("d-none", "alert-success", "alert-danger");
+        feedback.classList.add(isError ? "alert-danger" : "alert-success");
+        window.clearTimeout(showFeedback._t);
+        showFeedback._t = window.setTimeout(function () {
+          feedback.classList.add("d-none");
+          feedback.textContent = "";
+        }, 4000);
+      }
+
+      navigator.clipboard.writeText(invitationallink).then(
+        function () {
+          showFeedback("Invitation link copied to clipboard.", false);
+          if (btn) {
+            var prev = btn.textContent;
+            btn.textContent = "Copied";
+            btn.disabled = true;
+            window.setTimeout(function () {
+              btn.textContent = prev;
+              btn.disabled = false;
+            }, 2000);
+          }
+        },
+        function () {
+          showFeedback("Could not copy. Copy the link manually from the address bar after opening signup.", true);
+        }
+      );
+    }
+    window.copyCode = copyCode;
+  })();
 </script>
 {% endblock %}
