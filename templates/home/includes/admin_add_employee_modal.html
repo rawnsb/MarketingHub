@@ -1,0 +1,25 @@
+{% comment %}Global admin modal — opened from sidebar on any admin page.{% endcomment %}
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addEmployeeForm" action="{% url 'Admin_dashboard' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="employeeName" class="form-label">Username</label>
+            <input type="text" class="form-control" id="employeeName" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label for="employeePassword" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="employeePassword" required autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-primary">Add Employee</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -22,8 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Serve collected assets only (docker entrypoint runs collectstatic). Avoids finder edge cases.
-WHITENOISE_USE_FINDERS = False
+# When False, WhiteNoise serves only STATIC_ROOT (collected files). Local dev then keeps showing stale CSS
+# from the last collectstatic unless you re-run it. When True, finders use project /static/ (DEBUG builds).
+WHITENOISE_USE_FINDERS = os.environ.get('DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
 # Additional locations of static files
 STATICFILES_DIRS = [
@@ -32,6 +33,9 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Display name in staff header and other UI (override with SITE_BRAND_NAME env)
+SITE_BRAND_NAME = os.environ.get("SITE_BRAND_NAME", "MarketingHub")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -53,6 +57,18 @@ elif DEBUG:
 else:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# If ALLOWED_HOSTS is set explicitly, DEBUG no longer uses '*', so ngrok (new URL each
+# session) would raise DisallowedHost. Leading-dot entries match any subdomain of that zone.
+if DEBUG and ALLOWED_HOSTS != ['*']:
+    for _suffix in (
+        '.ngrok-free.app',
+        '.ngrok-free.dev',
+        '.ngrok.app',
+        '.ngrok.io',
+    ):
+        if _suffix not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(_suffix)
+
 _csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '').strip()
 if _csrf_origins:
     CSRF_TRUSTED_ORIGINS = [x.strip() for x in _csrf_origins.split(',') if x.strip()]
@@ -64,6 +80,16 @@ else:
         'http://localhost:8001',
         'http://127.0.0.1:8001',
     ]
+
+# CSRF does not support wildcards; for HTTPS ngrok add your current tunnel origin, e.g.
+# NGROK_ORIGIN=https://prehensile-gayla-proagreement.ngrok-free.dev
+# (comma-separated if you use several tunnels)
+_ngrok_origin = os.environ.get('NGROK_ORIGIN', '').strip()
+if DEBUG and _ngrok_origin:
+    CSRF_TRUSTED_ORIGINS = list(CSRF_TRUSTED_ORIGINS)
+    for _o in (x.strip() for x in _ngrok_origin.split(',') if x.strip()):
+        if _o not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(_o)
 
 
 # Application definition
@@ -114,6 +140,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',  # Ensure this is included
+                'project.context_processors.site_brand',
             ],
         },
     },

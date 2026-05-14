@@ -1,187 +1,39 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>KYC Details</title>-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--    <style>-->
-<!--        body {-->
-<!--            background-color: #f7f8fc;-->
-<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
-<!--        }-->
-<!--        .kyc-container {-->
-<!--            max-width: 800px;-->
-<!--            margin: 50px auto;-->
-<!--            padding: 30px;-->
-<!--            border: none;-->
-<!--            background: white;-->
-<!--            box-shadow: 0 4px 8px rgba(0,0,0,0.1);-->
-<!--            border-radius: 15px;-->
-<!--        }-->
-<!--        .kyc-image, .kyc-video {-->
-<!--            width: 100%;-->
-<!--            height: auto;-->
-<!--            border-radius: 10px;-->
-<!--            box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
-<!--        }-->
-<!--        .form-label {-->
-<!--            font-weight: 600;-->
-<!--            color: #333;-->
-<!--        }-->
-<!--        .form-control {-->
-<!--            background: none;-->
-<!--            border: none;-->
-<!--            border-bottom: 2px solid #ccc;-->
-<!--            border-radius: 0;-->
-<!--            font-size: 16px;-->
-<!--            color: #555;-->
-<!--        }-->
-<!--        .btn {-->
-<!--            padding: 10px 24px;-->
-<!--            font-size: 16px;-->
-<!--            border-radius: 8px;-->
-<!--            box-shadow: 0 2px 4px rgba(0,0,0,0.1);-->
-<!--        }-->
-<!--        .btn-success {-->
-<!--            background-color: #28a745;-->
-<!--        }-->
-<!--        .btn-danger {-->
-<!--            background-color: #dc3545;-->
-<!--        }-->
-<!--        .btn-secondary {-->
-<!--            background-color: #6c757d;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <div class="kyc-container">-->
-<!--        <h2 class="text-center mb-5">KYC Verification</h2>-->
-<!--        <div class="mb-4 row">-->
-<!--            <label class="form-label">ID Card Front Photo:</label>-->
-<!--            <img src="{{ kyc_record.id_card_front.url }}" style="height: 200px; width: auto;" alt="ID Card Front" class="kyc-image img-thumbnail">-->
-
-<!--        </div>-->
-<!--        <div class="mb-4 row">-->
-<!--            <label class="form-label">ID Card Front Photo:</label>-->
-<!--            <img src="{{ kyc_record.id_card_back.url }}" style="height: 200px; width: auto;" alt="ID Card Front" class="kyc-image img-thumbnail">-->
-
-<!--        </div>-->
-<!--        <div class="mb-4 row">-->
-<!--            <label class="form-label">Facial Recognition Video:</label>-->
-<!--            <video src="{{ kyc_record.face_video.url }}" style="height: auto; width: 300px;" controls class="kyc-video"></video>-->
-<!--        </div>-->
-<!--        <div class="mb-4">-->
-<!--            <label class="form-label">Crypto Type:</label>-->
-<!--            <p class="form-control text-uppercase">{{ kyc_record.wallet_type }}</p> &lt;!&ndash; Example placeholder &ndash;&gt;-->
-<!--        </div>-->
-<!--        <div class="mb-4">-->
-<!--            <label class="form-label">Wallet Address:</label>-->
-<!--            <p class="form-control">{{ kyc_record.wallet_address }}</p> &lt;!&ndash; Example placeholder &ndash;&gt;-->
-<!--        </div>-->
-<!--        <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">-->
-<!--            <button class="btn btn-success" type="button">Verify</button>-->
-<!--            <button class="btn btn-danger" type="button">Delete</button>-->
-<!--            <button class="btn btn-secondary" type="button">Cancel</button>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
-<!--</body>-->
-<!--</html>-->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KYC Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f7f8fc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .kyc-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 30px;
-            border: none;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 15px;
-        }
-        .kyc-image, .kyc-video {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .form-label {
-            font-weight: 600;
-            color: #333;
-        }
-        .form-control {
-            background: none;
-            border: none;
-            border-bottom: 2px solid #ccc;
-            border-radius: 0;
-            font-size: 16px;
-            color: #555;
-        }
-        .btn {
-            padding: 10px 24px;
-            font-size: 16px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .btn-success {
-            background-color: #28a745;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-        }
-    </style>
-</head>
-<body>
-    <div class="kyc-container">
-        <h2 class="text-center mb-5">KYC Verification</h2>
-        <form id="kycForm" method="post" action="{% url 'verify_kyc' kyc_record.user.id %}">
-            {% csrf_token %}
-            <div class="mb-4 row">
-                <label class="form-label">ID Card Front Photo:</label>
-                <img src="{{ kyc_record.id_card_front.url }}" style="height: 200px; width: auto;" alt="ID Card Front" class="kyc-image img-thumbnail">
-            </div>
-            <div class="mb-4 row">
-                <label class="form-label">ID Card Back Photo:</label>
-                <img src="{{ kyc_record.id_card_back.url }}" style="height: 200px; width: auto;" alt="ID Card Back" class="kyc-image img-thumbnail">
-            </div>
-            <div class="mb-4 row">
-                <label class="form-label">Facial Recognition Video:</label>
-                <video src="{{ kyc_record.face_video.url }}" style="height: auto; width: 300px;" controls class="kyc-video"></video>
-            </div>
-            <div class="mb-4">
-                <label class="form-label">Crypto Type:</label>
-                <p class="form-control text-uppercase">{{ kyc_record.wallet_type }}</p>
-            </div>
-            <div class="mb-4">
-                <label class="form-label">Wallet Address:</label>
-                <p class="form-control">{{ kyc_record.wallet_address }}</p>
-            </div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
-                <button class="btn btn-success" type="submit" name="action" value="verify">Verify</button>
-                <button class="btn btn-danger" type="submit" name="action" value="delete">Delete</button>
-                <button class="btn btn-secondary" type="button" onclick="cancelProcess()">Cancel</button>
-            </div>
-        </form>
+{% extends "home/base_admin.html" %}
+{% block admin_page_title %}KYC verification{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block admin_main %}
+<div class="admin-back-row">
+  <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">← Overview</a>
+</div>
+<div class="admin-page-card admin-page-card--wide">
+  <h1 class="h4 mb-4">KYC verification</h1>
+  <form id="kycForm" method="post" action="{% url 'verify_kyc' kyc_record.user.id %}">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label class="form-label d-block">ID card front</label>
+      <img src="{{ kyc_record.id_card_front.url }}" class="img-fluid rounded border" style="max-height: 220px; width: auto;" alt="ID card front">
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function cancelProcess() {
-            window.location.href = "{% url 'Admin_dashboard' %}";
-        }
-    </script>
-</body>
-</html>
+    <div class="mb-4">
+      <label class="form-label d-block">ID card back</label>
+      <img src="{{ kyc_record.id_card_back.url }}" class="img-fluid rounded border" style="max-height: 220px; width: auto;" alt="ID card back">
+    </div>
+    <div class="mb-4">
+      <label class="form-label d-block">Facial recognition video</label>
+      <video src="{{ kyc_record.face_video.url }}" class="w-100 rounded border" style="max-width: 28rem;" controls></video>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Crypto type</label>
+      <p class="mb-0 fw-semibold text-uppercase">{{ kyc_record.wallet_type }}</p>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Wallet address</label>
+      <p class="mb-0 font-monospace small">{{ kyc_record.wallet_address }}</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="submit" name="action" value="verify">Verify</button>
+      <button class="btn btn-outline-danger" type="submit" name="action" value="delete" data-mh-confirm="Delete this KYC record for __MH_SUBJECT__? This cannot be undone." data-mh-confirm-subject="{{ kyc_record.user.username }}" data-mh-confirm-ok="Delete">Delete</button>
+      <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

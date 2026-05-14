@@ -2,13 +2,28 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.shortcuts import render,get_object_or_404, redirect
 from django.contrib.auth import authenticate, login,logout
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from functools import wraps
 from accounts.models import User,Telegram,User_Wallet_Address
 from home.models import Deposit,Withdraw,KYC
 from . models import CustomerBatch, CustomerOrder
 from decimal import Decimal
 import uuid
-@login_required
+
+
+def admin_required(view_func):
+    """Require authenticated user with is_admin (MarketingHub admin role)."""
+    @wraps(view_func)
+    def _wrap(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if not getattr(request.user, 'is_admin', False):
+            return HttpResponseForbidden('Admin access only.')
+        return view_func(request, *args, **kwargs)
+    return _wrap
+
+
+@admin_required
 def update_deposit(request,id):
     user = get_object_or_404(User, id=id, is_customer=True)
 
@@ -39,7 +54,7 @@ def update_deposit(request,id):
     }
     return render(request, 'admin/update_deposit.html', context)
 # Create your views here.
-@login_required
+@admin_required
 def approve_withdraw(request, id):
     user = get_object_or_404(User, id=id, is_customer=True)
 
@@ -66,7 +81,7 @@ def approve_withdraw(request, id):
     }
     return render(request, 'admin/approve_withdraw.html', context)
 
-@login_required
+@admin_required
 def verify_kyc(request, id):
     user = get_object_or_404(User, id=id, is_customer=True)
 
@@ -98,7 +113,7 @@ def verify_kyc(request, id):
 
 
 
-@login_required
+@admin_required
 def update_telegram(request, id):
     user = get_object_or_404(User, id=id)
     telegram_account, created = Telegram.objects.get_or_create(user=user)
@@ -112,7 +127,7 @@ def update_telegram(request, id):
             return redirect('Admin_dashboard')  # Replace 'dashboard' with your dashboard URL name
 
     return render(request, 'admin/update_telegram.html', {'telegram_account': telegram_account, 'user': user})
-@login_required
+@admin_required
 def update_wallet(request, id):
     user = get_object_or_404(User, id=id)
     wallet_address, created = User_Wallet_Address.objects.get_or_create(user=user)
@@ -136,7 +151,7 @@ def update_wallet(request, id):
         'user': user,
         'withdrawal_address': kyc.wallet_address if kyc else "KYC Not Verified"  # Handle case where KYC is None
     })
-@login_required
+@admin_required
 def change_action(request, id):
     user = get_object_or_404(User, id=id)
     user.is_active = not user.is_active
@@ -146,7 +161,7 @@ def change_action(request, id):
     messages.success(request, f'The user {user.username} has been successfully {status}.')
     
     return redirect("Admin_dashboard")
-@login_required
+@admin_required
 def reset_order_numbers(request, id):
     user = get_object_or_404(User, id=id)
     user.ordercount.no_of_submitted_order = 0
@@ -155,6 +170,7 @@ def reset_order_numbers(request, id):
     messages.success(request, f'Order count for {user.username} has been successfully reset to 0.')
 
     return redirect("Admin_dashboard")
+@admin_required
 def delete_customer(request,id):
     user = get_object_or_404(User, id=id)
     user.delete()
@@ -164,7 +180,7 @@ def delete_customer(request,id):
 
 # new
 from .models import Batch,Order,Product
-@login_required
+@admin_required
 def orders_panel(request):
     if request.method == 'POST':
         batch_name = request.POST.get('batch_name')
@@ -180,7 +196,7 @@ def orders_panel(request):
     })
 
 from django.http import JsonResponse
-@login_required
+@admin_required
 def fetch_orders(request, batch_id):
     # Get the batch based on the provided batch_id
     batch = get_object_or_404(Batch, id=batch_id)
@@ -190,26 +206,31 @@ def fetch_orders(request, batch_id):
 
     orders_data = []
     for order in orders:
-        # Handle the ForeignKey relationship (single product)
+        seen_product_ids = set()
         products_data = []
-        if order.product:
-            products_data.append({
-                'name': order.product.name,
-                'image_url': order.product.image.url,
-            })
 
-        # Handle the Many-to-Many relationship (additional products in lucky orders)
-        for product in order.products.all():
+        def append_product(product):
+            if not product or not product.pk or product.pk in seen_product_ids:
+                return
+            if not product.image or not product.image.name:
+                return
+            seen_product_ids.add(product.pk)
+            image_url = request.build_absolute_uri(product.image.url)
             products_data.append({
+                'id': product.pk,
                 'name': product.name,
-                'image_url': product.image.url,
+                'image_url': image_url,
             })
 
-        # Append order data including products
+        if order.product_id:
+            append_product(order.product)
+        for product in order.products.all():
+            append_product(product)
+
         orders_data.append({
             'id': order.id,
             'order_type': order.order_type,
-            'total_amount': order.total_amount,
+            'total_amount': str(order.total_amount),
             'products': products_data,
         })
 
@@ -218,7 +239,7 @@ def fetch_orders(request, batch_id):
 
 
 
-@login_required
+@admin_required
 def add_orders(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
     current_order_count = Order.objects.filter(batch=batch).count()
@@ -300,7 +321,7 @@ def add_orders(request, batch_id):
         'orders': orders,
         'remaining_orders': 20 - orders.count()
     })
-@login_required
+@admin_required
 def finalize_batch(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
     orders = Order.objects.filter(batch=batch)
@@ -311,7 +332,7 @@ def finalize_batch(request, batch_id):
     # Add finalization logic here (if any)
     messages.success(request, f'Batch "{batch.name}" finalized successfully with {orders.count()} orders.')
     return redirect('orders_panel')
-@login_required
+@admin_required
 def delete_batch_order(request,order_id):
     order = get_object_or_404(Order, id=order_id)
     batch_id = order.batch.id
@@ -328,7 +349,7 @@ def delete_batch_order(request,order_id):
 
 
 # grant order new
-@login_required
+@admin_required
 def grant_batches_to_customer(request, customer_id):
     customer = get_object_or_404(User, id=customer_id)
     batches = Batch.objects.all()
@@ -350,7 +371,7 @@ def grant_batches_to_customer(request, customer_id):
 #         messages.success(request, f"Batch {batch.name} granted to {customer.username}.")
 
 #     return redirect('grant_batches_to_customer', customer_id=customer.id)
-@login_required
+@admin_required
 def grant_batch_to_customer(request, batch_id, customer_id):
     batch = get_object_or_404(Batch, id=batch_id)
     customer = get_object_or_404(User, id=customer_id)
@@ -394,7 +415,7 @@ def grant_batch_to_customer(request, batch_id, customer_id):
 #         messages.warning(request, f"Batch {batch.name} was not granted to {customer.username}.")
 
 #     return redirect('grant_batches_to_customer', customer_id=customer.id)
-@login_required
+@admin_required
 def remove_granted_batch(request, batch_id, customer_id):
     batch = get_object_or_404(Batch, id=batch_id)
     customer = get_object_or_404(User, id=customer_id)
@@ -412,7 +433,7 @@ def remove_granted_batch(request, batch_id, customer_id):
     return redirect('grant_batches_to_customer', customer_id=customer.id)
 
 # fetch orders
-@login_required
+@admin_required
 def fetch_custom_orders(request, batch_id,customer_id):
     
     # Get the batch based on the provided batch_id
@@ -493,7 +514,7 @@ def fetch_custom_orders(request, batch_id,customer_id):
 
 # update order
 
-# @login_required
+# @admin_required
 # def update_customer_order(request, order_id, customer_id):
 #     customer = get_object_or_404(User, id=customer_id)
 #     try:
@@ -564,7 +585,7 @@ def fetch_custom_orders(request, batch_id,customer_id):
 
 #     return render(request, 'admin/update_custom_order.html', {'customer_order': customer_order})
 
-@login_required
+@admin_required
 def update_customer_order(request, order_id, customer_id):
     customer = get_object_or_404(User, id=customer_id)
     try:
@@ -648,9 +669,7 @@ def update_customer_order(request, order_id, customer_id):
 
 
 
-from django.contrib.admin.views.decorators import staff_member_required
-@staff_member_required
-@login_required
+@admin_required
 def delete_unused_products(request):
     unused_products = Product.objects.filter(
         orders__isnull=True, 

@@ -1,211 +1,54 @@
+{% extends "home/base_customer.html" %}
 {% load i18n %}
+{% block customer_title %}{% trans "Settings" %}{% endblock %}
+{% block customer_header_title %}{% trans "Settings" %}{% endblock %}
+{% block content %}
+<div class="flow-card">
+  <h2 class="h5 text-center mb-4">{% trans "Settings" %}</h2>
 
-<!DOCTYPE html>
-<html lang="en">
+  <div class="mb-4 pb-3 border-bottom">
+    <h3 class="h6 text-secondary">{% trans "Upload Profile Photo" %}</h3>
+    <form action="{% url 'upload_photo' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="file" name="profile_photo" accept="image/*" class="form-control mb-2" required>
+      <button type="submit" class="btn btn-primary w-100">{% trans "Upload Photo" %}</button>
+    </form>
+  </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% trans "Settings" %}</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <div class="mb-4 pb-3 border-bottom">
+    <h3 class="h6 text-secondary">{% trans "Language Settings" %}</h3>
+    <form action="{% url 'select_language' %}" method="post">
+      {% csrf_token %}
+      <select name="language_code" class="form-select" onchange="this.form.submit()">
+        {% for code, name in languages %}
+          <option value="{{ code }}"{% if code == language_code %} selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
 
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 100%;
-            width: 600px;
-        }
+  <form action="{% url 'logout' %}" method="post" class="mb-4 pb-3 border-bottom">
+    {% csrf_token %}
+    <h3 class="h6 text-secondary">{% trans "Logout" %}</h3>
+    <button type="submit" class="btn btn-outline-primary w-100">{% trans "Logout" %}</button>
+  </form>
 
-        h2 {
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 2rem;
-        }
-
-        .upload-section,
-        .section {
-            margin-bottom: 30px;
-        }
-
-        .section h4 {
-            font-size: 1.25rem;
-            color: #495057;
-            margin-bottom: 15px;
-        }
-
-        .form-control {
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .upload-button,
-        .logout-button,
-        .reset-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .upload-button {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .upload-button:hover {
-            background-color: #0056b3;
-        }
-
-        .logout-button {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .logout-button:hover {
-            background-color: #c82333;
-        }
-
-        .reset-button {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .reset-button:hover {
-            background-color: #218838;
-        }
-
-        .text-muted {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            h2 {
-                font-size: 1.75rem;
-            }
-
-            .section h4 {
-                font-size: 1.15rem;
-            }
-
-            .upload-button,
-            .logout-button,
-            .reset-button {
-                font-size: 14px;
-                padding: 8px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding: 15px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            .section h4 {
-                font-size: 1.1rem;
-            }
-
-            .upload-button,
-            .logout-button,
-            .reset-button {
-                font-size: 13px;
-                padding: 8px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-        {% include "Base/alert.html" %}
-        <h2>{% trans "Settings" %}</h2>
-
-        <!-- Upload Profile Photo Section -->
-        <div class="upload-section">
-            <h4>{% trans "Upload Profile Photo" %}</h4>
-            <form action="{% url 'upload_photo' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="profile_photo" accept="image/*" class="form-control-file" required>
-                <button type="submit" class="upload-button btn btn-primary mt-2">{% trans "Upload Photo" %}</button>
-            </form>
-        </div>
-
-        <!-- Language Settings Section -->
-        <div class="section">
-            <h4>{% trans "Language Settings" %}</h4>
-            <form action="{% url 'select_language' %}" method="post">
-                {% csrf_token %}
-                <select name="language_code" class="form-control" onchange="this.form.submit()">
-                    {% for code, name in languages %}
-                    <option value="{{ code }}" {% if code == language_code %} selected {% endif %}>
-                        {{ name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </form>
-        </div>
-
-        <!-- Logout Section -->
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <div class="section">
-                <h4>{% trans "Logout" %}</h4>
-                <button type="submit" class="logout-button">{% trans "Logout" %}</button>
-            </div>
-        </form>
-
-        <!-- Reset Orders Section -->
-        <div class="section">
-            <h4>{% trans "Reset Orders" %}</h4>
-            <button class="reset-button" onclick="resetOrders()">{% trans "Reset Orders" %}</button>
-            <p class="text-muted">{% trans "Note: A 10% deposit fee will be charged for resetting orders." %}</p>
-        </div>
-
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function resetOrders() {
-            var confirmReset = confirm('{% trans "Are you sure you want to reset your orders? A 10% deposit fee will be charged." %}');
-            if (confirmReset) {
-                // Implement the reset orders logic here
-                console.log('Orders reset successfully');
-            } else {
-                console.log('Order reset cancelled');
-            }
-        }
-    </script>
-
-</body>
-
-</html>
+  <div>
+    <h3 class="h6 text-secondary">{% trans "Reset Orders" %}</h3>
+    <button type="button" class="btn btn-outline-primary w-100 mb-2" onclick="resetOrders()">{% trans "Reset Orders" %}</button>
+    <p class="text-muted small mb-0">{% trans "Note: A 10% deposit fee will be charged for resetting orders." %}</p>
+  </div>
+</div>
+{% endblock %}
+{% block customer_extra_js %}
+<script>
+  function resetOrders() {
+    var confirmReset = confirm('{% trans "Are you sure you want to reset your orders? A 10% deposit fee will be charged." %}');
+    if (confirmReset) {
+      console.log('Orders reset successfully');
+    } else {
+      console.log('Order reset cancelled');
+    }
+  }
+</script>
+{% endblock %}

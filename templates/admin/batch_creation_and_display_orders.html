@@ -1,257 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management Panel</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f7f9;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-top: 50px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #343a40;
-            margin-bottom: 30px;
-        }
-
-        .btn {
-            border-radius: 50px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            padding: 10px 20px;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            border-color: #5a6268;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-            border-color: #218838;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            color: #495057;
-        }
-
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid #ced4da;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: none;
-        }
-
-        .order-item {
-            background-color: #e9ecef;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .order-item img {
-            max-width: 60px;
-            margin-right: 20px;
-            border-radius: 5px;
-        }
-
-        .batch-list-item {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .batch-list-item .batch-name {
-            font-weight: bold;
-            color: #007bff;
-            font-size: 18px;
-        }
-
-        .batch-list-item .btn-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            h2 {
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
-
-            .btn {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-
-            .order-item img {
-                max-width: 40px;
-            }
-
-            .form-group label {
-                font-size: 14px;
-            }
-
-            .form-control {
-                font-size: 14px;
-            }
-
-            .batch-list-item .batch-name {
-                font-size: 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2 class="text-center">Order Management Panel</h2>
-
-        <!-- Batch Creation Section -->
-        <div id="createBatchSection">
-            <h4>Create Batch</h4>
-            <form id="createBatchForm" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="batch_name">Batch Name:</label>
-                    <input type="text" name="batch_name" class="form-control" id="batch_name" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block mt-3">Create Batch</button>
-            </form>
+{% extends "home/base_admin.html" %}
+{% block admin_page_title %}Order panel{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block admin_main %}
+<div class="admin-back-row">
+  <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">← Overview</a>
+</div>
+<div class="admin-page-card admin-page-card--wide admin-orders-hub">
+  <h1 class="admin-page-primary-title">Order management panel</h1>
+  <div id="createBatchSection">
+    <h2 class="admin-section-eyebrow">Create batch</h2>
+    <form id="createBatchForm" method="post" class="mb-4">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="batch_name" class="form-label">Batch name</label>
+        <input type="text" name="batch_name" class="form-control" id="batch_name" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 mt-2">Create batch</button>
+    </form>
+  </div>
+  <div id="batchListSection" class="mt-4">
+    <h2 class="admin-section-eyebrow mt-4">Created batches</h2>
+    <div id="batchList">
+      {% for batch in batches %}
+        <div class="batch-list-item" data-batch-id="{{ batch.id }}">
+          <span class="batch-name">{{ batch.name }}</span>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'add_orders' batch.id %}" class="btn btn-primary btn-sm">Add orders</a>
+            <button type="button" class="btn btn-outline-secondary btn-sm view-orders-btn">View orders</button>
+          </div>
         </div>
-        {% include "Base/alert.html" %}
-        <!-- Created Batches Section -->
-        <div id="batchListSection" class="mt-4">
-            <h4>Created Batches</h4>
-            <div id="batchList">
-                {% for batch in batches %}
-                    <div class="batch-list-item" data-batch-id="{{ batch.id }}">
-                        <span class="batch-name">{{ batch.name }}</span>
-                        <div class="btn-group">
-                            <a href="{% url 'add_orders' batch.id %}" class="btn btn-success btn-sm">Add Orders</a>
-                            <button class="btn btn-secondary btn-sm view-orders-btn">View Orders</button>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-        
-        <!-- Orders Display Section -->
-        <div id="ordersDisplaySection" class="hidden mt-4">
-            <h3>Orders in Batch: <span id="ordersBatchName"></span></h3>
-            <div id="ordersList" class="order-list mb-4"></div>
-        </div>
+      {% endfor %}
     </div>
+  </div>
+  <div id="ordersDisplaySection" class="hidden mt-4">
+    <h2 class="admin-section-eyebrow mt-2">Orders in batch: <span id="ordersBatchName" class="text-capitalize fw-semibold text-body"></span></h2>
+    <div id="ordersListWrap" class="mb-4 table-responsive admin-orders-preview-wrap">
+      <table class="table table-sm align-middle admin-orders-preview-table mb-0">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Order ID</th>
+            <th scope="col">Type</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Products</th>
+          </tr>
+        </thead>
+        <tbody id="ordersListBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block admin_extra_js %}
+<script>
+(function () {
+  var batchListSection = document.getElementById("batchListSection");
+  var ordersDisplaySection = document.getElementById("ordersDisplaySection");
+  var ordersBatchName = document.getElementById("ordersBatchName");
+  var ordersListBody = document.getElementById("ordersListBody");
+  if (!batchListSection || !ordersListBody) return;
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  function clearOrdersBody() {
+    while (ordersListBody.firstChild) {
+      ordersListBody.removeChild(ordersListBody.firstChild);
+    }
+  }
 
-    <script>
-        const batchListSection = document.getElementById('batchListSection');
-        const ordersDisplaySection = document.getElementById('ordersDisplaySection');
-        const ordersBatchName = document.getElementById('ordersBatchName');
-        const ordersList = document.getElementById('ordersList');
+  function appendTextCell(tr, text) {
+    var td = document.createElement("td");
+    td.textContent = text;
+    tr.appendChild(td);
+  }
 
-        let selectedBatchId = null;
+  function appendEmptyRow(message, colspan) {
+    var tr = document.createElement("tr");
+    var td = document.createElement("td");
+    td.colSpan = colspan;
+    td.className = "text-muted small py-4 text-center";
+    td.textContent = message;
+    tr.appendChild(td);
+    ordersListBody.appendChild(tr);
+  }
 
-        // Show orders when the "View Orders" button is clicked
-        batchListSection.addEventListener('click', (event) => {
-            if (event.target.classList.contains('view-orders-btn')) {
-                const batchItem = event.target.closest('.batch-list-item');
-                selectedBatchId = batchItem.getAttribute('data-batch-id');
-                const batchName = batchItem.querySelector('.batch-name').textContent;
+  batchListSection.addEventListener("click", function (event) {
+    var btn = event.target.closest(".view-orders-btn");
+    if (!btn) return;
+    var batchItem = btn.closest(".batch-list-item");
+    if (!batchItem) return;
+    var selectedBatchId = batchItem.getAttribute("data-batch-id");
+    var batchName = batchItem.querySelector(".batch-name");
+    if (ordersBatchName && batchName) ordersBatchName.textContent = batchName.textContent;
+    clearOrdersBody();
+    var fetchUrl = "{% url 'fetch_orders' 999999 %}".replace("999999", selectedBatchId);
+    fetch(fetchUrl)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var orders = data.orders || [];
+        if (orders.length === 0) {
+          appendEmptyRow("No orders in this batch yet.", 5);
+        } else {
+          orders.forEach(function (order, index) {
+            var tr = document.createElement("tr");
+            appendTextCell(tr, String(index + 1));
+            appendTextCell(tr, String(order.id));
+            appendTextCell(tr, order.order_type || "");
+            appendTextCell(tr, "$" + String(order.total_amount));
 
-                // Display the batch name
-                ordersBatchName.textContent = batchName;
-
-                // Fetch orders for the selected batch (you need to implement this in the backend)
-                fetchOrdersForBatch(selectedBatchId);
-
-                // Show the orders section
-                ordersDisplaySection.classList.remove('hidden');
+            var tdProducts = document.createElement("td");
+            var wrap = document.createElement("div");
+            wrap.className = "admin-orders-thumb-wrap";
+            var products = order.products || [];
+            if (products.length === 0) {
+              var empty = document.createElement("span");
+              empty.className = "text-muted small";
+              empty.textContent = "—";
+              wrap.appendChild(empty);
+            } else {
+              products.forEach(function (p) {
+                if (!p.image_url) return;
+                var img = document.createElement("img");
+                img.className = "admin-orders-thumb";
+                img.src = p.image_url;
+                img.alt = p.name || "Product";
+                img.loading = "lazy";
+                wrap.appendChild(img);
+              });
             }
-        });
-
-        // Fetch orders for the selected batch
-        
-        function fetchOrdersForBatch(batchId) {
-            const fetchUrl = `{% url 'fetch_orders' 0 %}`.replace('0', batchId);
-            fetch(fetchUrl)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear previous orders
-                    ordersList.innerHTML = '';
-
-                    // Append fetched orders to the orders list
-                    counter=0;
-                    data.orders.forEach(order => {
-                        const orderItem = document.createElement('div');
-                        orderItem.className = 'order-item';
-                        counter++;
-                        orderItem.innerHTML = `
-                            <span>${ counter }. Order ID: ${order.id} - ${order.order_type} - $${order.total_amount}</span>
-                            <div>
-                                ${order.products.map(product => `<img src="${product.image_url}" alt="${product.name}">`).join('')}
-                            </div>
-                        `;
-                        ordersList.appendChild(orderItem);
-                    });
-                })
-                .catch(error => console.error('Error fetching orders:', error));
+            tdProducts.appendChild(wrap);
+            tr.appendChild(tdProducts);
+            ordersListBody.appendChild(tr);
+          });
         }
-    </script>
-</body>
-</html>
+        ordersDisplaySection.classList.remove("hidden");
+      })
+      .catch(function (e) { console.error(e); });
+  });
+})();
+</script>
+{% endblock %}

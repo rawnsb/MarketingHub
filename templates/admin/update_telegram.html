@@ -1,55 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Service Link Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f7fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .service-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-            background: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
-        }
-        .form-control, .btn {
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .btn-primary {
-            background-color: #007bff;
-        }
-        .btn-success {
-            background-color: #28a745;
-        }
-    </style>
-</head>
-<body>
-    <div class="service-container">
-        <h2 class="text-center mb-4">Customer Service Telegram Link</h2>
-        <form method="post" action="{% url 'update_telegram' user.id %}">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="currentLink" class="form-label">Current Telegram Link:</label>
-                <input type="url" class="form-control" id="currentLink" value="{{ telegram_account.telegram_link }}" disabled>
-            </div>
-            <div class="mb-3">
-                <label for="newLink" class="form-label">New Telegram Link:</label>
-                <input type="url" class="form-control" id="newLink" name="newLink" placeholder="Enter new link">
-            </div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-primary">Save and Replace</button>
-                <a href="{% url 'Admin_dashboard' %}" class="btn btn-success">OK</a> <!-- Replace 'dashboard' with your dashboard URL name -->
-            </div>
-        </form>
+{% extends "home/base_admin.html" %}
+{% block admin_page_title %}Telegram link{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block admin_main %}
+<div class="admin-back-row">
+  <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">← Overview</a>
+</div>
+<div class="admin-page-card">
+  <h1 class="h4 mb-4">Customer service Telegram link</h1>
+  <form method="post" action="{% url 'update_telegram' user.id %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="currentLink" class="form-label">Current Telegram link</label>
+      <input type="url" class="form-control" id="currentLink" value="{{ telegram_account.telegram_link }}" disabled>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <div class="mb-3">
+      <label for="newLink" class="form-label">New Telegram link</label>
+      <input type="url" class="form-control" id="newLink" name="newLink" placeholder="https://t.me/…">
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button type="submit" class="btn btn-primary">Save and replace</button>
+      <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary">Back to overview</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

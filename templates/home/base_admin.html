@@ -1,0 +1,176 @@
+{% extends "home/base_staff.html" %}
+{% block staff_nav_actions %}{% endblock %}
+{% block staff_alerts %}{% endblock %}
+{% block staff_body_class %}staff-admin{% endblock %}
+{% block staff_title %}{% block admin_page_title %}Admin{% endblock %}{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block staff_extra_css %}{% block admin_extra_css %}{% endblock %}{% endblock %}
+{% block staff_content %}
+<div class="admin-shell-toolbar admin-shell-toolbar--chrome d-flex flex-wrap align-items-center gap-2 mb-2 px-2 py-2 rounded border">
+  <button class="btn btn-primary btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebarOffcanvas" aria-controls="adminSidebarOffcanvas">
+    <i class="fa-solid fa-bars me-1" aria-hidden="true"></i>Menu
+  </button>
+  <button type="button" class="btn btn-outline-secondary btn-sm d-none d-lg-inline-flex align-items-center gap-1" id="adminSidebarDesktopToggle" aria-expanded="true" aria-controls="adminSidebarDesktop" title="Collapse sidebar">
+    <i class="fa-solid fa-angles-left" id="adminSidebarToggleIcon" aria-hidden="true"></i>
+    <span class="admin-sidebar-toggle-text">Collapse</span>
+  </button>
+  <div class="ms-auto d-flex align-items-center gap-2 small text-muted">
+    {% block admin_toolbar_extra %}{% endblock %}
+  </div>
+</div>
+<div class="admin-shell" id="adminShell">
+  <aside id="adminSidebarDesktop" class="admin-sidebar d-none d-lg-flex flex-column" aria-label="Admin sidebar">
+    {% include "home/includes/admin_sidebar_links.html" %}
+  </aside>
+  <div class="offcanvas offcanvas-start admin-sidebar-offcanvas d-lg-none" tabindex="-1" id="adminSidebarOffcanvas" aria-labelledby="adminSidebarOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+      <h2 class="h6 offcanvas-title mb-0" id="adminSidebarOffcanvasLabel">Admin menu</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      {% include "home/includes/admin_sidebar_links.html" %}
+    </div>
+  </div>
+  <main class="admin-shell-main admin-shell-main--padded flex-grow-1 min-w-0" id="admin-main">
+    {% include "Base/alert.html" with message_stack_class="admin-message-stack mb-3" message_stack_id="admin-message-stack" message_stack_live=True %}
+    {% block admin_main %}{% endblock %}
+  </main>
+</div>
+{% include "home/includes/admin_add_employee_modal.html" %}
+{% include "home/includes/admin_confirm_modal.html" %}
+{% endblock %}
+{% block staff_extra_js %}
+<script>
+(function () {
+  var shell = document.getElementById("adminShell");
+  var btn = document.getElementById("adminSidebarDesktopToggle");
+  var icon = document.getElementById("adminSidebarToggleIcon");
+  var textEl = btn ? btn.querySelector(".admin-sidebar-toggle-text") : null;
+  var key = "mh-admin-sidebar-collapsed";
+  if (!shell || !btn) return;
+  function apply(collapsed) {
+    if (collapsed) {
+      shell.classList.add("is-sidebar-collapsed");
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("title", "Expand sidebar");
+      if (icon) {
+        icon.classList.remove("fa-angles-left");
+        icon.classList.add("fa-angles-right");
+      }
+      if (textEl) textEl.textContent = "Expand";
+    } else {
+      shell.classList.remove("is-sidebar-collapsed");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("title", "Collapse sidebar");
+      if (icon) {
+        icon.classList.remove("fa-angles-right");
+        icon.classList.add("fa-angles-left");
+      }
+      if (textEl) textEl.textContent = "Collapse";
+    }
+  }
+  apply(localStorage.getItem(key) === "1");
+  btn.addEventListener("click", function () {
+    var collapsed = !shell.classList.contains("is-sidebar-collapsed");
+    localStorage.setItem(key, collapsed ? "1" : "0");
+    apply(collapsed);
+  });
+})();
+</script>
+<script>
+(function () {
+  var modalEl = document.getElementById("mhAdminConfirmModal");
+  var messageEl = document.getElementById("mhAdminConfirmMessage");
+  var okBtn = document.getElementById("mhAdminConfirmOk");
+  if (!modalEl || !messageEl || !okBtn || typeof bootstrap === "undefined") return;
+
+  var pending = null;
+  var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+  function defaultOkButton() {
+    okBtn.className = "btn btn-primary px-4";
+    okBtn.textContent = "Confirm";
+  }
+
+  function isDestructiveTrigger(el) {
+    if (el.getAttribute("data-mh-confirm-danger") === "true") return true;
+    if (el.classList.contains("text-danger")) return true;
+    if (el.classList.contains("btn-outline-danger")) return true;
+    if (el.classList.contains("btn-danger")) return true;
+    return false;
+  }
+
+  function fillConfirmMessage(container, el) {
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    var msg = el.getAttribute("data-mh-confirm");
+    var subject = el.getAttribute("data-mh-confirm-subject");
+    var token = "__MH_SUBJECT__";
+    if (subject && msg && msg.indexOf(token) !== -1) {
+      var parts = msg.split(token);
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i]) {
+          container.appendChild(document.createTextNode(parts[i]));
+        }
+        if (i < parts.length - 1) {
+          var s = document.createElement("strong");
+          s.className = "mh-admin-confirm-subject";
+          s.textContent = subject;
+          container.appendChild(s);
+        }
+      }
+    } else {
+      container.textContent = msg;
+    }
+  }
+
+  okBtn.addEventListener("click", function () {
+    var el = pending;
+    pending = null;
+    modal.hide();
+    defaultOkButton();
+    if (!el) return;
+    if (el.tagName === "A") {
+      var href = el.getAttribute("href");
+      if (href && href !== "#") window.location.assign(href);
+    } else if (el.tagName === "BUTTON" && el.form && el.type === "submit") {
+      try {
+        el.form.requestSubmit(el);
+      } catch (err) {
+        el.form.submit();
+      }
+    }
+  });
+
+  modalEl.addEventListener("hidden.bs.modal", function () {
+    pending = null;
+    defaultOkButton();
+  });
+
+  document.addEventListener(
+    "click",
+    function (e) {
+      var el = e.target.closest("a[data-mh-confirm], button[data-mh-confirm]");
+      if (!el) return;
+      var msg = el.getAttribute("data-mh-confirm");
+      if (!msg) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      pending = el;
+      fillConfirmMessage(messageEl, el);
+      var okLabel = el.getAttribute("data-mh-confirm-ok");
+      if (isDestructiveTrigger(el)) {
+        okBtn.className = "btn btn-danger px-4";
+      } else {
+        defaultOkButton();
+      }
+      okBtn.textContent = okLabel || "Confirm";
+      modal.show();
+    },
+    true
+  );
+})();
+</script>
+{% block admin_extra_js %}{% endblock %}
+{% endblock %}

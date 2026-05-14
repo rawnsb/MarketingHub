@@ -1,139 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Customer Order</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f7f9;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin-top: 50px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #343a40;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-        }
-
-        .btn {
-            border-radius: 50px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-            box-shadow: 0px 4px 8px rgba(0, 91, 187, 0.5);
-        }
-
-        .form-group label {
-            font-weight: bold;
-            color: #495057;
-        }
-
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid #ced4da;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.25);
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-        <h2 class="text-center"><strong>Update Customer Order</strong></h2>
-
-        <form action="" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="orderId">Order ID:</label>
-                <input type="text" class="form-control" id="orderId" value="{{ customer_order.id }}" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="orderType">Order Type:</label>
-                <input type="text" class="form-control" id="orderType" value="{{ customer_order.original_order.order_type }}" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="totalAmount">Total Amount:</label>
-                <input type="text" class="form-control" id="totalAmount" name="total_amount" value="{{ customer_order.custom_total_amount }}" readonly>
-            </div>
-
-            {% if customer_order.original_order.order_type == 'Simple' %}
-                <div class="form-group">
-                    <label for="productName">Product Name:</label>
-                    <input type="text" class="form-control" id="productName" name="product_name" value="{{ customer_order.custom_product.name }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="productPrice">Product Price:</label>
-                    <input type="text" class="form-control" id="productPrice" name="product_price" value="{{ customer_order.custom_product.price }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="commissionRate">Commission Rate:</label>
-                    <input type="text" class="form-control" id="commissionRate" name="commission_rate" value="{{ customer_order.custom_product.commission_rate }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="productImage">Product Image:</label>
-                    <input type="file" class="form-control" id="productImage" name="product_image">
-                    <img src="{{ customer_order.custom_product.image.url }}" alt="{{ customer_order.custom_product.name }}" style="max-width: 200px; margin-top: 10px;">
-                </div>
-            {% else %}
-                {% for product in customer_order.custom_products.all %}
-                    <div class="form-group">
-                        <label for="productName_{{ product.id }}">Product Name ({{ product.id }}):</label>
-                        <input type="text" class="form-control" id="productName_{{ product.id }}" name="product_name_{{ product.id }}" value="{{ product.name }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productPrice_{{ product.id }}">Product Price ({{ product.id }}):</label>
-                        <input type="text" class="form-control" id="productPrice_{{ product.id }}" name="product_price_{{ product.id }}" value="{{ product.price }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="commissionRate_{{ product.id }}">Commission Rate ({{ product.id }}):</label>
-                        <input type="text" class="form-control" id="commissionRate_{{ product.id }}" name="commission_rate_{{ product.id }}" value="{{ product.commission_rate }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productImage_{{ product.id }}">Product Image ({{ product.id }}):</label>
-                        <input type="file" class="form-control" id="productImage_{{ product.id }}" name="product_image_{{ product.id }}">
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 200px; margin-top: 10px;">
-                    </div>
-                {% endfor %}
-            {% endif %}
-
-            <button type="submit" class="btn btn-primary">Update Order</button>
-        </form>
+{% extends "home/base_admin.html" %}
+{% block admin_page_title %}Update order{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block admin_main %}
+<div class="admin-back-row">
+  <a href="{% url 'grant_batches_to_customer' customer_order.customer_batch.user.id %}" class="btn btn-outline-secondary btn-sm">← Grant batches</a>
+  <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">Overview</a>
+</div>
+<div class="admin-page-card admin-page-card--wide">
+  <h1 class="h4 mb-4 text-center">Update customer order</h1>
+  <form method="post" enctype="multipart/form-data" action="{% url 'update_customer_order' customer_order.id customer_order.customer_batch.user.id %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="orderId" class="form-label">Order ID</label>
+      <input type="text" class="form-control" id="orderId" value="{{ customer_order.id }}" readonly>
     </div>
-
-</body>
-
-</html>
+    <div class="mb-3">
+      <label for="orderType" class="form-label">Order type</label>
+      <input type="text" class="form-control" id="orderType" value="{{ customer_order.original_order.order_type }}" readonly>
+    </div>
+    <div class="mb-3">
+      <label for="totalAmount" class="form-label">Total amount</label>
+      <input type="text" class="form-control" id="totalAmount" name="total_amount" value="{{ customer_order.custom_total_amount }}" readonly>
+    </div>
+    {% if customer_order.original_order.order_type == 'Simple' %}
+      <div class="mb-3">
+        <label for="productName" class="form-label">Product name</label>
+        <input type="text" class="form-control" id="productName" name="product_name" value="{{ customer_order.custom_product.name }}">
+      </div>
+      <div class="mb-3">
+        <label for="productPrice" class="form-label">Product price</label>
+        <input type="text" class="form-control" id="productPrice" name="product_price" value="{{ customer_order.custom_product.price }}">
+      </div>
+      <div class="mb-3">
+        <label for="commissionRate" class="form-label">Commission rate</label>
+        <input type="text" class="form-control" id="commissionRate" name="commission_rate" value="{{ customer_order.custom_product.commission_rate }}">
+      </div>
+      <div class="mb-3">
+        <label for="productImage" class="form-label">Product image</label>
+        <input type="file" class="form-control" id="productImage" name="product_image">
+        <img src="{{ customer_order.custom_product.image.url }}" alt="{{ customer_order.custom_product.name }}" class="mt-2 rounded border" style="max-width: 200px;">
+      </div>
+    {% else %}
+      {% for product in customer_order.custom_products.all %}
+        <div class="mb-3 p-3 border rounded">
+          <label for="productName_{{ product.id }}" class="form-label">Product name ({{ product.id }})</label>
+          <input type="text" class="form-control mb-2" id="productName_{{ product.id }}" name="product_name_{{ product.id }}" value="{{ product.name }}">
+          <label for="productPrice_{{ product.id }}" class="form-label">Product price ({{ product.id }})</label>
+          <input type="text" class="form-control mb-2" id="productPrice_{{ product.id }}" name="product_price_{{ product.id }}" value="{{ product.price }}">
+          <label for="commissionRate_{{ product.id }}" class="form-label">Commission rate ({{ product.id }})</label>
+          <input type="text" class="form-control mb-2" id="commissionRate_{{ product.id }}" name="commission_rate_{{ product.id }}" value="{{ product.commission_rate }}">
+          <label for="productImage_{{ product.id }}" class="form-label">Product image ({{ product.id }})</label>
+          <input type="file" class="form-control" id="productImage_{{ product.id }}" name="product_image_{{ product.id }}">
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="mt-2 rounded border" style="max-width: 200px;">
+        </div>
+      {% endfor %}
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Update order</button>
+  </form>
+</div>
+{% endblock %}
