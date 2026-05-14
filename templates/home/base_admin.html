@@ -1,0 +1,78 @@
+{% extends "home/base_staff.html" %}
+{% block staff_alerts %}{% endblock %}
+{% block staff_body_class %}staff-admin{% endblock %}
+{% block staff_title %}{% block admin_page_title %}Admin{% endblock %}{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block staff_extra_css %}{% block admin_extra_css %}{% endblock %}{% endblock %}
+{% block staff_content %}
+<div class="admin-shell-toolbar admin-shell-toolbar--chrome d-flex flex-wrap align-items-center gap-2 mb-2 px-2 py-2 rounded border">
+  <button class="btn btn-primary btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebarOffcanvas" aria-controls="adminSidebarOffcanvas">
+    <i class="fa-solid fa-bars me-1" aria-hidden="true"></i>Menu
+  </button>
+  <button type="button" class="btn btn-outline-secondary btn-sm d-none d-lg-inline-flex align-items-center gap-1" id="adminSidebarDesktopToggle" aria-expanded="true" aria-controls="adminSidebarDesktop" title="Collapse sidebar">
+    <i class="fa-solid fa-angles-left" id="adminSidebarToggleIcon" aria-hidden="true"></i>
+    <span class="admin-sidebar-toggle-text">Collapse</span>
+  </button>
+  <div class="ms-auto d-flex align-items-center gap-2 small text-muted">
+    {% block admin_toolbar_extra %}{% endblock %}
+  </div>
+</div>
+<div class="admin-shell" id="adminShell">
+  <aside id="adminSidebarDesktop" class="admin-sidebar d-none d-lg-flex flex-column" aria-label="Admin sidebar">
+    {% include "home/includes/admin_sidebar_links.html" %}
+  </aside>
+  <div class="offcanvas offcanvas-start admin-sidebar-offcanvas d-lg-none" tabindex="-1" id="adminSidebarOffcanvas" aria-labelledby="adminSidebarOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+      <h2 class="h6 offcanvas-title mb-0" id="adminSidebarOffcanvasLabel">Admin menu</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      {% include "home/includes/admin_sidebar_links.html" %}
+    </div>
+  </div>
+  <main class="admin-shell-main admin-shell-main--padded flex-grow-1 min-w-0" id="admin-main">
+    {% include "Base/alert.html" with message_stack_class="admin-message-stack mb-3" message_stack_id="admin-message-stack" message_stack_live=True %}
+    {% block admin_main %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
+{% block staff_extra_js %}
+<script>
+(function () {
+  var shell = document.getElementById("adminShell");
+  var btn = document.getElementById("adminSidebarDesktopToggle");
+  var icon = document.getElementById("adminSidebarToggleIcon");
+  var textEl = btn ? btn.querySelector(".admin-sidebar-toggle-text") : null;
+  var key = "mh-admin-sidebar-collapsed";
+  if (!shell || !btn) return;
+  function apply(collapsed) {
+    if (collapsed) {
+      shell.classList.add("is-sidebar-collapsed");
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("title", "Expand sidebar");
+      if (icon) {
+        icon.classList.remove("fa-angles-left");
+        icon.classList.add("fa-angles-right");
+      }
+      if (textEl) textEl.textContent = "Expand";
+    } else {
+      shell.classList.remove("is-sidebar-collapsed");
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("title", "Collapse sidebar");
+      if (icon) {
+        icon.classList.remove("fa-angles-right");
+        icon.classList.add("fa-angles-left");
+      }
+      if (textEl) textEl.textContent = "Collapse";
+    }
+  }
+  apply(localStorage.getItem(key) === "1");
+  btn.addEventListener("click", function () {
+    var collapsed = !shell.classList.contains("is-sidebar-collapsed");
+    localStorage.setItem(key, collapsed ? "1" : "0");
+    apply(collapsed);
+  });
+})();
+</script>
+{% block admin_extra_js %}{% endblock %}
+{% endblock %}

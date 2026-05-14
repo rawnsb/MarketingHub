@@ -1,9 +1,8 @@
-{% extends "home/base_staff.html" %}
-{% block staff_title %}Admin Dashboard{% endblock %}
-{% block staff_nav_title %}Admin Dashboard{% endblock %}
-{% block staff_body_class %}staff-admin{% endblock %}
-{% block staff_content %}
-<div class="container mt-4 py-3">
+{% extends "home/base_admin.html" %}
+{% block admin_page_title %}Overview{% endblock %}
+{% block staff_nav_title %}Admin{% endblock %}
+{% block admin_main %}
+<div class="admin-dashboard-inner">
   <div class="row g-2 mb-3">
     <div class="col-6 col-lg-2"><div class="info-box bg-total h-100">Total Deposits: $<span id="totalDeposits">{{ request.user.admin.total_deposit }}</span></div></div>
     <div class="col-6 col-lg-2"><div class="info-box bg-withdraw h-100">Total Withdrawals: $<span id="totalWithdrawals">{{ request.user.admin.total_withdrawal }}</span></div></div>
@@ -13,8 +12,6 @@
   </div>
   <div class="d-flex flex-wrap gap-2 mb-3">
     <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">+ Add Employee</button>
-    <a class="btn btn-outline-primary text-capitalize" href="{% url 'delete_unused_products' %}">Delete Unused Products</a>
-    <a class="btn btn-success" href="{% url 'orders_panel' %}">Order Panel</a>
   </div>
   <div class="accordion" id="employeesAccordion">
     {% for data in employees_data %}
@@ -26,7 +23,7 @@
         </h2>
         <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#employeesAccordion">
           <div class="accordion-body">
-            <h5 class="h6">Invited Customers</h5>
+            <h3 class="h6">Invited Customers</h3>
             <div class="table-responsive">
               <table class="table table-sm align-middle">
                 <thead>

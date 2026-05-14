@@ -1,0 +1,20 @@
+{% comment %}Shared admin primary nav — used in desktop sidebar and mobile offcanvas.{% endcomment %}
+<nav aria-label="Admin primary" class="admin-sidebar__nav">
+  <ul class="admin-sidebar__list list-unstyled mb-0">
+    <li class="admin-sidebar__item">
+      <a href="{% url 'Admin_dashboard' %}" class="admin-sidebar__link {% if request.resolver_match.url_name == 'Admin_dashboard' %}is-active{% endif %}" title="Overview">
+        <i class="fa-solid fa-gauge-high fa-fw me-2" aria-hidden="true"></i><span class="admin-sidebar__label">Overview</span>
+      </a>
+    </li>
+    <li class="admin-sidebar__item">
+      <a href="{% url 'orders_panel' %}" class="admin-sidebar__link {% if request.resolver_match.url_name == 'orders_panel' %}is-active{% endif %}" title="Order panel">
+        <i class="fa-solid fa-list fa-fw me-2" aria-hidden="true"></i><span class="admin-sidebar__label">Order panel</span>
+      </a>
+    </li>
+    <li class="admin-sidebar__item">
+      <a href="{% url 'delete_unused_products' %}" class="admin-sidebar__link {% if request.resolver_match.url_name == 'delete_unused_products' %}is-active{% endif %}" title="Delete unused prodcts">
+        <i class="fa-solid fa-broom fa-fw me-2" aria-hidden="true"></i><span class="admin-sidebar__label">Clear Bin</span>
+      </a>
+    </li>
+  </ul>
+</nav>
