@@ -34,6 +34,9 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Display name in staff header and other UI (override with SITE_BRAND_NAME env)
+SITE_BRAND_NAME = os.environ.get("SITE_BRAND_NAME", "MarketingHub")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -137,6 +140,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',  # Ensure this is included
+                'project.context_processors.site_brand',
             ],
         },
     },

@@ -34,14 +34,14 @@
   <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">Overview</a>
 </div>
 <div class="admin-page-card admin-page-card--wide admin-order-panel">
-  <h1 class="h4 mb-4 text-center"><strong>Order management</strong></h1>
+  <h1 class="admin-page-primary-title">Order management</h1>
   <div id="orderButtons" class="text-center mb-4 {% if not batch %}hidden{% endif %}">
-    <p class="mb-3"><strong>Batch:</strong> <span class="text-capitalize" id="currentBatchName">{{ batch.name }}</span></p>
+    <p class="mb-3"><span class="admin-section-eyebrow d-inline-block me-2 mb-0">Batch</span> <span class="text-capitalize fw-semibold text-body" id="currentBatchName">{{ batch.name }}</span></p>
     <button type="button" id="createSimpleOrderBtn" class="btn btn-primary btn-lg mx-2 my-1">Create simple order</button>
     <button type="button" id="createLuckyOrderBtn" class="btn btn-outline-primary btn-lg mx-2 my-1">Create lucky order</button>
   </div>
   <div id="simpleOrderForm" class="order-form hidden">
-    <h2 class="h5">Create simple order</h2>
+    <h2 class="admin-section-eyebrow">Create simple order</h2>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <input type="hidden" name="order_type" value="Simple">
@@ -70,7 +70,7 @@
     </form>
   </div>
   <div id="luckyOrderForm" class="order-form hidden">
-    <h2 class="h5">Create lucky order</h2>
+    <h2 class="admin-section-eyebrow">Create lucky order</h2>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <input type="hidden" name="order_type" value="Lucky">
@@ -88,12 +88,12 @@
     </form>
   </div>
   <div id="ordersDisplaySection" class="{% if not orders %}hidden{% endif %}">
-    <h2 class="h5 mt-4">Orders in batch: <span id="ordersBatchName">{{ batch.name }}</span></h2>
+    <h2 class="admin-section-eyebrow mt-4">Orders in batch: <span id="ordersBatchName" class="text-capitalize fw-semibold text-body">{{ batch.name }}</span></h2>
     <p class="small text-muted mb-2">{{ remaining_orders }} slot(s) remaining (max 20).</p>
     <div id="ordersList" class="mb-4">
       {% for order in orders %}
         <div class="order-item">
-          <span>{{ forloop.counter }}. Order ID: {{ order.id }} — {{ order.order_type }} — ${{ order.total_amount }}</span>
+          <span class="order-item__summary">{{ forloop.counter }}. Order ID: {{ order.id }} — {{ order.order_type }} — ${{ order.total_amount }}</span>
           {% if order.order_type == "Simple" %}
             <img src="{{ order.product.image.url }}" alt="{{ order.product.name }}">
           {% else %}
@@ -103,11 +103,11 @@
               {% endfor %}
             </div>
           {% endif %}
-          <a href="{% url 'delete_batch_order' order.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          <a href="{% url 'delete_batch_order' order.id %}" class="btn btn-sm btn-outline-danger" data-mh-confirm="Delete this order from the batch? Related product data may be removed. This cannot be undone.">Delete</a>
         </div>
       {% endfor %}
     </div>
-    <a href="{% url 'finalize_batch' batch.id %}" class="btn btn-primary w-100 mt-2">Finalize batch</a>
+    <a href="{% url 'finalize_batch' batch.id %}" class="btn btn-primary w-100 mt-2" data-mh-confirm="Finalize this batch? You should have exactly 20 orders. Continue?">Finalize batch</a>
   </div>
 </div>
 {% endblock %}

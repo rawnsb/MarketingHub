@@ -769,6 +769,7 @@
 
 /* ----- Staff (admin / employee) shell — same tokens as customer ----- */
 .staff-app {
+  --staff-navbar-sticky-offset: 5.5rem;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -798,6 +799,28 @@
   padding: var(--mh-space-3) var(--mh-space-4);
   border-radius: 0 0 var(--mh-radius-md) var(--mh-radius-md);
   box-shadow: var(--mh-shadow-sm);
+}
+
+.staff-app .staff-navbar__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  text-align: start;
+}
+
+.staff-app .staff-navbar__company {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.staff-app .staff-navbar__context {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .staff-app .staff-navbar .navbar-brand {
@@ -901,32 +924,180 @@
   color: var(--mh-color-text);
 }
 
-/* Admin dashboard cards — mono-hue navy tiers (readable on white stats) */
-.staff-admin .info-box {
+/* Admin dashboard — unified stat tiles (navy shell, single surface treatment) */
+.staff-admin .admin-stat-tile {
   padding: var(--mh-space-4);
-  margin: var(--mh-space-2) 0;
-  color: #fff;
+  background: var(--mh-color-surface);
+  color: var(--mh-color-text);
   border-radius: var(--mh-radius-md);
+  border: 1px solid var(--mh-color-border);
+  border-left: 3px solid var(--mh-color-brand);
+  box-shadow: var(--mh-shadow-sm);
 }
 
-.staff-admin .bg-total { background-color: var(--mh-color-brand); }
-.staff-admin .bg-net { background-color: var(--mh-color-brand-mid); }
-.staff-admin .bg-users { background-color: var(--mh-color-brand-light); }
-.staff-admin .bg-active {
-  background-color: color-mix(in srgb, var(--mh-color-brand) 22%, var(--mh-color-surface));
-  color: var(--mh-color-text) !important;
-  border: 1px solid var(--mh-color-border);
-}
-.staff-admin .bg-withdraw {
-  background-color: #f1f5f9;
-  color: var(--mh-color-text) !important;
-  border: 1px solid var(--mh-color-border);
+.staff-admin .admin-stat-tile__label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mh-color-text-muted);
+  margin-bottom: var(--mh-space-1);
 }
 
-.staff-admin .action-button {
+.staff-admin .admin-stat-tile__value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--mh-color-text);
+  line-height: 1.25;
+}
+
+.staff-admin .admin-section-eyebrow {
+  font-family: var(--mh-font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--mh-color-brand);
+  margin-top: 0;
+  margin-bottom: var(--mh-space-3);
+  padding-top: 0.125rem;
+  display: block;
+}
+
+.staff-admin span.admin-section-eyebrow {
+  display: inline-block;
+}
+
+.staff-admin .admin-page-primary-title {
+  font-family: var(--mh-font-sans);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--mh-color-brand);
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: var(--mh-space-5);
+}
+
+.staff-admin .admin-orders-hub .batch-name {
+  font-family: var(--mh-font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mh-color-brand);
+}
+
+.staff-admin .admin-orders-hub .batch-list-item {
+  background-color: var(--mh-color-surface);
+  border: 1px solid var(--mh-color-border);
+  border-radius: var(--mh-radius-md);
+  margin-bottom: var(--mh-space-3);
+  padding: var(--mh-space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--mh-space-3);
+  box-shadow: var(--mh-shadow-sm);
+}
+
+.staff-admin .admin-orders-preview-wrap {
+  border: 1px solid var(--mh-color-border);
+  border-radius: var(--mh-radius-md);
+  background: var(--mh-color-surface);
+}
+
+.staff-admin .admin-orders-preview-table thead th {
+  font-family: var(--mh-font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mh-color-text-muted);
+  background-color: color-mix(in srgb, var(--mh-color-brand) 4%, var(--mh-color-surface)) !important;
+  border-bottom: 1px solid var(--mh-color-border) !important;
+  vertical-align: middle;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.staff-admin .admin-orders-preview-table tbody td {
+  vertical-align: middle;
+}
+
+.staff-admin .admin-orders-thumb-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mh-space-2);
+  min-height: 2.75rem;
+}
+
+.staff-admin .admin-orders-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--mh-radius-sm);
+  border: 1px solid var(--mh-color-border);
+  background: var(--mh-color-surface);
+  flex-shrink: 0;
+}
+
+.staff-admin .admin-orders-hub .order-item .order-item__summary,
+.staff-admin .admin-order-panel .order-item .order-item__summary {
+  font-family: var(--mh-font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mh-color-text);
+}
+
+.staff-admin .admin-order-panel .form-label,
+.staff-admin .admin-orders-hub .form-label {
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  color: var(--mh-color-text);
+}
+
+.staff-admin .admin-customer-table thead th {
+  font-family: var(--mh-font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mh-color-text-muted);
+  background-color: color-mix(in srgb, var(--mh-color-brand) 4%, var(--mh-color-surface)) !important;
+  border-bottom: 1px solid var(--mh-color-border) !important;
+  vertical-align: middle;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
+/* Invited customers table — neutral status, compact actions dropdown */
+.staff-admin .admin-customer-status {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.staff-admin .admin-customer-status.is-active {
+  color: var(--mh-color-text);
+}
+
+.staff-admin .admin-customer-status.is-inactive {
+  color: var(--mh-color-text-muted);
+}
+
+.staff-admin .admin-customer-login-ip .text-muted {
+  color: var(--mh-color-text-muted) !important;
+}
+
+.staff-admin .admin-customer-actions-cell .dropdown-toggle::after {
+  margin-inline-start: 0.35em;
+}
+
+.staff-admin .admin-customer-actions-menu {
+  min-width: 12rem;
+  z-index: 1060;
 }
 
 .staff-admin .accordion-button:focus {
@@ -963,7 +1134,7 @@
 @media (min-width: 992px) {
   .staff-admin .admin-sidebar {
     position: sticky;
-    top: calc(var(--mh-space-3) + 3.25rem);
+    top: calc(var(--mh-space-3) + var(--staff-navbar-sticky-offset, 5.5rem));
     align-self: flex-start;
   }
 }
@@ -986,6 +1157,15 @@
   transition: background 0.15s ease, color 0.15s ease;
 }
 
+.staff-admin button.admin-sidebar__link {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
 .staff-admin .admin-sidebar__link:hover {
   background: color-mix(in srgb, var(--mh-color-brand) 7%, var(--mh-color-surface));
   color: var(--mh-color-brand);
@@ -999,6 +1179,23 @@
 .staff-admin .admin-sidebar__link.is-active {
   background: color-mix(in srgb, var(--mh-color-brand) 12%, var(--mh-color-surface));
   color: var(--mh-color-brand);
+}
+
+.staff-admin .admin-sidebar__divider {
+  margin: var(--mh-space-3) 0;
+  border: 0;
+  border-top: 1px solid var(--mh-color-border);
+  opacity: 1;
+}
+
+.staff-admin .admin-sidebar__link--muted {
+  color: var(--mh-color-text-muted);
+  font-weight: 500;
+}
+
+.staff-admin .admin-sidebar__link--muted:hover {
+  color: var(--mh-color-text);
+  background: color-mix(in srgb, var(--mh-color-brand) 5%, var(--mh-color-surface));
 }
 
 .staff-admin .admin-shell-main {
@@ -1085,6 +1282,53 @@
   .staff-admin .admin-sidebar-toggle-text {
     display: none;
   }
+}
+
+/* Admin custom confirm dialog (replaces window.confirm) */
+.staff-admin .mh-admin-confirm-modal .modal-content {
+  border: 1px solid var(--mh-color-border);
+  border-radius: var(--mh-radius-lg);
+  overflow: hidden;
+}
+
+.staff-admin .mh-admin-confirm-modal .modal-header {
+  background: var(--mh-color-surface);
+  border-color: var(--mh-color-border) !important;
+}
+
+.staff-admin .mh-admin-confirm-modal .modal-title {
+  font-weight: 700;
+  color: var(--mh-color-brand);
+  letter-spacing: -0.02em;
+}
+
+.staff-admin .mh-admin-confirm-modal .modal-body {
+  background: color-mix(in srgb, var(--mh-color-brand) 2.5%, var(--mh-color-surface));
+  color: var(--mh-color-text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.staff-admin .mh-admin-confirm-modal .modal-footer {
+  background: var(--mh-color-surface);
+  border-color: var(--mh-color-border) !important;
+}
+
+.staff-admin .mh-admin-confirm-modal .btn-primary {
+  min-width: 6.5rem;
+}
+
+.staff-admin .mh-admin-confirm-modal .btn-danger {
+  min-width: 6.5rem;
+}
+
+.staff-admin .mh-admin-confirm-modal .btn-outline-secondary {
+  min-width: 6.5rem;
+}
+
+.staff-admin .mh-admin-confirm-modal .modal-body strong.mh-admin-confirm-subject {
+  font-weight: 700;
+  color: var(--mh-color-brand);
 }
 
 .staff-admin .admin-back-row {

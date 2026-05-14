@@ -22,7 +22,7 @@
       <input type="number" class="form-control" id="approveAmount" name="approved_amount" placeholder="Enter amount to approve" required>
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button type="submit" class="btn btn-primary">Approve withdrawal</button>
+      <button type="submit" class="btn btn-primary" data-mh-confirm="Approve this withdrawal for the amount you entered? This will mark the withdrawal as processed.">Approve withdrawal</button>
       <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
     </div>
   </form>

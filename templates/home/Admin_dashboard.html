@@ -3,15 +3,37 @@
 {% block staff_nav_title %}Admin{% endblock %}
 {% block admin_main %}
 <div class="admin-dashboard-inner">
-  <div class="row g-2 mb-3">
-    <div class="col-6 col-lg-2"><div class="info-box bg-total h-100">Total Deposits: $<span id="totalDeposits">{{ request.user.admin.total_deposit }}</span></div></div>
-    <div class="col-6 col-lg-2"><div class="info-box bg-withdraw h-100">Total Withdrawals: $<span id="totalWithdrawals">{{ request.user.admin.total_withdrawal }}</span></div></div>
-    <div class="col-6 col-lg-2"><div class="info-box bg-net h-100">Net Deposits: $<span id="netDeposits">{{ request.user.admin.net_deposit }}</span></div></div>
-    <div class="col-6 col-lg-2"><div class="info-box bg-users h-100">Total Users: <span id="totalUsers">{{ Total_Customer }}</span></div></div>
-    <div class="col-6 col-lg-2"><div class="info-box bg-active h-100">Active Employees: <span id="activeEmployees">{{ Total_Employees }}</span></div></div>
-  </div>
-  <div class="d-flex flex-wrap gap-2 mb-3">
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">+ Add Employee</button>
+  <div class="row g-2 mb-3 admin-stat-row">
+    <div class="col-6 col-lg-2">
+      <div class="admin-stat-tile h-100">
+        <div class="admin-stat-tile__label">Total deposits</div>
+        <div class="admin-stat-tile__value">$<span id="totalDeposits">{{ request.user.admin.total_deposit }}</span></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-2">
+      <div class="admin-stat-tile h-100">
+        <div class="admin-stat-tile__label">Total withdrawals</div>
+        <div class="admin-stat-tile__value">$<span id="totalWithdrawals">{{ request.user.admin.total_withdrawal }}</span></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-2">
+      <div class="admin-stat-tile h-100">
+        <div class="admin-stat-tile__label">Net deposits</div>
+        <div class="admin-stat-tile__value">$<span id="netDeposits">{{ request.user.admin.net_deposit }}</span></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-2">
+      <div class="admin-stat-tile h-100">
+        <div class="admin-stat-tile__label">Total users</div>
+        <div class="admin-stat-tile__value"><span id="totalUsers">{{ Total_Customer }}</span></div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-2">
+      <div class="admin-stat-tile h-100">
+        <div class="admin-stat-tile__label">Active employees</div>
+        <div class="admin-stat-tile__value"><span id="activeEmployees">{{ Total_Employees }}</span></div>
+      </div>
+    </div>
   </div>
   <div class="accordion" id="employeesAccordion">
     {% for data in employees_data %}
@@ -23,9 +45,9 @@
         </h2>
         <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#employeesAccordion">
           <div class="accordion-body">
-            <h3 class="h6">Invited Customers</h3>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
+            <h3 class="admin-section-eyebrow">Invited Customers</h3>
+            <div class="table-responsive admin-customer-table-wrap">
+              <table class="table table-sm align-middle admin-customer-table">
                 <thead>
                   <tr>
                     <th>Username</th>
@@ -48,43 +70,37 @@
                       <td>${{ customer.balance.total_withdrawal }}</td>
                       <td>
                         {% if customer.is_active %}
-                          <span class="text-success">Active</span>
+                          <span class="admin-customer-status is-active">Active</span>
                         {% else %}
-                          <span class="text-danger">InActive</span>
+                          <span class="admin-customer-status is-inactive">Inactive</span>
                         {% endif %}
                       </td>
                       <td>{{ customer.user_ip.ip_address }}</td>
-                      <td class="text-danger">{{ customer.user_ip.login_ip }}</td>
+                      <td class="admin-customer-login-ip"><span class="font-monospace small text-muted">{{ customer.user_ip.login_ip }}</span></td>
                       <td>{{ customer.ordercount.no_of_submitted_order }}</td>
-                      <td>
-                        <div class="row g-1">
-                          <div class="col-4">
-                            <a href="{% url 'update_deposit' customer.id %}" class="btn btn-success action-button w-100 text-truncate btn-sm">Deposit</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'approve_withdraw' customer.id %}" class="btn btn-warning action-button w-100 text-truncate btn-sm">Withdraw</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'update_telegram' customer.id %}" class="btn btn-info action-button w-100 text-truncate btn-sm">Telegram</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'grant_batches_to_customer' customer.id %}" class="btn btn-secondary action-button w-100 text-truncate btn-sm">Grant Batch</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'verify_kyc' customer.id %}" class="btn btn-dark action-button w-100 text-truncate btn-sm">KYC</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'update_wallet' customer.id %}" class="btn btn-primary action-button w-100 text-truncate btn-sm">Wallet Address</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'change_action' customer.id %}" class="btn btn-danger action-button w-100 text-truncate btn-sm">Active/Inactice</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'reset_order_numbers' customer.id %}" class="btn btn-info action-button w-100 text-truncate btn-sm">Reset Orders</a>
-                          </div>
-                          <div class="col-4">
-                            <a href="{% url 'delete_customer' customer.id %}" class="btn btn-outline-danger action-button w-100 text-truncate btn-sm">Delete User</a>
-                          </div>
+                      <td class="admin-customer-actions-cell text-nowrap">
+                        <div class="dropdown">
+                          <button
+                            class="btn btn-outline-secondary btn-sm dropdown-toggle"
+                            type="button"
+                            id="customerActions{{ customer.id }}"
+                            data-bs-toggle="dropdown"
+                            data-bs-popper-config='{"strategy":"fixed"}'
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                          >Actions</button>
+                          <ul class="dropdown-menu dropdown-menu-end admin-customer-actions-menu" aria-labelledby="customerActions{{ customer.id }}">
+                            <li><a class="dropdown-item" href="{% url 'update_deposit' customer.id %}">Deposit</a></li>
+                            <li><a class="dropdown-item" href="{% url 'approve_withdraw' customer.id %}">Withdraw</a></li>
+                            <li><a class="dropdown-item" href="{% url 'update_telegram' customer.id %}">Telegram</a></li>
+                            <li><a class="dropdown-item" href="{% url 'grant_batches_to_customer' customer.id %}">Grant batch</a></li>
+                            <li><a class="dropdown-item" href="{% url 'verify_kyc' customer.id %}">KYC</a></li>
+                            <li><a class="dropdown-item" href="{% url 'update_wallet' customer.id %}">Wallet address</a></li>
+                            <li><a class="dropdown-item" href="{% url 'change_action' customer.id %}" data-mh-confirm="Change active status for user __MH_SUBJECT__? They may gain or lose access to the app." data-mh-confirm-subject="{{ customer.username }}">Toggle active</a></li>
+                            <li><a class="dropdown-item" href="{% url 'reset_order_numbers' customer.id %}" data-mh-confirm="Reset submitted order count to zero for __MH_SUBJECT__? This cannot be undone." data-mh-confirm-subject="{{ customer.username }}">Reset orders</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'delete_customer' customer.id %}" data-mh-confirm="Permanently delete user __MH_SUBJECT__ and their data? This cannot be undone." data-mh-confirm-subject="{{ customer.username }}" data-mh-confirm-ok="Delete user">Delete user</a></li>
+                          </ul>
                         </div>
                       </td>
                     </tr>
@@ -100,31 +116,6 @@
         </div>
       </div>
     {% endfor %}
-  </div>
-</div>
-
-<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="addEmployeeForm" action="{% url 'Admin_dashboard' %}" method="post">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="employeeName" class="form-label">Username</label>
-            <input type="text" class="form-control" id="employeeName" name="username" required>
-          </div>
-          <div class="mb-3">
-            <label for="employeePassword" class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" id="employeePassword" required autocomplete="new-password">
-          </div>
-          <button type="submit" class="btn btn-primary">Add Employee</button>
-        </form>
-      </div>
-    </div>
   </div>
 </div>
 {% endblock %}

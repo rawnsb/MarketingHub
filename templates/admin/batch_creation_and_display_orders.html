@@ -1,53 +1,14 @@
 {% extends "home/base_admin.html" %}
 {% block admin_page_title %}Order panel{% endblock %}
 {% block staff_nav_title %}Admin{% endblock %}
-{% block admin_extra_css %}
-<style>
-  .admin-orders-hub .order-item {
-    background-color: #f1f5f9;
-    border-radius: var(--mh-radius-md, 10px);
-    margin-bottom: 15px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    box-shadow: var(--mh-shadow-sm);
-  }
-  .admin-orders-hub .order-item img {
-    max-width: 60px;
-    margin-right: 12px;
-    border-radius: 5px;
-  }
-  .admin-orders-hub .batch-list-item {
-    background-color: var(--mh-color-surface, #fff);
-    border: 1px solid var(--mh-color-border, #e2e8f0);
-    border-radius: var(--mh-radius-md, 10px);
-    margin-bottom: 10px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    box-shadow: var(--mh-shadow-sm);
-  }
-  .admin-orders-hub .batch-list-item .batch-name {
-    font-weight: 700;
-    color: var(--mh-color-brand);
-    font-size: 1.05rem;
-  }
-</style>
-{% endblock %}
 {% block admin_main %}
 <div class="admin-back-row">
   <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary btn-sm">← Overview</a>
 </div>
 <div class="admin-page-card admin-page-card--wide admin-orders-hub">
-  <h1 class="h4 mb-4 text-center">Order management panel</h1>
+  <h1 class="admin-page-primary-title">Order management panel</h1>
   <div id="createBatchSection">
-    <h2 class="h5">Create batch</h2>
+    <h2 class="admin-section-eyebrow">Create batch</h2>
     <form id="createBatchForm" method="post" class="mb-4">
       {% csrf_token %}
       <div class="mb-3">
@@ -58,7 +19,7 @@
     </form>
   </div>
   <div id="batchListSection" class="mt-4">
-    <h2 class="h5">Created batches</h2>
+    <h2 class="admin-section-eyebrow mt-4">Created batches</h2>
     <div id="batchList">
       {% for batch in batches %}
         <div class="batch-list-item" data-batch-id="{{ batch.id }}">
@@ -72,48 +33,108 @@
     </div>
   </div>
   <div id="ordersDisplaySection" class="hidden mt-4">
-    <h2 class="h5">Orders in batch: <span id="ordersBatchName"></span></h2>
-    <div id="ordersList" class="mb-4"></div>
+    <h2 class="admin-section-eyebrow mt-2">Orders in batch: <span id="ordersBatchName" class="text-capitalize fw-semibold text-body"></span></h2>
+    <div id="ordersListWrap" class="mb-4 table-responsive admin-orders-preview-wrap">
+      <table class="table table-sm align-middle admin-orders-preview-table mb-0">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Order ID</th>
+            <th scope="col">Type</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Products</th>
+          </tr>
+        </thead>
+        <tbody id="ordersListBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock %}
 {% block admin_extra_js %}
 <script>
-  (function () {
-    var batchListSection = document.getElementById("batchListSection");
-    var ordersDisplaySection = document.getElementById("ordersDisplaySection");
-    var ordersBatchName = document.getElementById("ordersBatchName");
-    var ordersList = document.getElementById("ordersList");
-    if (!batchListSection) return;
-    batchListSection.addEventListener("click", function (event) {
-      var btn = event.target.closest(".view-orders-btn");
-      if (!btn) return;
-      var batchItem = btn.closest(".batch-list-item");
-      if (!batchItem) return;
-      var selectedBatchId = batchItem.getAttribute("data-batch-id");
-      var batchName = batchItem.querySelector(".batch-name");
-      if (ordersBatchName && batchName) ordersBatchName.textContent = batchName.textContent;
-      if (ordersList) ordersList.innerHTML = "";
-      var fetchUrl = "{% url 'fetch_orders' 999999 %}".replace("999999", selectedBatchId);
-      fetch(fetchUrl)
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          var counter = 0;
-          data.orders.forEach(function (order) {
-            counter++;
-            var orderItem = document.createElement("div");
-            orderItem.className = "order-item";
-            var imgs = order.products.map(function (p) {
-              return '<img src="' + p.image_url + '" alt="' + (p.name || "") + '">';
-            }).join("");
-            orderItem.innerHTML =
-              "<span>" + counter + ". Order ID: " + order.id + " — " + order.order_type + " — $" + order.total_amount + "</span><div>" + imgs + "</div>";
-            ordersList.appendChild(orderItem);
+(function () {
+  var batchListSection = document.getElementById("batchListSection");
+  var ordersDisplaySection = document.getElementById("ordersDisplaySection");
+  var ordersBatchName = document.getElementById("ordersBatchName");
+  var ordersListBody = document.getElementById("ordersListBody");
+  if (!batchListSection || !ordersListBody) return;
+
+  function clearOrdersBody() {
+    while (ordersListBody.firstChild) {
+      ordersListBody.removeChild(ordersListBody.firstChild);
+    }
+  }
+
+  function appendTextCell(tr, text) {
+    var td = document.createElement("td");
+    td.textContent = text;
+    tr.appendChild(td);
+  }
+
+  function appendEmptyRow(message, colspan) {
+    var tr = document.createElement("tr");
+    var td = document.createElement("td");
+    td.colSpan = colspan;
+    td.className = "text-muted small py-4 text-center";
+    td.textContent = message;
+    tr.appendChild(td);
+    ordersListBody.appendChild(tr);
+  }
+
+  batchListSection.addEventListener("click", function (event) {
+    var btn = event.target.closest(".view-orders-btn");
+    if (!btn) return;
+    var batchItem = btn.closest(".batch-list-item");
+    if (!batchItem) return;
+    var selectedBatchId = batchItem.getAttribute("data-batch-id");
+    var batchName = batchItem.querySelector(".batch-name");
+    if (ordersBatchName && batchName) ordersBatchName.textContent = batchName.textContent;
+    clearOrdersBody();
+    var fetchUrl = "{% url 'fetch_orders' 999999 %}".replace("999999", selectedBatchId);
+    fetch(fetchUrl)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var orders = data.orders || [];
+        if (orders.length === 0) {
+          appendEmptyRow("No orders in this batch yet.", 5);
+        } else {
+          orders.forEach(function (order, index) {
+            var tr = document.createElement("tr");
+            appendTextCell(tr, String(index + 1));
+            appendTextCell(tr, String(order.id));
+            appendTextCell(tr, order.order_type || "");
+            appendTextCell(tr, "$" + String(order.total_amount));
+
+            var tdProducts = document.createElement("td");
+            var wrap = document.createElement("div");
+            wrap.className = "admin-orders-thumb-wrap";
+            var products = order.products || [];
+            if (products.length === 0) {
+              var empty = document.createElement("span");
+              empty.className = "text-muted small";
+              empty.textContent = "—";
+              wrap.appendChild(empty);
+            } else {
+              products.forEach(function (p) {
+                if (!p.image_url) return;
+                var img = document.createElement("img");
+                img.className = "admin-orders-thumb";
+                img.src = p.image_url;
+                img.alt = p.name || "Product";
+                img.loading = "lazy";
+                wrap.appendChild(img);
+              });
+            }
+            tdProducts.appendChild(wrap);
+            tr.appendChild(tdProducts);
+            ordersListBody.appendChild(tr);
           });
-          ordersDisplaySection.classList.remove("hidden");
-        })
-        .catch(function (e) { console.error(e); });
-    });
-  })();
+        }
+        ordersDisplaySection.classList.remove("hidden");
+      })
+      .catch(function (e) { console.error(e); });
+  });
+})();
 </script>
 {% endblock %}

@@ -206,26 +206,31 @@ def fetch_orders(request, batch_id):
 
     orders_data = []
     for order in orders:
-        # Handle the ForeignKey relationship (single product)
+        seen_product_ids = set()
         products_data = []
-        if order.product:
-            products_data.append({
-                'name': order.product.name,
-                'image_url': order.product.image.url,
-            })
 
-        # Handle the Many-to-Many relationship (additional products in lucky orders)
-        for product in order.products.all():
+        def append_product(product):
+            if not product or not product.pk or product.pk in seen_product_ids:
+                return
+            if not product.image or not product.image.name:
+                return
+            seen_product_ids.add(product.pk)
+            image_url = request.build_absolute_uri(product.image.url)
             products_data.append({
+                'id': product.pk,
                 'name': product.name,
-                'image_url': product.image.url,
+                'image_url': image_url,
             })
 
-        # Append order data including products
+        if order.product_id:
+            append_product(order.product)
+        for product in order.products.all():
+            append_product(product)
+
         orders_data.append({
             'id': order.id,
             'order_type': order.order_type,
-            'total_amount': order.total_amount,
+            'total_amount': str(order.total_amount),
             'products': products_data,
         })
 

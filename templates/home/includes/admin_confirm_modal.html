@@ -1,0 +1,18 @@
+{% comment %}Replaces window.confirm for data-mh-confirm actions — styled for admin shell.{% endcomment %}
+<div class="modal fade mh-admin-confirm-modal" id="mhAdminConfirmModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="mhAdminConfirmTitle" aria-describedby="mhAdminConfirmMessage">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header border-bottom py-3">
+        <h2 class="h5 modal-title mb-0" id="mhAdminConfirmTitle">Confirm action</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-4">
+        <p class="mb-0 text-body" id="mhAdminConfirmMessage"></p>
+      </div>
+      <div class="modal-footer border-top py-3 gap-2">
+        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary px-4" id="mhAdminConfirmOk">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -31,7 +31,7 @@
     </div>
     <div class="d-flex flex-wrap gap-2">
       <button class="btn btn-primary" type="submit" name="action" value="verify">Verify</button>
-      <button class="btn btn-outline-danger" type="submit" name="action" value="delete">Delete</button>
+      <button class="btn btn-outline-danger" type="submit" name="action" value="delete" data-mh-confirm="Delete this KYC record for __MH_SUBJECT__? This cannot be undone." data-mh-confirm-subject="{{ kyc_record.user.username }}" data-mh-confirm-ok="Delete">Delete</button>
       <a href="{% url 'Admin_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
     </div>
   </form>

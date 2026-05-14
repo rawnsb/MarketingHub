@@ -46,7 +46,7 @@
           <div class="d-flex flex-wrap gap-2">
             <button type="button" class="btn btn-outline-secondary btn-sm view-orders-btn">View orders</button>
             <a href="{% url 'grant_batch_to_customer' batch.id customer.id %}" class="btn btn-primary btn-sm">Grant batch</a>
-            <a href="{% url 'remove_granted_batch' batch.id customer.id %}" class="btn btn-outline-danger btn-sm">Remove granted</a>
+            <a href="{% url 'remove_granted_batch' batch.id customer.id %}" class="btn btn-outline-danger btn-sm" data-mh-confirm="Remove this granted batch from __MH_SUBJECT__? They will lose access to those orders." data-mh-confirm-subject="{{ customer.username }}">Remove granted</a>
           </div>
         </div>
       {% endfor %}
